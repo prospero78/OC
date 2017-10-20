@@ -67,10 +67,14 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainForm.Designer.vb">
-      <DependentUpon>MainForm.vb</DependentUpon>
+    <Compile Include="винКонв.Designer.vb">
+      <DependentUpon>винКонв.vb</DependentUpon>
     </Compile>
-    <Compile Include="MainForm.vb">
+    <Compile Include="винКонв.vb" />
+    <Compile Include="винГлавн.Designer.vb">
+      <DependentUpon>винГлавн.vb</DependentUpon>
+    </Compile>
+    <Compile Include="винГлавн.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="App.vb" />
@@ -83,8 +87,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.vb</DependentUpon>
+    <EmbeddedResource Include="винГлавн.resx">
+      <DependentUpon>винГлавн.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="винКонв.resx">
+      <DependentUpon>винКонв.Designer.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

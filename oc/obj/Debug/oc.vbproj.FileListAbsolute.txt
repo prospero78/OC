@@ -8,3 +8,4 @@ D:\coding\github.com\OC\oc\obj\Debug\oc.окнГлавное.resources
 D:\coding\github.com\OC\oc\obj\Debug\oc.vbproj.GenerateResource.Cache
 D:\coding\github.com\OC\oc\obj\Debug\oc.exe
 D:\coding\github.com\OC\oc\obj\Debug\oc.pdb
+D:\coding\github.com\OC\oc\obj\Debug\oc.окнКонв.resources

@@ -32,4 +32,8 @@ Public Class окнГлавное
     Sub ToolStripButton1Click(sender As Object, e As EventArgs)
         conv.txtOb=Me.txtOb.Text
     End Sub
+    
+    Sub КнпКонвClick(sender As Object, e As EventArgs)
+		окнКонв.show()    	
+    End Sub
 End Class
