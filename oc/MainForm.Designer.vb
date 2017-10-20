@@ -43,8 +43,14 @@ Partial Class окнГлавное
         Me.файлToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.toolStripMenuItem1 = New System.Windows.Forms.ToolStripSeparator()
         Me.выходToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tabControl1 = New System.Windows.Forms.TabControl()
+        Me.tabPage1 = New System.Windows.Forms.TabPage()
+        Me.tabPage2 = New System.Windows.Forms.TabPage()
+        Me.textBox1 = New System.Windows.Forms.TextBox()
         Me.statusStrip1.SuspendLayout
         Me.menuStrip1.SuspendLayout
+        Me.tabControl1.SuspendLayout
+        Me.tabPage1.SuspendLayout
         Me.SuspendLayout
         '
         'statusStrip1
@@ -96,20 +102,64 @@ Partial Class окнГлавное
         'toolStripMenuItem1
         '
         Me.toolStripMenuItem1.Name = "toolStripMenuItem1"
-        Me.toolStripMenuItem1.Size = New System.Drawing.Size(149, 6)
+        Me.toolStripMenuItem1.Size = New System.Drawing.Size(105, 6)
         '
         'выходToolStripMenuItem
         '
         Me.выходToolStripMenuItem.Name = "выходToolStripMenuItem"
-        Me.выходToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.выходToolStripMenuItem.Size = New System.Drawing.Size(108, 22)
         Me.выходToolStripMenuItem.Text = "&Выход"
         AddHandler Me.выходToolStripMenuItem.Click, AddressOf Me.ВыходToolStripMenuItemClick
+        '
+        'tabControl1
+        '
+        Me.tabControl1.Controls.Add(Me.tabPage1)
+        Me.tabControl1.Controls.Add(Me.tabPage2)
+        Me.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.tabControl1.Location = New System.Drawing.Point(0, 24)
+        Me.tabControl1.Name = "tabControl1"
+        Me.tabControl1.SelectedIndex = 0
+        Me.tabControl1.Size = New System.Drawing.Size(527, 371)
+        Me.tabControl1.TabIndex = 2
+        '
+        'tabPage1
+        '
+        Me.tabPage1.Controls.Add(Me.textBox1)
+        Me.tabPage1.Location = New System.Drawing.Point(4, 22)
+        Me.tabPage1.Name = "tabPage1"
+        Me.tabPage1.Padding = New System.Windows.Forms.Padding(3)
+        Me.tabPage1.Size = New System.Drawing.Size(519, 345)
+        Me.tabPage1.TabIndex = 0
+        Me.tabPage1.Text = "tabPage1"
+        Me.tabPage1.UseVisualStyleBackColor = true
+        '
+        'tabPage2
+        '
+        Me.tabPage2.Location = New System.Drawing.Point(4, 22)
+        Me.tabPage2.Name = "tabPage2"
+        Me.tabPage2.Padding = New System.Windows.Forms.Padding(3)
+        Me.tabPage2.Size = New System.Drawing.Size(216, 142)
+        Me.tabPage2.TabIndex = 1
+        Me.tabPage2.Text = "tabPage2"
+        Me.tabPage2.UseVisualStyleBackColor = true
+        '
+        'textBox1
+        '
+        Me.textBox1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.textBox1.Font = New System.Drawing.Font("Consolas", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204,Byte))
+        Me.textBox1.Location = New System.Drawing.Point(3, 3)
+        Me.textBox1.Multiline = true
+        Me.textBox1.Name = "textBox1"
+        Me.textBox1.Size = New System.Drawing.Size(513, 339)
+        Me.textBox1.TabIndex = 0
+        Me.textBox1.Text = "MODULE Test:"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"END Test."
         '
         'окнГлавное
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(527, 419)
+        Me.Controls.Add(Me.tabControl1)
         Me.Controls.Add(Me.statusStrip1)
         Me.Controls.Add(Me.menuStrip1)
         Me.MainMenuStrip = Me.menuStrip1
@@ -119,9 +169,16 @@ Partial Class окнГлавное
         Me.statusStrip1.PerformLayout
         Me.menuStrip1.ResumeLayout(false)
         Me.menuStrip1.PerformLayout
+        Me.tabControl1.ResumeLayout(false)
+        Me.tabPage1.ResumeLayout(false)
+        Me.tabPage1.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
     End Sub
+    Private tabPage2 As System.Windows.Forms.TabPage
+    Private textBox1 As System.Windows.Forms.TextBox
+    Private tabPage1 As System.Windows.Forms.TabPage
+    Private tabControl1 As System.Windows.Forms.TabControl
     Private выходToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Private toolStripMenuItem1 As System.Windows.Forms.ToolStripSeparator
     Private файлToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
