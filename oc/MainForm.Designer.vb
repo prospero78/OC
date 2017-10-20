@@ -47,6 +47,7 @@ Partial Class окнГлавное
         Me.tabPage1 = New System.Windows.Forms.TabPage()
         Me.tabPage2 = New System.Windows.Forms.TabPage()
         Me.textBox1 = New System.Windows.Forms.TextBox()
+        Me.textBox2 = New System.Windows.Forms.TextBox()
         Me.statusStrip1.SuspendLayout
         Me.menuStrip1.SuspendLayout
         Me.tabControl1.SuspendLayout
@@ -124,6 +125,7 @@ Partial Class окнГлавное
         '
         'tabPage1
         '
+        Me.tabPage1.Controls.Add(Me.textBox2)
         Me.tabPage1.Controls.Add(Me.textBox1)
         Me.tabPage1.Location = New System.Drawing.Point(4, 22)
         Me.tabPage1.Name = "tabPage1"
@@ -138,21 +140,32 @@ Partial Class окнГлавное
         Me.tabPage2.Location = New System.Drawing.Point(4, 22)
         Me.tabPage2.Name = "tabPage2"
         Me.tabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabPage2.Size = New System.Drawing.Size(216, 142)
+        Me.tabPage2.Size = New System.Drawing.Size(519, 345)
         Me.tabPage2.TabIndex = 1
         Me.tabPage2.Text = "tabPage2"
         Me.tabPage2.UseVisualStyleBackColor = true
         '
         'textBox1
         '
-        Me.textBox1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.textBox1.Dock = System.Windows.Forms.DockStyle.Left
         Me.textBox1.Font = New System.Drawing.Font("Consolas", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204,Byte))
         Me.textBox1.Location = New System.Drawing.Point(3, 3)
         Me.textBox1.Multiline = true
         Me.textBox1.Name = "textBox1"
-        Me.textBox1.Size = New System.Drawing.Size(513, 339)
+        Me.textBox1.Size = New System.Drawing.Size(208, 339)
         Me.textBox1.TabIndex = 0
         Me.textBox1.Text = "MODULE Test:"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"END Test."
+        '
+        'textBox2
+        '
+        Me.textBox2.Dock = System.Windows.Forms.DockStyle.Right
+        Me.textBox2.Font = New System.Drawing.Font("Consolas", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204,Byte))
+        Me.textBox2.Location = New System.Drawing.Point(268, 3)
+        Me.textBox2.Multiline = true
+        Me.textBox2.Name = "textBox2"
+        Me.textBox2.Size = New System.Drawing.Size(248, 339)
+        Me.textBox2.TabIndex = 1
+        Me.textBox2.Text = "MODULE Test:"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"END Test."
         '
         'окнГлавное
         '
@@ -175,6 +188,7 @@ Partial Class окнГлавное
         Me.ResumeLayout(false)
         Me.PerformLayout
     End Sub
+    Private textBox2 As System.Windows.Forms.TextBox
     Private tabPage2 As System.Windows.Forms.TabPage
     Private textBox1 As System.Windows.Forms.TextBox
     Private tabPage1 As System.Windows.Forms.TabPage
