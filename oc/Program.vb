@@ -21,7 +21,7 @@ Namespace My
         End Sub
         
         Protected Overrides Sub OnCreateMainForm()
-            Me.MainForm = My.Forms.MainForm
+            Me.MainForm = oc.окнГлавное
         End Sub
     End Class
 End Namespace

@@ -1,0 +1,8 @@
+D:\coding\github.com\OC\oc\obj\Debug\oc.vbprojResolveAssemblyReference.cache
+D:\coding\github.com\OC\oc\obj\Debug\oc.окнГлавное.resources
+D:\coding\github.com\OC\oc\obj\Debug\oc.vbproj.GenerateResource.Cache
+D:\coding\github.com\OC\oc\bin\Debug\oc.exe.config
+D:\coding\github.com\OC\oc\bin\Debug\oc.exe
+D:\coding\github.com\OC\oc\bin\Debug\oc.pdb
+D:\coding\github.com\OC\oc\obj\Debug\oc.exe
+D:\coding\github.com\OC\oc\obj\Debug\oc.pdb
