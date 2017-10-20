@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <MyType>Windows</MyType>
     <RootNamespace>Converter2vb</RootNamespace>
-    <AssemblyName>Converter2vb</AssemblyName>
+    <AssemblyName>modConverter2vb</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <OptionInfer>On</OptionInfer>
@@ -72,10 +72,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.vb" />
-    <Compile Include="Converter2vb.Designer.vb">
-      <DependentUpon>Converter2vb.vb</DependentUpon>
+    <Compile Include="clsConverter2vb.Designer.vb">
+      <DependentUpon>clsConverter2vb.vb</DependentUpon>
     </Compile>
-    <Compile Include="Converter2vb.vb" />
+    <Compile Include="clsConverter2vb.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

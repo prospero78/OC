@@ -4,7 +4,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # SharpDevelop 4.4
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "oc", "oc\oc.vbproj", "{F9D7A91C-5B1F-401E-B86F-9004407D040A}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Converter2vb", "Converter2vb\Converter2vb.vbproj", "{E7F83D3C-8B36-4A60-B5FD-521C1A7CC172}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "modConverter2vb", "Converter2vb\modConverter2vb.vbproj", "{E7F83D3C-8B36-4A60-B5FD-521C1A7CC172}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -9,12 +9,12 @@ Imports System.Runtime.InteropServices
 ' you compile.
 
 <assembly: AssemblyTitle("oc")>
-<assembly: AssemblyDescription("")>
+<assembly: AssemblyDescription("Compiler for Oberon-07")>
 <assembly: AssemblyConfiguration("")>
-<assembly: AssemblyCompany("")>
+<assembly: AssemblyCompany("KBK Technicks Ltd.")>
 <assembly: AssemblyProduct("oc")>
-<assembly: AssemblyCopyright("Copyright 2017")>
-<assembly: AssemblyTrademark("")>
+<assembly: AssemblyCopyright("BSD-2 2017")>
+<assembly: AssemblyTrademark("KBK Technicks Ltd.")>
 <assembly: AssemblyCulture("")>
 
 ' This sets the default COM visibility of types in the assembly to invisible.

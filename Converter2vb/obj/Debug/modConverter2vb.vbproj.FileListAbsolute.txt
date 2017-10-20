@@ -1,0 +1,5 @@
+D:\coding\github.com\OC\Converter2vb\bin\Debug\modConverter2vb.dll
+D:\coding\github.com\OC\Converter2vb\bin\Debug\modConverter2vb.pdb
+D:\coding\github.com\OC\Converter2vb\obj\Debug\modConverter2vb.dll
+D:\coding\github.com\OC\Converter2vb\obj\Debug\modConverter2vb.pdb
+D:\coding\github.com\OC\Converter2vb\obj\Debug\modConverter2vb.vbprojResolveAssemblyReference.cache

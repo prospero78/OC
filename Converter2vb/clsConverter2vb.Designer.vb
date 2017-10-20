@@ -7,7 +7,7 @@
 ' 
 ' Для изменения этого шаблона используйте Сервис | Настройка | Кодирование | Правка стандартных заголовков.
 '
-Partial Class Converter2vb
+Partial Public Class clsConverter2vb
     ''' <summary>
     ''' Designer variable used to keep track of non-visual components.
     ''' </summary>
@@ -36,6 +36,6 @@ Partial Class Converter2vb
         'UserControl1
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.Name = "UserControl1"
+        Me.Name = "clsConverter2vb"
     End Sub
 End Class

@@ -7,7 +7,10 @@
 ' 
 ' Для изменения этого шаблона используйте Сервис | Настройка | Кодирование | Правка стандартных заголовков.
 '
-Public Partial Class окнГлавное
+Imports mConv=Converter2vb
+
+Public Class окнГлавное
+    Dim conv As mConv.clsConverter2vb 
     Public Sub New()
         ' The Me.InitializeComponent call is required for Windows Forms designer support.
         Me.InitializeComponent()
@@ -15,6 +18,7 @@ Public Partial Class окнГлавное
         '
         ' TODO : Add constructor code after InitializeComponents
         '
+        conv = New mConv.clsConverter2vb()
     End Sub
     
     Sub Timer1Tick(sender As Object, e As EventArgs)
@@ -23,5 +27,9 @@ Public Partial Class окнГлавное
     
     Sub ВыходToolStripMenuItemClick(sender As Object, e As EventArgs)
         Application.Exit()
+    End Sub
+    
+    Sub ToolStripButton1Click(sender As Object, e As EventArgs)
+        conv.txtOb=Me.txtOb.Text
     End Sub
 End Class

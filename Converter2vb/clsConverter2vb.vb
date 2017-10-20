@@ -7,8 +7,10 @@
 ' 
 ' Для изменения этого шаблона используйте Сервис | Настройка | Кодирование | Правка стандартных заголовков.
 '
-Public Partial Class Converter2vb
+Partial Public Class clsConverter2vb
     Inherits System.Windows.Forms.UserControl
+    Public txtVb As String
+    Public txtOb As String
     
     Public Sub New()
         ' The Me.InitializeComponent call is required for Windows Forms designer support.
@@ -17,5 +19,6 @@ Public Partial Class Converter2vb
         '
         ' TODO : Add constructor code after InitializeComponents
         '
+        Debug.Print("1 2 3 ")
     End Sub
 End Class
