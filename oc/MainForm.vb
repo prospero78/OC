@@ -20,4 +20,8 @@ Public Partial Class окнГлавное
     Sub Timer1Tick(sender As Object, e As EventArgs)
         лблДата.Text=Format(Now(), "yyyy-MM-dd hh:mm:ss")
     End Sub
+    
+    Sub ВыходToolStripMenuItemClick(sender As Object, e As EventArgs)
+        Application.Exit()
+    End Sub
 End Class
