@@ -4,20 +4,13 @@
     
    End Class
    
-   Module modOc
+   Module модОк
 
       Sub Main()
          Console.Clear()
-         'FoneColor = Console.BackgroundColor
-
-         'Console.ForegroundColor =
          Console.Title = "Oberon-07 Compiler"
-         'Console.writeline("Oberon-07 compiler", System.ConsoleColor.Gray)
-         'Color_Write("Oberon-07 compiler")
-         'Console.BackgroundColor = System.ConsoleColor.Black
-         'Console.ResetColor()
-         'modCocon.hello()
-         modCocon.Splash()
+         модКокон.Сплэш_Печать()
+         модАрг.Парам_Получ()
          Console.Write("Нажмите любую клавишу для выхода")
          Console.Read()
       end sub

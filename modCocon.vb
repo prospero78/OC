@@ -1,31 +1,31 @@
 ﻿' пи -- "пространство имён"
 ' Ок -- "Оберон компилятор"
 Namespace пиОк
-   Public Module modCocon
+   Public Module модКокон ' Consol Colorize
    
       Const txtObcomp as String = "|     Oberon-07 compiler 2017 BSD-2  |"
-      Const txtBuild as String  = "|     Build 0002   2017-10-21 21:06  |"
+      Const txtBuild as String  = "|     Build 0004   2017-10-21 22:23  |"
       Const txtAuthor as String = "|     KBK Technicks Ltd.     (c)     |"
       
-      Public Sub Info(ByRef txt As String)' нужен для вывода информационных сообщение белыми буквами на синем фоне
+      Public Sub Инфо(ByRef txt As String)' нужен для вывода информационных сообщение белыми буквами на синем фоне
          Static FoneColor As System.ConsoleColor
          Console.BackgroundColor = System.ConsoleColor.Blue
          Console.WriteLine(txt)
          Console.BackgroundColor = FoneColor
       End Sub
       
-      Public Sub Splash()'Первичная надпись при старте компилятора
+      Public Sub Сплэш_Печать()'Первичная надпись при старте компилятора
          Console.WriteLine()
          Console.Write("                 ")
-         Info("+------------------------------------+")
+         Инфо("+------------------------------------+")
          Console.Write("                 ")
-         Info(txtObcomp)
+         Инфо(txtObcomp)
          Console.Write("                 ")
-         Info(txtBuild)
+         Инфо(txtBuild)
          Console.Write("                 ")
-         Info(txtAuthor)
+         Инфо(txtAuthor)
          Console.Write("                 ")
-         Info("+------------------------------------+")
+         Инфо("+------------------------------------+")
          Console.WriteLine()
       End Sub
       
