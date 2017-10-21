@@ -1,28 +1,25 @@
-Namespace пиОк
+﻿Namespace пиОк
 
-Public Class clsWinMain
-End Class
-Module modOc
-Dim FoneColor as System.ConsoleColor
-Sub Color_Write(ByRef txt As String, Optional color as integer = 15)
-    Console.BackgroundColor = System.ConsoleColor.DarkBlue
-    Console.WriteLine(txt)
-    Console.BackgroundColor = FoneColor
-End Sub
-Sub main()
-    Console.Clear()
-    FoneColor = Console.BackgroundColor
+   Public Class clsWinMain
+    
+   End Class
+   
+   Module modOc
 
-    'Console.ForegroundColor =
-    Console.Title = "Oberon-07 Compiler"
-    'Console.writeline("Oberon-07 compiler", System.ConsoleColor.Gray)
-    Color_Write("Oberon-07 compiler")
-    Console.BackgroundColor = System.ConsoleColor.Black
-    Console.ResetColor()
-    modCocon.hello()
-    modCocon.Splash()
-    Console.Write("Файл для компиляции>")
-    Console.Read()
-end sub
-End module
+      Sub Main()
+         Console.Clear()
+         'FoneColor = Console.BackgroundColor
+
+         'Console.ForegroundColor =
+         Console.Title = "Oberon-07 Compiler"
+         'Console.writeline("Oberon-07 compiler", System.ConsoleColor.Gray)
+         'Color_Write("Oberon-07 compiler")
+         'Console.BackgroundColor = System.ConsoleColor.Black
+         'Console.ResetColor()
+         'modCocon.hello()
+         modCocon.Splash()
+         Console.Write("Нажмите любую клавишу для выхода")
+         Console.Read()
+      end sub
+   End module
 End Namespace
