@@ -1,4 +1,5 @@
-﻿Namespace nsOc
+﻿Namespace пиОк
+
 public class clsWinMain
 end class
 module modOc
@@ -18,6 +19,8 @@ module modOc
       Color_Write("Oberon-07 compiler")
       Console.BackgroundColor = System.ConsoleColor.Black
       Console.ResetColor()
+      modCocon.hello()
+      modCocon.Splash()
       Console.Write("Файл для компиляции>")
       Console.Read()
    end sub
