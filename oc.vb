@@ -18,8 +18,7 @@ module modOc
       Color_Write("Oberon-07 compiler")
       Console.BackgroundColor = System.ConsoleColor.Black
       Console.ResetColor()
-      Console.WriteLine()
-      Console.Write(">")
+      Console.Write("Файл для компиляции>")
       Console.Read()
    end sub
 end module
