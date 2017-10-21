@@ -1,0 +1,33 @@
+[Config]
+Compilator.FileName=D:\coding\github.com\OC\build.bat
+Compilator.Run=D:\coding\github.com\OC\oc.exe
+Compilator.DefaultDir=D:\coding\github.com\OC
+Compilator.SaveAll=1
+Compilator.Capture=0
+Compilator.HideOutput=0
+Compilator.ProgSaveAll=0
+Compilator.ProgRunSelection=0
+Compilator.LogType=0
+DefaultDir=D:\coding\github.com\OC
+DefaultCPIndex=7
+LogtoEnd=1
+DontOpen=0
+AbsolutePath=1
+FileFormat=0
+ProjectFilesOnly=0
+HTServer=localhost
+Extensions=*.*
+[Project tree]
+oc
+	-out
+	+VB
+		D:\coding\github.com\OC\oc.vb
+		D:\coding\github.com\OC\modCocon.vb
+[Open project files]
+0=D:\coding\github.com\OC\oc.vb
+[Selected Project Files]
+Main=
+Selected=D:\coding\github.com\OC\oc.vb
+[oc.vb]
+TopLine=1
+Caret=36,21

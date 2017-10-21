@@ -1,4 +1,6 @@
-Namespace ����
+﻿' пи -- "пространство имён"
+' Ок -- "Оберон компилятор"
+Namespace пиОк
    Public Module modCocon
       Public Sub Hello()
          Console.WriteLine("Hello, modCocon!")
