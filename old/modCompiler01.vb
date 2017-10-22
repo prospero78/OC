@@ -86,7 +86,6 @@ Namespace пиОк
          txtOut +="Namespace Oberon07"+vbCrLf
          txtOut +="Public Module modOut"+vbCrLf
          txtOut +="Dim рег0 As Integer = 0"+vbCrLf
-         txtOut +="Dim рег1 As Integer = 0"+vbCrLf
          txtOut +="Sub Main()"+vbCrLf
       End Sub
       
@@ -101,40 +100,10 @@ Namespace пиОк
          Лит_Получ()
       End Sub
       
-      
-      Sub Терминал() ' Term
+      Sub Выражение() ' Expression
          Dim lit As String = Цифра_Получ()
          ВыводНов("рег0 = " + lit)
          txtOut += "рег0 = " + lit + vbCrLf
-      End Sub
-      
-      Sub Сложить() ' Add
-         Совпадение("+")
-         Терминал()
-         ВыводНов("рег0 += рег1")
-         txtOut += "рег0 += рег1" + vbCrLf
-      End Sub
-      
-      Sub Вычесть()' Substract
-         Совпадение("-")
-         Терминал()
-         ВыводНов("рег0 = рег1 - рег0")
-         txtOut += "рег0 = рег1 - рег0" + vbCrLf
-      End Sub
-      
-      Sub Выражение() ' Expression
-         Терминал()
-         ВыводНов("рег1 = рег0")
-         ' для выходного файла
-         txtOut += "рег1 = рег0" + vbCrLf
-         Select Case литАнализ
-            Case "+" 
-               Сложить()
-            Case "-" 
-               Вычесть()
-            Case Else
-               Ожидалось("Операция +/-")
-         End Select
       End Sub
       
       Sub Вых_Записать()
