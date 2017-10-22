@@ -4,7 +4,7 @@ Imports System.IO' для File
 Namespace пиОк
    Public Module модФайл
       Dim argMod As clsArgs
-      Dim txtFileO7 as String = "" ' содержимое исходного файла Оберон-07
+      Public txtFileO7 as String = "" ' содержимое исходного файла Оберон-07
       Public Sub Init()
          argMod = модАрг.argMod
       End Sub
@@ -17,7 +17,6 @@ Namespace пиОк
             Using sr As StreamReader = File.OpenText(argMod.val)
                txtFileO7 = sr.ReadToEnd()
                sr.Close()
-               Console.WriteLine(txtFileO7)
             End Using
          End If
       End Sub

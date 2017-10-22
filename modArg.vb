@@ -9,7 +9,7 @@ Namespace пиОк
       Public args() As String = Split(arg, " ")
       Public argOc As clsArgs  'Указатель на путь к компилятору
       Public argMod As clsArgs 'Указатель на модуль для компиляции
-      Public optOc As Integer = 0'Число распознанных опций компилятора
+      Public optOc As Integer = 0 'Число распознанных опций компилятора
       
       Public Sub Парам_Получ()
          Static NumArg As Integer = 0
