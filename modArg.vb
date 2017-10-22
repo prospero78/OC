@@ -16,14 +16,8 @@ Namespace пиОк
          Dim i As Integer = 0
          argOc = New clsArgs()
          argMod = New clsArgs()
-         Console.WriteLine("Командная строка:  <" + arg + ">")
-         Console.WriteLine("Число аргументов: <" + Str(args.Length) + ">")
-         'Перечисление списа парметров
+         'Перечисление списrа парметров
          NumArg = args.Length
-         'For i = 0 to NumArg-1
-         '   Console.WriteLine(str(i)+": <"+args(i) + "> len="+Str(Len(args(i))))
-         'Next
-         'Контроль числа и типа параметров
          i = 0
          Do While i<NumArg
             If Len(args(i))>0 Then
@@ -37,13 +31,14 @@ Namespace пиОк
                End If
                OptOc += 1
             End IF
-            Console.WriteLine(Str(i)+": " + args(i))
             i += 1
          Loop
          If optOc < 2 Then ' аргументов недостаточно
             модКокон.Ошибка("Нет параметров для работы")
             модСправка.Справа_Показать()
          Else
+            Console.WriteLine("Командная строка:  <" + arg + ">")
+            Console.WriteLine("Число аргументов: <" + Str(args.Length) + ">")
             Console.WriteLine(argOc.arg+": "+argOc.val)
             Console.WriteLine(argMod.arg+":  "+argMod.val)
          End If
