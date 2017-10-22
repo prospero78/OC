@@ -81,9 +81,15 @@ Namespace пиОк
       End Sub
       
       Sub Множитель() ' Factor
-         Dim lit As String = Цифра_Получ()
-         ВыводНов("рег0 = " + lit)
-         txtOut += "рег0 = " + lit+vbCrLf
+         If литАнализ = "(" Then
+            Совпадение("(")
+            Выражение()
+            Совпадение(")")
+         Else
+            Dim lit As String = Цифра_Получ()
+            ВыводНов("рег0 = " + lit)
+            txtOut += "рег0 = " + lit+vbCrLf
+         End If
       End Sub
       
       Sub Умножить() ' Multiply

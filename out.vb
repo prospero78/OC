@@ -24,7 +24,27 @@ Sub pop(ByRef arg As Integer)
    End If
 End Sub
 Sub Main()
-рег0 = 
+рег0 = 2
+push(рег0)
+рег0 = 2
+pop(head)
+рег0 *= head
+push(рег0)
+рег0 = 2
+pop(head)
+рег0 = head / рег0
+push(рег0)
+рег0 = 2
+push(рег0)
+рег0 = 3
+pop(head)
+рег0 *= head
+push(рег0)
+рег0 = 2
+pop(head)
+рег0 = head / рег0
+pop(head)
+рег0 += head
 Console.WriteLine("Result: " + Str(рег0))
 End Sub
 End Module
