@@ -15,6 +15,6 @@ vbc /t:library /debug+ /debug:pdbonly /optionexplicit+ /optioninfer+ /rootnamesp
 
 vbc /t:library /debug+ /debug:pdbonly /optionexplicit+ /optioninfer+ /rootnamespace:nsOc /optionstrict+ /nologo /platform:x86 /utf8output+ /r:modFile.dll modLexer.vb
 
-vbc /t:library /debug+ /debug:pdbonly /optionexplicit+ /optioninfer+ /rootnamespace:nsOc /optionstrict+ /nologo /platform:x86 /utf8output+ /r:modLexer.dll modCompiler.vb
+vbc /t:library /debug+ /debug:pdbonly /optionexplicit+ /optioninfer+ /rootnamespace:nsOc /optionstrict+ /nologo /platform:x86 /utf8output+ /r:modLexer.dll /r:modCocon.dll modCompiler.vb
 
 vbc /t:exe /debug+ /debug:pdbonly /optionexplicit+ /optioninfer+ /rootnamespace:nsOc /optionstrict+ /nologo /platform:x86 /utf8output+ /r:modCocon.dll /r:modArg.dll /r:modFile.dll /r:modScaner.dll /r:modCompiler.dll oc.vb
