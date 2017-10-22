@@ -24,27 +24,7 @@ Sub pop(ByRef arg As Integer)
    End If
 End Sub
 Sub Main()
-рег0 = 9
-push(рег0)
-рег0 = 9
-pop(head)
-рег0 += head
-push(рег0)
-рег0 = 8
-pop(head)
-рег0 = head - рег0
-push(рег0)
-рег0 = 5
-pop(head)
-рег0 += head
-push(рег0)
-рег0 = 5
-pop(head)
-рег0 += head
-push(рег0)
-рег0 = 1
-pop(head)
-рег0 = head - рег0
+рег0 = 
 Console.WriteLine("Result: " + Str(рег0))
 End Sub
 End Module
