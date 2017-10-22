@@ -144,9 +144,22 @@ Namespace пиОк
                   "рег0 = head - рег0" + vbCrLf
       End Sub
       
+      Function ЕслиПлюсМинус(lit As String) As Boolean ' IsAddop
+         Dim res As Boolean = False
+         If InStr("+-", lit)>0 Then
+            res = True
+         End If
+         Return res
+      End Function
+      
       Sub Выражение() ' Expression
-         Терминал()
-         Do While InStr("+-", литАнализ)>0
+         If ЕслиПлюсМинус(литАнализ) Then
+            ВыводНов("рег0 *= 0")
+            txtOut += "рег0 *= 0" + vbCrLf
+         Else
+            Терминал()
+         End If
+         Do While ЕслиПлюсМинус(литАнализ)
             ВыводНов("push(рег0)")
             ' для выходного файла
             txtOut += "push(рег0)" + vbCrLf
