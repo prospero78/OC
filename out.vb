@@ -2,11 +2,13 @@
 ' Данные для компиляции
 Namespace Oberon07
 Public Module modOut
+
 Dim рег0 As Integer = 0
 Dim рег1 As Integer = 0
 Dim head As Integer = 0
 Dim стек(1000) As Integer' программный стек
 Dim sp As Integer = 0'указатель стека
+
 Sub push(arg As Integer)
    If (sp+1)<1000 Then
       sp +=1
@@ -15,6 +17,7 @@ Sub push(arg As Integer)
    End If
    стек(sp) = arg
 End Sub
+
 Sub pop(ByRef arg As Integer)
    arg = стек(sp)
    If (sp-1)>=0 Then
@@ -23,20 +26,31 @@ Sub pop(ByRef arg As Integer)
       Console.WriteLine("ВНИМАНИЕ! Стек пустой!!!")
    End If
 End Sub
+
+Dim B As Integer = 0
+Dim C As Integer = 0
+Dim D As Integer = 0
+Dim A As Integer = 0
+
 Sub Main()
-рег0 = 4
+рег0 = B
 push(рег0)
-рег0 = 2
+рег0 = 7
 pop(head)
 рег0 += head
 push(рег0)
-рег0 *= 0
+рег0 = C
+pop(head)
+рег0 += head
 push(рег0)
-рег0 = 2
+рег0 = 3
 pop(head)
-рег0 = head - рег0
+рег0 += head
+push(рег0)
+рег0 = D
 pop(head)
-рег0 *= head
+рег0 += head
+A = рег0
 Console.WriteLine("Result: " + Str(рег0))
 End Sub
 End Module

@@ -4,7 +4,7 @@ Namespace пиОк
    Public Module модКокон ' Consol Colorize
    
       Const txtObcomp as String = "|     Oberon-07 compiler 2017 BSD-2  |"
-      Const txtBuild as String  = "|     Build 0022   2017-10-22 20:37  |"
+      Const txtBuild as String  = "|     Build 0024   2017-10-22 22:12  |"
       Const txtAuthor as String = "|     KBK Technicks Ltd.     (c)     |"
       
       Public Sub Инфо(ByRef txt As String)' нужен для вывода информационных сообщений белыми буквами на синем фоне

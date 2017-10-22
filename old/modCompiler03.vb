@@ -5,10 +5,7 @@ Imports System.Diagnostics
 Namespace пиОк
    Public Module модКомпиль
       Dim литАнализ As String = "" ' Look литера для анализа
-      Dim txtBeg As String = "" ' Начало текст Visual Basic
-      Dim txtOut As String = "" ' Конец текст Visual Basic
-      Dim перем(1000) As String ' Массив добавляемых переменных
-      Dim цПерем As Integer=0 'Свободный элемент массива
+      Dim txtOut As String = "" ' Выходной текст Visual Basic
       
       Sub Лит_Получ() 'GetChar получение символа из входного потока
          литАнализ = Chr(Console.Read())
@@ -83,32 +80,17 @@ Namespace пиОк
          Console.Write(vbCrLf)
       End Sub
       
-      Sub Сущность() ' Ident
-         Dim имя As String = ""
-         имя = Имя_Получ()
-         If литАнализ = "(" Then ' анализ скобок
-            Совпадение("(")
-            Совпадение(")")
-            ВыводНов(имя+"()")
-            txtOut += имя+"()" + "'здесь косяк?2" + vbCrLf
-         Else                               ' анализ констант
-            ВыводНов("Dim " + имя + " As Integer")
-            Перем_Добав(имя)
-            ВыводНов("рег0 = " + имя)
-            txtOut += "рег0 = " + имя + vbCrLf
-         End If
-      End Sub
-      
       Sub Множитель() ' Factor
          If литАнализ = "(" Then ' анализ скобок
             Совпадение("(")
             Выражение()
             Совпадение(")")
          Else If ЕслиБуква(литАнализ) Then ' анализ имён
-            Сущность()
+            Dim lit As String = Имя_Получ()
+            ВыводНов("рег0 = " + lit)
+            txtOut += "рег0 = Asc(" + lit+")"+vbCrLf
          Else                               ' анализ констант
             Dim lit As String = Цифра_Получ()
-            ВыводНов("рег0 = " + lit)
             txtOut += "рег0 = " + lit+vbCrLf
          End If
       End Sub
@@ -195,20 +177,6 @@ Namespace пиОк
          Loop
       End Sub
       
-      Sub Присвоение() ' Assigment
-         Dim имя As String = Имя_Получ()
-         Совпадение("=")
-         Выражение()
-         ' Здесь надо придумать втыкание перед Sub Main()
-         ' операторов вида:
-         ' Dim <Name> As String
-         ВыводНов("Dim " + имя + " As Integer")
-         Перем_Добав(имя)
-         ВыводНов(имя+" = рег0")
-         ВыводНов("***")
-         txtOut += имя+" = рег0"+vbCrlf
-      End Sub
-      
       Sub Настр() ' Init
          Лит_Получ()
       End Sub
@@ -232,63 +200,50 @@ Namespace пиОк
          'Process.Start("vbc /debug- /t:exe /platform:x86 /nologo /utf8output /optionexplicit+ /optioninfer+ /rootnamespace:Oberon07 /out:out.exe out.vb")
       End Sub
       
-      Sub Перем_Добав(имя As String)
-         If цПерем<1000 Then
-            перем(цПерем) = "Dim " + имя + " As Integer = 0"
-            цПерем += 1
-         Else
-            модКокон.Ошибка("Слишком много переменных!")
-         End If
-      End Sub
-      
       Sub Заголовок()
          Настр()
-         txtBeg = "' Автогенерация текста Visual Basic" + vbCrLf
-         txtBeg += "' Данные для компиляции" + vbCrLf
-         txtBeg +="Namespace Oberon07"+vbCrLf
-         txtBeg +="Public Module modOut"+vbCrLf+vbCrLf
-         txtBeg +="Dim рег0 As Integer = 0"+vbCrLf
-         txtBeg +="Dim рег1 As Integer = 0"+vbCrLf
-         txtBeg +="Dim head As Integer = 0"+vbCrLf
-         txtBeg +="Dim стек(1000) As Integer' программный стек"+vbCrlf
-         txtBeg +="Dim sp As Integer = 0'указатель стека"+vbCrLf+vbCrLf
-         txtBeg +="Sub push(arg As Integer)"+vbCrlf
-         txtBeg +="   If (sp+1)<1000 Then"+vbCrLf
-         txtBeg +="      sp +=1"+vbCrLf
-         txtBeg +="   Else"+vbCrLf
-         txtBeg +="      Console.WriteLine(""ВНИМАНИЕ! Стек переполнен!!!"")"+vbCrLf
-         txtBeg +="   End If"+vbCrLf
-         txtBeg +="   стек(sp) = arg"+vbCrLf
-         txtBeg +="End Sub" + vbCrLf+vbCrLf
+         txtOut = "' Автогенерация текста Visual Basic" + vbCrLf
+         txtOut += "' Данные для компиляции" + vbCrLf
+         txtOut +="Namespace Oberon07"+vbCrLf
+         txtOut +="Public Module modOut"+vbCrLf
+         txtOut +="Dim рег0 As Integer = 0"+vbCrLf
+         txtOut +="Dim рег1 As Integer = 0"+vbCrLf
+         txtOut +="Dim head As Integer = 0"+vbCrLf
+         txtOut +="Dim стек(1000) As Integer' программный стек"+vbCrlf
+         txtOut +="Dim sp As Integer = 0'указатель стека"+vbCrLf
+         txtOut +="Sub push(arg As Integer)"+vbCrlf
+         txtOut +="   If (sp+1)<1000 Then"+vbCrLf
+         txtOut +="      sp +=1"+vbCrLf
+         txtOut +="   Else"+vbCrLf
+         txtOut +="      Console.WriteLine(""ВНИМАНИЕ! Стек переполнен!!!"")"+vbCrLf
+         txtOut +="   End If"+vbCrLf
+         txtOut +="   стек(sp) = arg"+vbCrLf
+         txtOut +="End Sub" + vbCrLf
          
-         txtBeg +="Sub pop(ByRef arg As Integer)"+vbCrlf
-         txtBeg +="   arg = стек(sp)"+vbCrLf
-         txtBeg +="   If (sp-1)>=0 Then"+vbCrLf
-         txtBeg +="      sp -=1"+vbCrLf
-         txtBeg +="   Else"+vbCrLf
-         txtBeg +="      Console.WriteLine(""ВНИМАНИЕ! Стек пустой!!!"")"+vbCrLf
-         txtBeg +="   End If"+vbCrLf
-         txtBeg +="End Sub" + vbCrLf+vbCrLf
+         txtOut +="Sub pop(ByRef arg As Integer)"+vbCrlf
+         txtOut +="   arg = стек(sp)"+vbCrLf
+         txtOut +="   If (sp-1)>=0 Then"+vbCrLf
+         txtOut +="      sp -=1"+vbCrLf
+         txtOut +="   Else"+vbCrLf
+         txtOut +="      Console.WriteLine(""ВНИМАНИЕ! Стек пустой!!!"")"+vbCrLf
+         txtOut +="   End If"+vbCrLf
+         txtOut +="End Sub" + vbCrLf
          
          txtOut +="Sub Main()"+vbCrLf
       End Sub
       
       Sub Подвал()
-         For i As Integer=0 To цПерем
-            txtBeg += перем(i) + vbCrLf
-         Next
          txtOut += "Console.WriteLine(""Result: "" + Str(рег0))" + vbCrLf
          txtOut += "End Sub" + vbCrLf
          txtout += "End Module" + vbCrLf
          txtOut += "End Namespace"
-         txtOut = txtBeg + txtOut
          Вых_Записать()
          Транслировать()
       End Sub
       
       Public Sub Компилировать()
          Заголовок()
-         Присвоение()
+         Выражение()
          Подвал()
       End Sub
    End Module
