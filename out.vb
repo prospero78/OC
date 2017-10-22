@@ -4,11 +4,47 @@ Namespace Oberon07
 Public Module modOut
 Dim рег0 As Integer = 0
 Dim рег1 As Integer = 0
+Dim head As Integer = 0
+Dim стек(1000) As Integer' программный стек
+Dim sp As Integer = 0'указатель стека
+Sub push(arg As Integer)
+   If (sp+1)<1000 Then
+      sp +=1
+   Else
+      Console.WriteLine("ВНИМАНИЕ! Стек переполнен!!!")
+   End If
+   стек(sp) = arg
+End Sub
+Sub pop(ByRef arg As Integer)
+   arg = стек(sp)
+   If (sp-1)>=0 Then
+      sp -=1
+   Else
+      Console.WriteLine("ВНИМАНИЕ! Стек пустой!!!")
+   End If
+End Sub
 Sub Main()
-рег0 = 6
-рег1 = рег0
+рег0 = 9
+push(рег0)
+рег0 = 9
+pop(head)
+рег0 += head
+push(рег0)
+рег0 = 8
+pop(head)
+рег0 = head - рег0
+push(рег0)
 рег0 = 5
-рег0 = рег1 - рег0
+pop(head)
+рег0 += head
+push(рег0)
+рег0 = 5
+pop(head)
+рег0 += head
+push(рег0)
+рег0 = 1
+pop(head)
+рег0 = head - рег0
 Console.WriteLine("Result: " + Str(рег0))
 End Sub
 End Module

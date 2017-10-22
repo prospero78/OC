@@ -22,7 +22,7 @@ Namespace пиОк
       End Sub
       
       Sub Ожидалось(ByRef msg As String) ' Expected
-         Прервать(msg + " ожидалось")
+         Прервать("Ожидалось " + msg)
       End Sub
       
       Sub Совпадение(lit As String) '  Math
@@ -72,7 +72,7 @@ Namespace пиОк
       End Function
       
       Sub Вывод(ByVal txt As String) ' Emit
-         Console.Write(vbTab, txt)
+         Console.Write(vbTab + txt)
       End Sub
       
       Sub ВыводНов(ByVal txt As String) ' EmitLn
@@ -87,6 +87,27 @@ Namespace пиОк
          txtOut +="Public Module modOut"+vbCrLf
          txtOut +="Dim рег0 As Integer = 0"+vbCrLf
          txtOut +="Dim рег1 As Integer = 0"+vbCrLf
+         txtOut +="Dim head As Integer = 0"+vbCrLf
+         txtOut +="Dim стек(1000) As Integer' программный стек"+vbCrlf
+         txtOut +="Dim sp As Integer = 0'указатель стека"+vbCrLf
+         txtOut +="Sub push(arg As Integer)"+vbCrlf
+         txtOut +="   If (sp+1)<1000 Then"+vbCrLf
+         txtOut +="      sp +=1"+vbCrLf
+         txtOut +="   Else"+vbCrLf
+         txtOut +="      Console.WriteLine(""ВНИМАНИЕ! Стек переполнен!!!"")"+vbCrLf
+         txtOut +="   End If"+vbCrLf
+         txtOut +="   стек(sp) = arg"+vbCrLf
+         txtOut +="End Sub" + vbCrLf
+         
+         txtOut +="Sub pop(ByRef arg As Integer)"+vbCrlf
+         txtOut +="   arg = стек(sp)"+vbCrLf
+         txtOut +="   If (sp-1)>=0 Then"+vbCrLf
+         txtOut +="      sp -=1"+vbCrLf
+         txtOut +="   Else"+vbCrLf
+         txtOut +="      Console.WriteLine(""ВНИМАНИЕ! Стек пустой!!!"")"+vbCrLf
+         txtOut +="   End If"+vbCrLf
+         txtOut +="End Sub" + vbCrLf
+         
          txtOut +="Sub Main()"+vbCrLf
       End Sub
       
@@ -101,7 +122,6 @@ Namespace пиОк
          Лит_Получ()
       End Sub
       
-      
       Sub Терминал() ' Term
          Dim lit As String = Цифра_Получ()
          ВыводНов("рег0 = " + lit)
@@ -111,30 +131,36 @@ Namespace пиОк
       Sub Сложить() ' Add
          Совпадение("+")
          Терминал()
-         ВыводНов("рег0 += рег1")
-         txtOut += "рег0 += рег1" + vbCrLf
+         ВыводНов("pop(head)" + vbCrLf + _
+                  vbTab + "рег0 += head")
+         txtOut += "pop(head)" + vbCrLf + _
+                  "рег0 += head" + vbCrLf
       End Sub
       
       Sub Вычесть()' Substract
          Совпадение("-")
          Терминал()
-         ВыводНов("рег0 = рег1 - рег0")
-         txtOut += "рег0 = рег1 - рег0" + vbCrLf
+         ВыводНов("pop(head)" + vbCrLf + _
+                  vbTab +"рег0 = head - рег0")
+         txtOut += "pop(head)" + vbCrLf + _
+                  "рег0 = head - рег0" + vbCrLf
       End Sub
       
       Sub Выражение() ' Expression
          Терминал()
-         ВыводНов("рег1 = рег0")
-         ' для выходного файла
-         txtOut += "рег1 = рег0" + vbCrLf
-         Select Case литАнализ
-            Case "+" 
-               Сложить()
-            Case "-" 
-               Вычесть()
-            Case Else
-               Ожидалось("Операция +/-")
-         End Select
+         Do While InStr("+-", литАнализ)>0
+            ВыводНов("push(рег0)")
+            ' для выходного файла
+            txtOut += "push(рег0)" + vbCrLf
+            Select Case литАнализ
+               Case "+" 
+                  Сложить()
+               Case "-" 
+                  Вычесть()
+               Case Else
+                  Ожидалось("операция +/-")
+            End Select
+         Loop
       End Sub
       
       Sub Вых_Записать()
