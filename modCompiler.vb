@@ -92,8 +92,9 @@ Namespace пиОк
             ВыводНов(имя+"()")
             txtOut += имя+"()" + "'здесь косяк?2" + vbCrLf
          Else                               ' анализ констант
-            ВыводНов("Dim " + имя + " As Integer")
-            Перем_Добав(имя)
+            If Not Перем_Добав(имя) Then
+               ВыводНов("Dim " + имя + " As Integer = 0")
+            End If
             ВыводНов("рег0 = " + имя)
             txtOut += "рег0 = " + имя + vbCrLf
          End If
@@ -202,8 +203,9 @@ Namespace пиОк
          ' Здесь надо придумать втыкание перед Sub Main()
          ' операторов вида:
          ' Dim <Name> As String
-         ВыводНов("Dim " + имя + " As Integer")
-         Перем_Добав(имя)
+         If Not Перем_Добав(имя) Then
+            ВыводНов("Dim " + имя + " As Integer = 0")
+         End If
          ВыводНов(имя+" = рег0")
          ВыводНов("***")
          txtOut += имя+" = рег0"+vbCrlf
@@ -232,14 +234,25 @@ Namespace пиОк
          'Process.Start("vbc /debug- /t:exe /platform:x86 /nologo /utf8output /optionexplicit+ /optioninfer+ /rootnamespace:Oberon07 /out:out.exe out.vb")
       End Sub
       
-      Sub Перем_Добав(имя As String)
+      Function Перем_Добав(имя As String) As Boolean
+         Dim bnew As Boolean = False
          If цПерем<1000 Then
-            перем(цПерем) = "Dim " + имя + " As Integer = 0"
-            цПерем += 1
+            имя = UCase(имя)
+            For i As Integer = 0 To цПерем
+               If имя = перем(i) Then
+                  bnew = True
+               End If
+               Console.WriteLine(Str(i) + ": """ + перем(i) + """")
+            Next
+            If Not bnew Then
+               перем(цПерем) = имя
+               цПерем += 1
+            End If
          Else
             модКокон.Ошибка("Слишком много переменных!")
          End If
-      End Sub
+         return bnew
+      End Function
       
       Sub Заголовок()
          Настр()
@@ -274,8 +287,8 @@ Namespace пиОк
       End Sub
       
       Sub Подвал()
-         For i As Integer=0 To цПерем
-            txtBeg += перем(i) + vbCrLf
+         For i As Integer=0 To цПерем - 1
+            txtBeg += "Dim " + перем(i) + " As Integer = 0"+ vbCrLf
          Next
          txtOut += "Console.WriteLine(""Result: "" + Str(рег0))" + vbCrLf
          txtOut += "End Sub" + vbCrLf
