@@ -24,7 +24,7 @@ echo 7. Compile modLexer.dll
 vbc source\modLexer.vb /nologo /debug+ /optionexplicit+ /optioninfer+ /optionstrict+ /rootnamespace:nsOc /platform:x86 /utf8output+ /r:"modFile.dll" /out:"modLexer.dll" /t:library /optimize+
 
 echo 8. Compile modCompiler.dll
-vbc source\modCompiler.vb /nologo /debug+ /optionexplicit+ /optioninfer+ /optionstrict+ /rootnamespace:nsOc /platform:x86 /utf8output+ /r:"modLexer.dll" /r:"modCocon.dll" /t:library /out:"modCompiler.dll" /optimize+
+vbc source\modCompiler.vb /nologo /debug+ /optionexplicit+ /optioninfer+ /optionstrict+ /rootnamespace:nsOc /platform:x86 /utf8output+ /r:"modFile.dll" /r:"modCocon.dll" /t:library /out:"modCompiler.dll" /optimize+
 
 echo +++ 9. Compile oc.exe +++
 vbc source\oc.vb /nologo /debug+ /optionexplicit+ /optioninfer+ /optionstrict+ /rootnamespace:nsOc /platform:x86 /utf8output+ /r:"modCocon.dll" /r:"modArg.dll" /r:"modFile.dll" /r:"modScaner.dll" /r:"modCompiler.dll" /t:exe /out:oc.exe /optimize+

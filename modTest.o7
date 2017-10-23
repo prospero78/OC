@@ -1,3 +1,18 @@
 MODULE modTest;
 
+IMPORT mT:=modTest:
+
+VAR
+   a:INTEGER;
+
+PROCEDURE Test*(a_:INTEGER):BOOLEAN;
+   VAR 
+      res : BOOLEAN;
+   BEGIN
+      res:=(a_>a);
+      RETURN res
+   END Test;
+
+BEGIN
+   a:=10
 END modTest.

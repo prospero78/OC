@@ -12,21 +12,21 @@ Namespace пиОк
       
       Sub Лит_Получ() 'GetChar получение символа из входного потока
          литАнализ = Chr(Console.Read())
-         End Sub
+      End Sub
       
       Sub Ошибка(ByRef msg As String) ' Error вывод сообщения об ошибке
          Console.WriteLine()
          модКокон.Ошибка("   Ошибка: " + msg)
-         End Sub
+      End Sub
       
       Sub Прервать(ByRef msg As String) '  Abort Прерывание компиляции
          Ошибка(msg)
          Exit Sub 
-         End Sub
+      End Sub
       
       Sub Ожидалось(ByRef msg As String) ' Expected
          Прервать("Ожидалось " + msg)
-         End Sub
+      End Sub
       
       Sub Совпадение(lit As String) '  Math
          If литАнализ = lit Then
@@ -34,7 +34,7 @@ Namespace пиОк
          Else
             Ожидалось("'" + lit + "'")
          End If
-         End Sub
+      End Sub
       
       Function ЕслиБуква(lit As String) As Boolean '  IsAlpha
          Dim res As Boolean = False
@@ -46,7 +46,7 @@ Namespace пиОк
             res = True
          End If
          Return res
-         End Function
+      End Function
       
       Function ЕслиЦифра(lit As String) As Boolean '  IsDigit
          Dim res As Boolean = False
@@ -54,11 +54,11 @@ Namespace пиОк
             res = True
          End If
          Return res
-         End Function
+      End Function
       
       Function ЕслиИмя(lit As String) As Boolean '  IsAlNum
          Return ЕслиЦифра(lit) Or ЕслиБуква(lit)
-         End Function
+      End Function
       
       Function Имя_Получ() As String ' GetName
          If Not ЕслиБуква(литАнализ) Then
@@ -67,7 +67,7 @@ Namespace пиОк
          Dim lit As String = UCase(литАнализ)
          Лит_Получ()
          Return lit
-         End Function
+      End Function
       
       Function Цифра_Получ() As String ' GetNum
          If Not ЕслиЦифра(литАнализ) Then
@@ -76,16 +76,16 @@ Namespace пиОк
          Dim lit As String = литАнализ
          Лит_Получ()
          Return lit
-         End Function
+      End Function
       
       Sub Вывод(ByVal txt As String) ' Emit
          Console.Write(vbTab + txt)
-         End Sub
+      End Sub
       
       Sub ВыводНов(ByVal txt As String) ' EmitLn
          Вывод(txt)
          Console.Write(vbCrLf)
-         End Sub
+      End Sub
       
       Sub Сущность() ' Ident
          Dim имя As String = ""
@@ -102,7 +102,7 @@ Namespace пиОк
             ВыводНов("рег0 = " + имя)
             txtOut += "рег0 = " + имя + vbCrLf
          End If
-         End Sub
+      End Sub
       
       Sub Множитель() ' Factor
          If литАнализ = "(" Then ' анализ скобок
@@ -116,7 +116,7 @@ Namespace пиОк
             ВыводНов("рег0 = " + lit)
             txtOut += "рег0 = " + lit+vbCrLf
          End If
-         End Sub
+      End Sub
       
       Sub Умножить() ' Multiply
          Совпадение("*")
@@ -125,7 +125,7 @@ Namespace пиОк
                   vbTab + "рег0 *= head")
          txtOut += "pop(head)"+vbCrLf + _
                   "рег0 *= head"+vbCrLf
-         End Sub
+      End Sub
       
       Sub Разделить() ' Divide
          Совпадение("/")
@@ -134,7 +134,7 @@ Namespace пиОк
                   vbTab + "рег0 = head / рег0")
          txtOut += "pop(head)"+vbCrLf + _
                   "рег0 = head / рег0"+vbCrLf
-         End Sub
+      End Sub
       
       Sub Терминал() ' Term
          Множитель()
@@ -150,7 +150,7 @@ Namespace пиОк
                   Ожидалось("операция * или /")
                End Select
          Loop
-         End Sub
+      End Sub
       
       Sub Сложить() ' Add
          Совпадение("+")
@@ -159,7 +159,7 @@ Namespace пиОк
                   vbTab + "рег0 += head")
          txtOut += "pop(head)" + vbCrLf + _
                   "рег0 += head" + vbCrLf
-         End Sub
+      End Sub
       
       Sub Вычесть()' Substract
          Совпадение("-")
@@ -168,7 +168,7 @@ Namespace пиОк
                   vbTab +"рег0 = head - рег0")
          txtOut += "pop(head)" + vbCrLf + _
                   "рег0 = head - рег0" + vbCrLf
-         End Sub
+      End Sub
       
       Function ЕслиПлюсМинус(lit As String) As Boolean ' IsAddop
          Dim res As Boolean = False
@@ -176,7 +176,7 @@ Namespace пиОк
             res = True
          End If
          Return res
-         End Function
+      End Function
       
       Sub Выражение() ' Expression
          If ЕслиПлюсМинус(литАнализ) Then
@@ -198,7 +198,7 @@ Namespace пиОк
                   Ожидалось("операция +/-")
             End Select
          Loop
-         End Sub
+      End Sub
       
       Sub Присвоение() ' Assigment
          Dim имя As String = Имя_Получ()
@@ -213,18 +213,18 @@ Namespace пиОк
          ВыводНов(имя+" = рег0")
          ВыводНов("***")
          txtOut += имя+" = рег0"+vbCrlf
-         End Sub
+      End Sub
       
       Sub Настр() ' Init
          Лит_Получ()
-         End Sub
+      End Sub
       
       Sub Вых_Записать()
          Using sw As StreamWriter = File.CreateText("out.vb")
                sw.Write(txtOut)
                sw.Close()
          End Using
-         End Sub
+      End Sub
       
       Sub Транслировать()
          Console.WriteLine("Начало трансляции")
@@ -236,7 +236,7 @@ Namespace пиОк
          pr.WaitForExit()
          
          'Process.Start("vbc /debug- /t:exe /platform:x86 /nologo /utf8output /optionexplicit+ /optioninfer+ /rootnamespace:Oberon07 /out:out.exe out.vb")
-         End Sub
+      End Sub
       
       Function Перем_Добав(имя As String) As Boolean
          Dim bnew As Boolean = False
@@ -256,7 +256,7 @@ Namespace пиОк
             модКокон.Ошибка("Слишком много переменных!")
          End If
          return bnew
-         End Function
+      End Function
       
       Sub Заголовок()
          Настр()
@@ -288,7 +288,7 @@ Namespace пиОк
          txtBeg +="End Sub" + vbCrLf+vbCrLf
          
          txtOut +="Sub Main()"+vbCrLf
-         End Sub
+      End Sub
       
       Sub Подвал()
          For i As Integer=0 To цПерем - 1
@@ -301,86 +301,12 @@ Namespace пиОк
          txtOut = txtBeg + txtOut
          Вых_Записать()
          Транслировать()
-         End Sub
-         
+      End Sub
+      
       Public Sub Компилировать()
          Заголовок()
          Присвоение()
          Подвал()
-         End Sub
-      End Module
-   Public Module модКомпиль2
-      ' попытка сделать по уму
-      Class клсТэг
-         ' хранит в себе последовательно кусочек нераспознанного кода с координатами
-         Dim цСтр As Integer = 0
-         Dim цПоз As Integer = 0
-         Dim сТэг As String = ""
-         End class
-      Dim теги() As клсТэг
-      Dim txtSrc As String ="" ' текст исходника
-      Dim txtLine() As String ' исходник разбитый построчно
-      Dim countLine As Integer = 0 ' количество строк в массиве
-      Dim гцСтр As Integer = 1 ' нумерация строк с 1
-      Dim гцПоз As Integer = 0
-      Sub Поз_Получ(lit As String)
-         Static srcLine As String = "" ' очередная строка исходного кода
-         if lit = vbLf Then
-            гцСтр += 1
-            гцПоз = 0
-            ' Добавить строку в массив исходников
-            ReDim Preserve txtLine(countLine+1)
-            txtLine(countLine) = srcLine
-            countLine += 1
-            srcLine = ""
-         Else
-            гцПоз += 1
-            srcLine += lit
-         End If
-         End Sub
-      Function Лит_Отсев(lit As String) As Boolean
-         Dim res As Boolean = False
-         If lit<=" " Then
-            res = True
-         End If
-         Return res
-         End Function
-      Sub Тэг_Получ()
-         ' крутим строку до тех пор пока не получим каку
-         Dim lit As String = Mid(txtSrc, 1,1)
-         Dim tag As String = ""
-         Do
-            txtSrc = Mid(txtSrc, 2)
-            tag += lit
-            lit = Mid(txtSrc, 1,1)
-            Поз_Получ(lit)
-         Loop While lit>" "
-         ' Здесь гцСтр ещё не перешёл на новую строку.
-         Console.WriteLine(Str(гцСтр+1)+ " tag= """+tag+"""")
-         
-         End Sub
-      Sub Разметить()
-         txtSrc = модФайл.txtFileO7
-         Dim lit As String = ""
-         ' сканируем файл вдоль, считаем координаты
-         ' по необходимости в массив добавлем тэги
-         Console.Write(vbCrLf)
-         Do While txtSrc<>""
-            lit = Mid(txtSrc,1,1)
-            ' учитываем строку и позицию
-            Поз_Получ(lit)
-            ' фильтруем дурные символы
-            If Not Лит_Отсев(lit)
-               ' попался тэг
-               Тэг_Получ()
-            End If
-            txtSrc = Mid(txtSrc, 2)
-         Loop
-         Console.Write(vbCrLf + vbCrLf)
-         End Sub
-      Public Sub Компилировать()
-         ' нарезать колбасу из исхдника с присовением координат
-         Разметить()
-         End Sub
-      End Module
+      End Sub
+   End Module
 End Namespace
