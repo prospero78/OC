@@ -1,20 +1,30 @@
+echo off
 chcp 65001
 cls
 
-vbc /t:library /debug+ /debug:pdbonly /optionexplicit+ /optioninfer+ /rootnamespace:nsOc /optionstrict+ /nologo /platform:x86 /utf8output+ modConst.vb
+echo 1. Compile modConst.dll
+vbc source\modConst.vb /nologo /debug+ /optionexplicit+ /optioninfer+ /optionstrict+ /rootnamespace:nsOc /platform:x86 /utf8output+ /t:library /out:"modConst.dll" /optimize+
 
-vbc /t:library /debug+ /debug:pdbonly /optionexplicit+ /optioninfer+ /rootnamespace:nsOc /optionstrict+ /nologo /platform:x86 /utf8output+ modCocon.vb
+echo 2. Compile modCocon.dll
+vbc source\modCocon.vb /nologo /debug+ /optionexplicit+ /optioninfer+ /optionstrict+ /rootnamespace:nsOc /platform:x86 /utf8output+ /t:library /out:"modCocon.dll" /optimize+
 
-vbc /t:library /debug+ /debug:pdbonly /optionexplicit+ /optioninfer+ /rootnamespace:nsOc /optionstrict+ /nologo /platform:x86 /utf8output+ /r:modCocon.dll modHelp.vb
+echo 3. Compile modHelp.dll
+vbc source\modHelp.vb /nologo /debug+ /optionexplicit+ /optioninfer+ /optionstrict+ /rootnamespace:nsOc  /platform:x86 /utf8output+ /r:"modCocon.dll" /t:library /out:"modHelp.dll" /optimize+
 
-vbc /t:library /debug+ /debug:pdbonly /optionexplicit+ /optioninfer+ /rootnamespace:nsOc /optionstrict+ /nologo /platform:x86 /utf8output+  /r:modHelp.dll /r:modCocon.dll modArg.vb
+echo 4. Compile modArg.dll
+vbc source\modArg.vb /nologo /debug+ /optionexplicit+ /optioninfer+ /optionstrict+ /rootnamespace:nsOc /platform:x86 /utf8output+ /r:"modHelp.dll" /r:"modCocon.dll" /t:library /out:"modArg.dll" /optimize+
 
-vbc /t:library /debug+ /debug:pdbonly /optionexplicit+ /optioninfer+ /rootnamespace:nsOc /optionstrict+ /nologo /platform:x86 /utf8output+ /r:modArg.dll /r:modCocon.dll modFile.vb
+echo 5. Compile modFile.dll
+vbc source\modFile.vb /nologo /debug+ /optionexplicit+ /optioninfer+ /optionstrict+ /rootnamespace:nsOc /platform:x86 /utf8output+ /r:"modArg.dll" /r:"modCocon.dll" /t:library /out:"modFile.dll" /optimize+
 
-vbc /t:library /debug+ /debug:pdbonly /optionexplicit+ /optioninfer+ /rootnamespace:nsOc /optionstrict+ /nologo /platform:x86 /utf8output+ /r:modArg.dll /r:modCocon.dll /r:modFile.dll /r:modConst.dll modScaner.vb
+echo 6. Compile modScaner.dll
+vbc source\modScaner.vb /nologo /debug+ /optionexplicit+ /optioninfer+ /optionstrict+ /rootnamespace:nsOc /platform:x86 /utf8output+ /r:"modArg.dll" /r:"modCocon.dll" /r:"modFile.dll" /r:"modConst.dll" /t:library /out:"modScaner.dll" /optimize+
 
-vbc /t:library /debug+ /debug:pdbonly /optionexplicit+ /optioninfer+ /rootnamespace:nsOc /optionstrict+ /nologo /platform:x86 /utf8output+ /r:modFile.dll modLexer.vb
+echo 7. Compile modLexer.dll
+vbc source\modLexer.vb /nologo /debug+ /optionexplicit+ /optioninfer+ /optionstrict+ /rootnamespace:nsOc /platform:x86 /utf8output+ /r:"modFile.dll" /out:"modLexer.dll" /t:library /optimize+
 
-vbc /t:library /debug+ /debug:pdbonly /optionexplicit+ /optioninfer+ /rootnamespace:nsOc /optionstrict+ /nologo /platform:x86 /utf8output+ /r:modLexer.dll /r:modCocon.dll modCompiler.vb
+echo 8. Compile modCompiler.dll
+vbc source\modCompiler.vb /nologo /debug+ /optionexplicit+ /optioninfer+ /optionstrict+ /rootnamespace:nsOc /platform:x86 /utf8output+ /r:"modLexer.dll" /r:"modCocon.dll" /t:library /out:"modCompiler.dll" /optimize+
 
-vbc /t:exe /debug+ /debug:pdbonly /optionexplicit+ /optioninfer+ /rootnamespace:nsOc /optionstrict+ /nologo /platform:x86 /utf8output+ /r:modCocon.dll /r:modArg.dll /r:modFile.dll /r:modScaner.dll /r:modCompiler.dll oc.vb
+echo +++ 9. Compile oc.exe +++
+vbc source\oc.vb /nologo /debug+ /optionexplicit+ /optioninfer+ /optionstrict+ /rootnamespace:nsOc /platform:x86 /utf8output+ /r:"modCocon.dll" /r:"modArg.dll" /r:"modFile.dll" /r:"modScaner.dll" /r:"modCompiler.dll" /t:exe /out:oc.exe /optimize+

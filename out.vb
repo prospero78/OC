@@ -27,18 +27,14 @@ Sub pop(ByRef arg As Integer)
    End If
 End Sub
 
-Dim A As Integer = 0
+Dim W As Integer = 0
 Sub Main()
-рег0 = A
+рег0 = 2
 push(рег0)
-рег0 = A
+рег0 = 3
 pop(head)
 рег0 += head
-push(рег0)
-рег0 = A
-pop(head)
-рег0 += head
-A = рег0
+W = рег0
 Console.WriteLine("Result: " + Str(рег0))
 End Sub
 End Module
