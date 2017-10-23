@@ -31,70 +31,89 @@ Public Module ORP
     ' pbsList: PtrBase;   (*list of names of pointer base types*)
     ' dummy: ORB.Object;
     ' W: Texts.Writer;
+   Sub Check()
+      ' PROCEDURE Check(s: INTEGER; msg: ARRAY OF CHAR);
+        ' BEGIN
+          ' IF sym = s THEN ORS.Get(sym) ELSE ORS.Mark(msg) END
+        ' END Check;
+      End Sub
 
-' PROCEDURE Check(s: INTEGER; msg: ARRAY OF CHAR);
-  ' BEGIN
-    ' IF sym = s THEN ORS.Get(sym) ELSE ORS.Mark(msg) END
-  ' END Check;
+   Sub qualident()
+      ' PROCEDURE qualident(VAR obj: ORB.Object);
+        ' BEGIN obj := ORB.thisObj(); ORS.Get(sym);
+          ' IF obj = NIL THEN ORS.Mark("undef"); obj := dummy END ;
+          ' IF (sym = ORS.period) & (obj.class = ORB.Mod) THEN
+            ' ORS.Get(sym);
+            ' IF sym = ORS.ident THEN obj := ORB.thisimport(obj); ORS.Get(sym);
+              ' IF obj = NIL THEN ORS.Mark("undef"); obj := dummy END
+            ' ELSE ORS.Mark("identifier expected"); obj := dummy
+            ' END
+          ' END
+        ' END qualident;
+      End Sub
 
-' PROCEDURE qualident(VAR obj: ORB.Object);
-  ' BEGIN obj := ORB.thisObj(); ORS.Get(sym);
-    ' IF obj = NIL THEN ORS.Mark("undef"); obj := dummy END ;
-    ' IF (sym = ORS.period) & (obj.class = ORB.Mod) THEN
-      ' ORS.Get(sym);
-      ' IF sym = ORS.ident THEN obj := ORB.thisimport(obj); ORS.Get(sym);
-        ' IF obj = NIL THEN ORS.Mark("undef"); obj := dummy END
-      ' ELSE ORS.Mark("identifier expected"); obj := dummy
-      ' END
-    ' END
-  ' END qualident;
+   Sub CheckBool()
+      ' PROCEDURE CheckBool(VAR x: ORG.Item);
+        ' BEGIN
+          ' IF x.type.form # ORB.Bool THEN ORS.Mark("not Boolean"); x.type := ORB.boolType END
+        ' END CheckBool;
+      End Sub
 
-' PROCEDURE CheckBool(VAR x: ORG.Item);
-  ' BEGIN
-    ' IF x.type.form # ORB.Bool THEN ORS.Mark("not Boolean"); x.type := ORB.boolType END
-  ' END CheckBool;
+   Sub CheckInt()
+      ' PROCEDURE CheckInt(VAR x: ORG.Item);
+        ' BEGIN
+          ' IF x.type.form # ORB.Int THEN ORS.Mark("not Integer"); x.type := ORB.intType END
+        ' END CheckInt;
+      End Sub
 
-' PROCEDURE CheckInt(VAR x: ORG.Item);
-  ' BEGIN
-    ' IF x.type.form # ORB.Int THEN ORS.Mark("not Integer"); x.type := ORB.intType END
-  ' END CheckInt;
-
-' PROCEDURE CheckReal(VAR x: ORG.Item);
-  ' BEGIN
-    ' IF x.type.form # ORB.Real THEN ORS.Mark("not Real"); x.type := ORB.realType END
-  ' END CheckReal;
-
-' PROCEDURE CheckSet(VAR x: ORG.Item);
-  ' BEGIN
-    ' IF x.type.form # ORB.Set THEN ORS.Mark("not Set"); x.type := ORB.setType END 
-  ' END CheckSet;
-
-' PROCEDURE CheckSetVal(VAR x: ORG.Item);
-  ' BEGIN
-    ' IF x.type.form # ORB.Int THEN ORS.Mark("not Int"); x.type := ORB.setType
-    ' ELSIF x.mode = ORB.Const_ THEN
-      ' IF (x.a < 0) OR (x.a >= 32) THEN ORS.Mark("invalid set") END
-    ' END 
-  ' END CheckSetVal;
-
-' PROCEDURE CheckConst(VAR x: ORG.Item);
-  ' BEGIN
-    ' IF x.mode # ORB.Const_ THEN ORS.Mark("not a constant"); x.mode := ORB.Const_ END
-  ' END CheckConst;
-
-' PROCEDURE CheckReadOnly(VAR x: ORG.Item);
-  ' BEGIN
-    ' IF x.rdo THEN ORS.Mark("read-only") END
-  ' END CheckReadOnly;
-
-' PROCEDURE CheckExport(VAR expo: BOOLEAN);
-  ' BEGIN
-    ' IF sym = ORS.times THEN
-      ' expo := TRUE; ORS.Get(sym);
-      ' IF level # 0 THEN ORS.Mark("remove asterisk") END
-    ' ELSE expo := FALSE
-    ' END
-  ' END CheckExport;
+   Sub CheckReal()
+      ' PROCEDURE CheckReal(VAR x: ORG.Item);
+        ' BEGIN
+          ' IF x.type.form # ORB.Real THEN ORS.Mark("not Real"); x.type := ORB.realType END
+        ' END CheckReal;
+      End Sub
+  
+   Sub CheckSet()
+      ' PROCEDURE CheckSet(VAR x: ORG.Item);
+        ' BEGIN
+          ' IF x.type.form # ORB.Set THEN ORS.Mark("not Set"); x.type := ORB.setType END 
+        ' END CheckSet;
+      End Sub
+  
+   Sub CheckSetVal()
+      ' PROCEDURE CheckSetVal(VAR x: ORG.Item);
+        ' BEGIN
+          ' IF x.type.form # ORB.Int THEN ORS.Mark("not Int"); x.type := ORB.setType
+          ' ELSIF x.mode = ORB.Const_ THEN
+            ' IF (x.a < 0) OR (x.a >= 32) THEN ORS.Mark("invalid set") END
+          ' END 
+        ' END CheckSetVal;
+      End Sub
+  
+   Sub CheckConst()
+      ' PROCEDURE CheckConst(VAR x: ORG.Item);
+        ' BEGIN
+          ' IF x.mode # ORB.Const_ THEN ORS.Mark("not a constant"); x.mode := ORB.Const_ END
+        ' END CheckConst;
+      End Sub
+  
+   Sub CheckReadOnly()
+      ' PROCEDURE CheckReadOnly(VAR x: ORG.Item);
+        ' BEGIN
+          ' IF x.rdo THEN ORS.Mark("read-only") END
+        ' END CheckReadOnly;
+      End Sub
+  
+   Sub CheckExport()
+      ' PROCEDURE CheckExport(VAR expo: BOOLEAN);
+        ' BEGIN
+          ' IF sym = ORS.times THEN
+            ' expo := TRUE; ORS.Get(sym);
+            ' IF level # 0 THEN ORS.Mark("remove asterisk") END
+          ' ELSE expo := FALSE
+          ' END
+        ' END CheckExport;
+      End Sub
 
 ' PROCEDURE IsExtension(t0, t1: ORB.Type): BOOLEAN;
   ' BEGIN (*t1 is an extension of t0*)
@@ -789,7 +808,7 @@ Public Module ORP
           ' ELSE ORS.Mark("illegal type")
           ' END
         ' END Type0;
-   End Sub
+      End Sub
    
    Sub Declarations()
       ' PROCEDURE Declarations(VAR varsize: LONGINT);
@@ -857,7 +876,7 @@ Public Module ORP
           ' END ;
           ' IF (sym >= ORS.const) & (sym <= ORS.var) THEN ORS.Mark("declaration in bad order") END
         ' END Declarations;
-   End Sub
+      End Sub
    
    Sub ProcedureDecl()
       ' PROCEDURE ProcedureDecl;
@@ -905,7 +924,7 @@ Public Module ORP
           ' END ;
           ' int := FALSE
         ' END ProcedureDecl;
-   End Sub
+      End Sub
    
    Sub Module_()
       ' PROCEDURE Module;
@@ -967,7 +986,7 @@ Public Module ORP
           ' ELSE ORS.Mark("must start with MODULE")
           ' END
         ' END Module;
-   End Sub
+      End Sub
    
    Sub Option_()
       ' PROCEDURE Option(VAR S: Texts.Scanner);
@@ -977,7 +996,7 @@ Public Module ORP
             ' IF (S.class = Texts.Name) & (S.s[0] = "s") THEN newSF := TRUE END
           ' END
         ' END Option;
-   End Sub
+      End Sub
    
    Public Sub Compile
       ' PROCEDURE Compile*;
@@ -1011,7 +1030,7 @@ Public Module ORP
           ' END ;
           ' Oberon.Collect(0)
         ' END Compile;
-   End Sub
+      End Sub
    
    Public Sub Main()
       ' BEGIN
@@ -1025,7 +1044,7 @@ Public Module ORP
          ' expression := expression0;
          ' Type := Type0;
          ' FormalType := FormalType0
-   End Sub
+      End Sub
 ' END ORP.
 End Module
 End Namespace
