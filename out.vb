@@ -27,27 +27,15 @@ Sub pop(ByRef arg As Integer)
    End If
 End Sub
 
-Dim B As Integer = 0
-Dim C As Integer = 0
-Dim D As Integer = 0
 Dim A As Integer = 0
-
 Sub Main()
-рег0 = B
+рег0 = A
 push(рег0)
-рег0 = 7
+рег0 = A
 pop(head)
 рег0 += head
 push(рег0)
-рег0 = C
-pop(head)
-рег0 += head
-push(рег0)
-рег0 = 3
-pop(head)
-рег0 += head
-push(рег0)
-рег0 = D
+рег0 = A
 pop(head)
 рег0 += head
 A = рег0

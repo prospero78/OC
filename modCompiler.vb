@@ -56,6 +56,10 @@ Namespace пиОк
          Return res
       End Function
       
+      Function ЕслиИмя(lit As String) As Boolean '  IsAlNum
+         Return ЕслиЦифра(lit) Or ЕслиБуква(lit)
+      End Function
+      
       Function Имя_Получ() As String ' GetName
          If Not ЕслиБуква(литАнализ) Then
             Ожидалось("Имя")

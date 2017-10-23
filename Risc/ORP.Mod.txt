@@ -993,8 +993,15 @@ PROCEDURE Compile*;
     Oberon.Collect(0)
   END Compile;
 
-BEGIN Texts.OpenWriter(W); Texts.WriteString(W, "OR Compiler  17.9.2016");
-  Texts.WriteLn(W); Texts.Append(Oberon.Log, W.buf);
-  NEW(dummy); dummy.class := ORB.Var; dummy.type := ORB.intType;
-  expression := expression0; Type := Type0; FormalType := FormalType0
+BEGIN
+   Texts.OpenWriter(W);
+   Texts.WriteString(W, "OR Compiler  17.9.2016");
+   Texts.WriteLn(W);
+   Texts.Append(Oberon.Log, W.buf);
+   NEW(dummy);
+   dummy.class := ORB.Var;
+   dummy.type := ORB.intType;
+   expression := expression0;
+   Type := Type0;
+   FormalType := FormalType0
 END ORP.

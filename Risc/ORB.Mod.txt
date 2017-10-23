@@ -19,11 +19,12 @@ CONST versionkey* = 1; maxTypTab = 64;
       Pointer* = 7; NilTyp* = 8; NoTyp* = 9; Proc* = 10;
       String* = 11; Array* = 12; Record* = 13;
       
-TYPE Object* = POINTER TO ObjDesc;
-    Module* = POINTER TO ModDesc;
-    Type* = POINTER TO TypeDesc;
+TYPE 
+   Object* = POINTER TO ObjDesc;
+   Module* = POINTER TO ModDesc;
+   Type* = POINTER TO TypeDesc;
 
-    ObjDesc*= RECORD
+   ObjDesc*= RECORD
       class*, lev*, exno*: INTEGER;
       expo*, rdo*: BOOLEAN;   (*exported / read-only*)
       next*, dsc*: Object;
