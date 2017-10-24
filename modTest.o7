@@ -1,3 +1,5 @@
+
+
 MODULE modTest;
 
 IMPORT mT:=modTest;
@@ -19,3 +21,6 @@ PROCEDURE Test*(a_:INTEGER):BOOLEAN;
 BEGIN
    a:=10
 END modTest.
+
+А здесь я как в классике жанра могу писать
+что угодно.

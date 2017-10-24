@@ -316,6 +316,7 @@ Namespace пиОк
          Public Dim цСтр As Integer = 0
          Public Dim цПоз As Integer = 0
          Public Dim стрТег As String = ""
+         Public Dim type_ As String = "" ' тип тега
          End class
       Dim теги() As клсТэг
       Dim цТегСчёт As Integer = 0 ' солько всего тэгов
@@ -325,6 +326,7 @@ Namespace пиОк
       Dim гцСтр As Integer = 1 ' нумерация строк с 1
       Dim гцПоз As Integer = 0
       Dim гсТег As String = "" ' глобальный текущий тэг
+      ' =================== ТЕГИРОВАНИЕ =======================
       Sub Поз_Получ(lit As String)
          Static srcLine As String = "" ' очередная строка исходного кода
          if lit = vbLf Then
@@ -340,7 +342,7 @@ Namespace пиОк
             srcLine += lit
          End If
          End Sub
-      Function Лит_Отсев(lit As String) As Boolean
+      Function ЕслиОтсев(lit As String) As Boolean
          Dim res As Boolean = False
          If lit<=" " Then
             res = True
@@ -359,7 +361,7 @@ Namespace пиОк
          End Sub
       Function ЕслиВнутрТег(lit As String) As Integer
          Dim res As Integer = 0
-         If InStr("(;)*-+", lit) >0 Then
+         If InStr("(;)*-+.[]""'", lit) >0 Then
             res = 1
          Else If InStr(":<>", lit)>0 Then
             res=2
@@ -370,6 +372,7 @@ Namespace пиОк
          Dim lit2 As String = Mid(txtSrc,1,1)
          If InStr("=", lit2)>0 Then
             lit += lit2
+            Поз_Получ(lit2)
             txtSrc = Mid(txtSrc,2)
          End If
          Тег_Добавить(lit)
@@ -381,21 +384,23 @@ Namespace пиОк
          Else If ЕслиВнутрТег(lit)=2 Then
                ТегСложн_Добавить(lit)
          End If
+         'Позиция тут учтена раньше, можно просто вырезать
+         txtSrc = Mid(txtSrc,2)
          End Sub
       Sub Тег_Получ()
-         ' крутим строку до тех пор пока не получим каку
-         Dim lit As String = "1"
+         Dim lit As String
          Dim bBreak As Boolean = False
          гсТег=""
-         Do While (lit>" " And Len(txtSrc)>1)
-            lit = Mid(txtSrc, 1,1)
-            Поз_Получ(lit)
-            txtSrc = Mid(txtSrc, 2)
-            If  ЕслиВнутрТег(lit)>0 Then
+         lit = Mid(txtSrc, 1,1)
+         Do While (lit>" " And (Len(txtSrc)>1))
+            If ЕслиВнутрТег(lit)=0 Then
+               гсТег += lit
+               txtSrc = Mid(txtSrc, 2)
+               lit = Mid(txtSrc, 1,1)
+               Поз_Получ(lit)
+            Else
                bBreak = True
                Exit Do
-            Else
-               гсТег += lit
             End If
          Loop
          If (Not bBreak) Then
@@ -403,10 +408,10 @@ Namespace пиОк
             ' теперь в тэге надо выделить внутренние разделители: ":= ( ) [ ]" . и т. д.
             Тег_Добавить(гсТег)
             гсТег=""
-         Else If Len(гсТег)>0 Then
+         Else If Len(гсТег)>0 And bBreak Then
             Тег_Добавить(гсТег)
             ТегВнутр_Получ(lit)
-         Else
+         Else If bBreak Then
             ТегВнутр_Получ(lit)
          End If
          End Sub
@@ -419,19 +424,104 @@ Namespace пиОк
             lit = Mid(txtSrc,1,1)
             Поз_Получ(lit)' учитываем строку и позицию
             ' фильтруем дурные символы
-            If Not Лит_Отсев(lit)' попался тэг
-               Тег_Получ()
-            Else
+            If ЕслиОтсев(lit)' отбросим мусор
                txtSrc = Mid(txtSrc, 2)
+            Else
+               Тег_Получ()
             End If
             Loop
+      End Sub
+      ' ==================== ПРАВИЛА ============================
+      Dim tagc As Integer = 0 ' текущий тег на анализе
+      Dim sRes As String = "" ' результат анализа
+      Function Смещ(ind As Integer) As String
+         Dim s As String ="^"
+         For i As Integer = 1 To ind
+            s = " " + s
+         Next
+         Return s
+         End Function
+      Sub Пр_МОДУЛЬ()
+         If sRes="1.1" Then ' 1.1 МОДУЛЬ должен быть первым
+            If теги(tagc).стрТег<>"MODULE" Then
+               модКокон.Ошибка("Ошибка: стр " + Str(теги(tagc).цСтр) + " поз " + Str(теги(tagc).цПоз))
+               Console.WriteLine(txtLine(теги(tagc).цСтр-1))
+               Console.WriteLine(Смещ(теги(tagc).цПоз))
+               модКокон.Ошибка("Модуль должен начинаться с ""MODULE""")
+               sRes="err"
+            Else
+               теги(tagc).type_="MODULE"
+               tagc +=1
+               sRes = "1.2"
+            End If
+            End If
+         If sRes="1.2" Then ' 1.2 У модуля должно быть имя
+            If теги(tagc).стрТег=";" Then ' пропущено имя модуля
+               модКокон.Ошибка("Ошибка: стр " + Str(теги(tagc).цСтр) + " поз " + Str(теги(tagc).цПоз))
+               Console.WriteLine(txtLine(теги(tagc).цСтр-1))
+               Console.WriteLine(Смещ(теги(tagc).цПоз))
+               модКокон.Ошибка("Модуль должен иметь имя")
+               sRes="err"
+            Else
+               теги(tagc).type_="name_module"
+               tagc += 2 'Пропускаем ";"
+               sRes = "1.3"
+            End If
+            End If
+         If sRes="1.3" Then ' 1.3 У Модуля должно быть окончание
+            Dim bEnd As Boolean=False
+            Dim i As Integer
+            For i = 0 To цТегСчёт-1
+               If теги(i).стрТег="END" Then ' относится ли это к концу модуля?
+                  If теги(i+2).стрТег="." Then ' конец ли это? i+2 -- через имя
+                     bEnd=True
+                     tagc=i
+                     Exit For
+                  End If
+               End If
+               Next
+            If bEnd = False Then'а конца то нет!! работаем с последним тегом
+               модКокон.Ошибка("Ошибка: стр " + Str(теги(цТегСчёт-1).цСтр) + " поз " + Str(теги(цТегСчёт-1).цПоз))
+               Console.WriteLine(txtLine(теги(цТегСчёт-1).цСтр-1))
+               Console.WriteLine(Смещ(теги(цТегСчёт-1).цПоз))
+               модКокон.Ошибка("Модуль должен иметь ""END <NameModule.>""")
+               sRes="err"
+            Else
+               теги(tagc).type_="end_module"
+               ' отбрасываем лишние тэги
+               ReDim Preserve теги(tagc+1)
+               ' уменьшаем общее количество тэгов
+               цТегСчёт = Len(теги)
+               tagc = 4' 1-модуль; 2-имя модуля; 3-";"
+               sRes = "1.4"
+            End If
+            End If
+         If sRes="1.4" Then ' 1.4 Модуль должен быть один
+            ' Организуем цикл в поиске МОДУЛЬ с учётом, что это может быть строка
+            ' Интересует только первая тотальная встреча
+            Dim i As Integer
+            Dim bKw As Boolean = True
+            For i = 4 To цТегСчёт-2 ' последние тэги мы уже выяснили
+               If теги(i).стрТег="MODULE" Then 'надо выясить, может это часть выражения, или строка
+                  If теги(i-1).стрТег="." Or теги(i-1).стрТег="""" Or теги(i-1).стрТег="'" Or _
+                     теги(i+1).стрТег="""" Or теги(i+1).стрТег="'" Then
+                     bKw = False ' это не ключевое слово
+                  Else
+                     bKw = True
+                  End IF
+               End If
+            Next
+            End If
+         End Sub
+      Sub Правила()
+         sRes="1.1"
+         Пр_МОДУЛЬ() '; ; 1.3 должно быть jокончание.
          End Sub
       Public Sub Компилировать()
          ' нарезать колбасу из исхдника с присовением координат
          Разметить()
-         For i As Integer=0 to цТегСчёт-1
-            Console.WriteLine(Str(i)+"> " + теги(i).стрТег)
-         Next
+         ' проверить правильность полученного исходного текста
+         Правила()
          End Sub
       End Module
 End Namespace
