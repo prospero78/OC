@@ -1,6 +1,6 @@
 MODULE modTest;
 
-IMPORT mT:=modTest:
+IMPORT mT:=modTest;
 
 VAR
    a:INTEGER;

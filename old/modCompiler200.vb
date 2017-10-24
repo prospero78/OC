@@ -313,18 +313,16 @@ Namespace пиОк
       ' попытка сделать по уму
       Class клсТэг
          ' хранит в себе последовательно кусочек нераспознанного кода с координатами
-         Public Dim цСтр As Integer = 0
-         Public Dim цПоз As Integer = 0
-         Public Dim стрТег As String = ""
+         Dim цСтр As Integer = 0
+         Dim цПоз As Integer = 0
+         Dim сТэг As String = ""
          End class
       Dim теги() As клсТэг
-      Dim цТегСчёт As Integer = 0 ' солько всего тэгов
       Dim txtSrc As String ="" ' текст исходника
       Dim txtLine() As String ' исходник разбитый построчно
       Dim countLine As Integer = 0 ' количество строк в массиве
       Dim гцСтр As Integer = 1 ' нумерация строк с 1
       Dim гцПоз As Integer = 0
-      Dim гсТег As String = "" ' глобальный текущий тэг
       Sub Поз_Получ(lit As String)
          Static srcLine As String = "" ' очередная строка исходного кода
          if lit = vbLf Then
@@ -347,82 +345,42 @@ Namespace пиОк
          End If
          Return res
          End Function
-      Sub Тег_Добавить(lit As string)
-         'Создать новй тэг
-         Dim tag As клсТэг = New клсТэг()
-         tag.стрТег = lit
-         tag.цСтр = гцСтр
-         tag.цПоз = гцПоз
-         ReDim Preserve теги(цТегСчёт+1)
-         теги(цТегСчёт)=tag
-         цТегСчёт += 1
-         End Sub
-      Function ЕслиВнутрТег(lit As String) As Boolean
-         Dim res As Boolean = False
-         If inStr("(;)*-+:", lit) >0 Then
-            res = True
-         End If
-         Return res
-         End Function
-      Sub ТегВнутр_Получ(lit As String)
-         ' уже есть тег-литера и его надо распознать
-         If ЕслиВнутрТег(lit) Then
-            Тег_Добавить(lit)
-         End If
-         End Sub
-      Sub Тег_Получ()
+      Sub Тэг_Получ()
          ' крутим строку до тех пор пока не получим каку
-         Dim lit As String = "1"
-         Dim bBreak As Boolean = False
-         гсТег=""
-         Do While (lit>" " And Len(txtSrc)>1)
+         Dim lit As String = Mid(txtSrc, 1,1)
+         Dim tag As String = ""
+         Do
+            txtSrc = Mid(txtSrc, 2)
+            tag += lit
             lit = Mid(txtSrc, 1,1)
             Поз_Получ(lit)
-            txtSrc = Mid(txtSrc, 2)
-            If  ЕслиВнутрТег(lit) Then
-               bBreak = True
-               Exit Do
-            Else
-               гсТег += lit
-            End If
-         Loop
-         If (Not bBreak) Then
-            ' Здесь гцСтр ещё не перешёл на новую строку.
-            Console.WriteLine(Str(гцСтр+1)+ " tag= """+гсТег+"""")
-            ' теперь в тэге надо выделить внутренние разделители: ":= ( ) [ ]" . и т. д.
-            Тег_Добавить(гсТег)
-            гсТег=""
-         Else If Len(гсТег)>0 Then
-            Тег_Добавить(гсТег)
-            ТегВнутр_Получ(lit)
-         Else
-            ТегВнутр_Получ(lit)
-         End If
+         Loop While lit>" "
+         ' Здесь гцСтр ещё не перешёл на новую строку.
+         Console.WriteLine(Str(гцСтр+1)+ " tag= """+tag+"""")
+         
          End Sub
       Sub Разметить()
-         txtSrc = модФайл.txtFileO7 + "  "' хвост нужен, чтобы гарантированно не обрезать тег
+         txtSrc = модФайл.txtFileO7
          Dim lit As String = ""
          ' сканируем файл вдоль, считаем координаты
          ' по необходимости в массив добавлем тэги
          Console.Write(vbCrLf)
          Do While txtSrc<>""
             lit = Mid(txtSrc,1,1)
-            Поз_Получ(lit)' учитываем строку и позицию
+            ' учитываем строку и позицию
+            Поз_Получ(lit)
             ' фильтруем дурные символы
-            If Not Лит_Отсев(lit)' попался тэг
-               Тег_Получ()
-            Else
-               txtSrc = Mid(txtSrc, 2)
+            If Not Лит_Отсев(lit)
+               ' попался тэг
+               Тэг_Получ()
             End If
-            Loop
+            txtSrc = Mid(txtSrc, 2)
+         Loop
          Console.Write(vbCrLf + vbCrLf)
          End Sub
       Public Sub Компилировать()
          ' нарезать колбасу из исхдника с присовением координат
          Разметить()
-         For i As Integer=0 to цТегСчёт-1
-            Console.WriteLine(Str(i)+"> " + теги(i).стрТег)
-         Next
          End Sub
       End Module
 End Namespace
