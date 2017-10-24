@@ -436,7 +436,7 @@ Namespace пиОк
       Dim sRes As String = "" ' результат анализа
       Function Смещ(ind As Integer) As String
          Dim s As String ="^"
-         For i As Integer = 1 To ind
+         For i As Integer = 1 To ind-1
             s = " " + s
          Next
          Return s
@@ -489,9 +489,11 @@ Namespace пиОк
             Else
                теги(tagc).type_="end_module"
                ' отбрасываем лишние тэги
-               ReDim Preserve теги(tagc+1)
+               'ReDim Preserve теги(tagc+2)
                ' уменьшаем общее количество тэгов
-               цТегСчёт = Len(теги)
+               ' Redim не умеет уменшать размер
+               ' поэтому ограничивать будем счётчиком
+               цТегСчёт = tagc+1
                tagc = 4' 1-модуль; 2-имя модуля; 3-";"
                sRes = "1.4"
             End If
@@ -499,23 +501,42 @@ Namespace пиОк
          If sRes="1.4" Then ' 1.4 Модуль должен быть один
             ' Организуем цикл в поиске МОДУЛЬ с учётом, что это может быть строка
             ' Интересует только первая тотальная встреча
-            Dim i As Integer
+            Dim i As Integer = 0 
             Dim bKw As Boolean = True
             For i = 4 To цТегСчёт-2 ' последние тэги мы уже выяснили
                If теги(i).стрТег="MODULE" Then 'надо выясить, может это часть выражения, или строка
-                  If теги(i-1).стрТег="." Or теги(i-1).стрТег="""" Or теги(i-1).стрТег="'" Or _
-                     теги(i+1).стрТег="""" Or теги(i+1).стрТег="'" Then
+                  If (теги(i-1).стрТег=".") Then
+                     bKw=False
+                  Else If теги(i-1).стрТег="""" And теги(i+1).стрТег="""" Then
+                     bKw=False
+                  Else If теги(i-1).стрТег="'" And теги(i+1).стрТег="'" Then
                      bKw = False ' это не ключевое слово
-                  Else
-                     bKw = True
+                  Else ' да. Это не строка ,и не часть сущности!!
+                     Exit For
                   End IF
                End If
             Next
+            If i = цТегСчёт-1 Then
+               bKw = False
             End If
+            If bKw = True Then
+               модКокон.Ошибка("Ошибка: стр " + Str(теги(i).цСтр) + " поз " + Str(теги(i).цПоз))
+               Console.WriteLine(txtLine(теги(i).цСтр-1))
+               Console.WriteLine(Смещ(теги(i).цПоз) + Str(i) + Str(цТегСчёт))
+               модКокон.Ошибка("MODULE в модуле должен быть один")
+               sRes = "Err"
+            ELSE
+               sRes = "2.1"
+            End If
+            End If
+         End Sub
+      Sub Селектор()
+         ' прочесали модуль, теперь проверить нет ли импорта
          End Sub
       Sub Правила()
          sRes="1.1"
-         Пр_МОДУЛЬ() '; ; 1.3 должно быть jокончание.
+         Пр_МОДУЛЬ()
+         Импорт()
          End Sub
       Public Sub Компилировать()
          ' нарезать колбасу из исхдника с присовением координат
