@@ -10,6 +10,9 @@ PROCEDURE Test*(a_:INTEGER):BOOLEAN;
       res : BOOLEAN;
    BEGIN
       res:=(a_>a);
+      IF ( res >= a) THEN
+         res := -1
+      END;
       RETURN res
    END Test;
 
