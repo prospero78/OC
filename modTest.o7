@@ -1,6 +1,6 @@
 
 
-MODULE modTest;
+MODULE modTest;;
 
 IMPORT mT:=modTest;
 

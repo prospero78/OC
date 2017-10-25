@@ -9,216 +9,6 @@ Namespace пиОк
       Dim txtOut As String = "" ' Конец текст Visual Basic
       Dim перем(1000) As String ' Массив добавляемых переменных
       Dim цПерем As Integer=0 'Свободный элемент массива
-      
-      Sub Лит_Получ() 'GetChar получение символа из входного потока
-         литАнализ = Chr(Console.Read())
-         End Sub
-      
-      Sub Ошибка(ByRef msg As String) ' Error вывод сообщения об ошибке
-         Console.WriteLine()
-         модКокон.Ошибка("   Ошибка: " + msg)
-         End Sub
-      
-      Sub Прервать(ByRef msg As String) '  Abort Прерывание компиляции
-         Ошибка(msg)
-         Exit Sub 
-         End Sub
-      
-      Sub Ожидалось(ByRef msg As String) ' Expected
-         Прервать("Ожидалось " + msg)
-         End Sub
-      
-      Sub Совпадение(lit As String) '  Math
-         If литАнализ = lit Then
-            Лит_Получ()
-         Else
-            Ожидалось("'" + lit + "'")
-         End If
-         End Sub
-      
-      Function ЕслиБуква(lit As String) As Boolean '  IsAlpha
-         Dim res As Boolean = False
-         lit = UCase(lit)
-         If InStr("ABCDEFGHIJKLMNOPQRSTUVWXYZ", lit) <> 0 Then
-            res = True
-         End If
-         If InStr("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ", lit)<>0 Then
-            res = True
-         End If
-         Return res
-         End Function
-      
-      Function ЕслиЦифра(lit As String) As Boolean '  IsDigit
-         Dim res As Boolean = False
-         If InStr("0123456789", lit)<>0 Then
-            res = True
-         End If
-         Return res
-         End Function
-      
-      Function ЕслиИмя(lit As String) As Boolean '  IsAlNum
-         Return ЕслиЦифра(lit) Or ЕслиБуква(lit)
-         End Function
-      
-      Function Имя_Получ() As String ' GetName
-         If Not ЕслиБуква(литАнализ) Then
-            Ожидалось("Имя")
-         End If
-         Dim lit As String = UCase(литАнализ)
-         Лит_Получ()
-         Return lit
-         End Function
-      
-      Function Цифра_Получ() As String ' GetNum
-         If Not ЕслиЦифра(литАнализ) Then
-            Ожидалось("Целое")
-         End If
-         Dim lit As String = литАнализ
-         Лит_Получ()
-         Return lit
-         End Function
-      
-      Sub Вывод(ByVal txt As String) ' Emit
-         Console.Write(vbTab + txt)
-         End Sub
-      
-      Sub ВыводНов(ByVal txt As String) ' EmitLn
-         Вывод(txt)
-         Console.Write(vbCrLf)
-         End Sub
-      
-      Sub Сущность() ' Ident
-         Dim имя As String = ""
-         имя = Имя_Получ()
-         If литАнализ = "(" Then ' анализ скобок
-            Совпадение("(")
-            Совпадение(")")
-            ВыводНов(имя+"()")
-            txtOut += имя+"()" + "'здесь косяк?2" + vbCrLf
-         Else                               ' анализ констант
-            If Not Перем_Добав(имя) Then
-               ВыводНов("Dim " + имя + " As Integer = 0")
-            End If
-            ВыводНов("рег0 = " + имя)
-            txtOut += "рег0 = " + имя + vbCrLf
-         End If
-         End Sub
-      
-      Sub Множитель() ' Factor
-         If литАнализ = "(" Then ' анализ скобок
-            Совпадение("(")
-            Выражение()
-            Совпадение(")")
-         Else If ЕслиБуква(литАнализ) Then ' анализ имён
-            Сущность()
-         Else                               ' анализ констант
-            Dim lit As String = Цифра_Получ()
-            ВыводНов("рег0 = " + lit)
-            txtOut += "рег0 = " + lit+vbCrLf
-         End If
-         End Sub
-      
-      Sub Умножить() ' Multiply
-         Совпадение("*")
-         Множитель()
-         ВыводНов("pop(head)"+vbCrLf + _
-                  vbTab + "рег0 *= head")
-         txtOut += "pop(head)"+vbCrLf + _
-                  "рег0 *= head"+vbCrLf
-         End Sub
-      
-      Sub Разделить() ' Divide
-         Совпадение("/")
-         Множитель()
-         ВыводНов("pop(head)"+vbCrLf + _
-                  vbTab + "рег0 = head / рег0")
-         txtOut += "pop(head)"+vbCrLf + _
-                  "рег0 = head / рег0"+vbCrLf
-         End Sub
-      
-      Sub Терминал() ' Term
-         Множитель()
-         Do While InStr("*/", литАнализ)>0
-            ВыводНов("push(рег0)")
-            txtOut += "push(рег0)" + vbCrLf
-            Select Case литАнализ
-               Case "*"
-                  Умножить()
-               Case "/"
-                  Разделить()
-               Case Else
-                  Ожидалось("операция * или /")
-               End Select
-         Loop
-         End Sub
-      
-      Sub Сложить() ' Add
-         Совпадение("+")
-         Терминал()
-         ВыводНов("pop(head)" + vbCrLf + _
-                  vbTab + "рег0 += head")
-         txtOut += "pop(head)" + vbCrLf + _
-                  "рег0 += head" + vbCrLf
-         End Sub
-      
-      Sub Вычесть()' Substract
-         Совпадение("-")
-         Терминал()
-         ВыводНов("pop(head)" + vbCrLf + _
-                  vbTab +"рег0 = head - рег0")
-         txtOut += "pop(head)" + vbCrLf + _
-                  "рег0 = head - рег0" + vbCrLf
-         End Sub
-      
-      Function ЕслиПлюсМинус(lit As String) As Boolean ' IsAddop
-         Dim res As Boolean = False
-         If InStr("+-", lit)>0 Then
-            res = True
-         End If
-         Return res
-         End Function
-      
-      Sub Выражение() ' Expression
-         If ЕслиПлюсМинус(литАнализ) Then
-            ВыводНов("рег0 *= 0")
-            txtOut += "рег0 *= 0" + vbCrLf
-         Else
-            Терминал()
-         End If
-         Do While ЕслиПлюсМинус(литАнализ)
-            ВыводНов("push(рег0)")
-            ' для выходного файла
-            txtOut += "push(рег0)" + vbCrLf
-            Select Case литАнализ
-               Case "+" 
-                  Сложить()
-               Case "-" 
-                  Вычесть()
-               Case Else
-                  Ожидалось("операция +/-")
-            End Select
-         Loop
-         End Sub
-      
-      Sub Присвоение() ' Assigment
-         Dim имя As String = Имя_Получ()
-         Совпадение("=")
-         Выражение()
-         ' Здесь надо придумать втыкание перед Sub Main()
-         ' операторов вида:
-         ' Dim <Name> As String
-         If Not Перем_Добав(имя) Then
-            ВыводНов("Dim " + имя + " As Integer = 0")
-         End If
-         ВыводНов(имя+" = рег0")
-         ВыводНов("***")
-         txtOut += имя+" = рег0"+vbCrlf
-         End Sub
-      
-      Sub Настр() ' Init
-         Лит_Получ()
-         End Sub
-      
       Sub Вых_Записать()
          Using sw As StreamWriter = File.CreateText("out.vb")
                sw.Write(txtOut)
@@ -238,28 +28,7 @@ Namespace пиОк
          'Process.Start("vbc /debug- /t:exe /platform:x86 /nologo /utf8output /optionexplicit+ /optioninfer+ /rootnamespace:Oberon07 /out:out.exe out.vb")
          End Sub
       
-      Function Перем_Добав(имя As String) As Boolean
-         Dim bnew As Boolean = False
-         If цПерем<1000 Then
-            имя = UCase(имя)
-            For i As Integer = 0 To цПерем
-               If имя = перем(i) Then
-                  bnew = True
-               End If
-               Console.WriteLine(Str(i) + ": """ + перем(i) + """")
-            Next
-            If Not bnew Then
-               перем(цПерем) = имя
-               цПерем += 1
-            End If
-         Else
-            модКокон.Ошибка("Слишком много переменных!")
-         End If
-         return bnew
-         End Function
-      
       Sub Заголовок()
-         Настр()
          txtBeg = "' Автогенерация текста Visual Basic" + vbCrLf
          txtBeg += "' Данные для компиляции" + vbCrLf
          txtBeg +="Namespace Oberon07"+vbCrLf
@@ -305,165 +74,87 @@ Namespace пиОк
          
       Public Sub Компилировать()
          Заголовок()
-         Присвоение()
          Подвал()
          End Sub
       End Module
+   Public Class clsLexem
+         Inherits клсТег
+         Public type_ As String = "" ' тип тега
+         Public name_alias As String = "" ' алиас для имени модуля
+         Public name_origin As String = "" ' настоящее имя модуля
+
+    End Class
    Public Module модКомпиль2
-      ' попытка сделать по уму
-      Class клсТэг
-         ' хранит в себе последовательно кусочек нераспознанного кода с координатами
-         Public Dim цСтр As Integer = 0
-         Public Dim цПоз As Integer = 0
-         Public Dim стрТег As String = ""
-         Public Dim type_ As String = "" ' тип тега
-         End class
-      Dim теги() As клсТэг
-      Dim цТегСчёт As Integer = 0 ' солько всего тэгов
-      Dim txtSrc As String ="" ' текст исходника
-      Dim txtLine() As String ' исходник разбитый построчно
-      Dim countLine As Integer = 0 ' количество строк в массиве
-      Dim гцСтр As Integer = 1 ' нумерация строк с 1
-      Dim гцПоз As Integer = 0
-      Dim гсТег As String = "" ' глобальный текущий тэг
-      ' =================== ТЕГИРОВАНИЕ =======================
-      Sub Поз_Получ(lit As String)
-         Static srcLine As String = "" ' очередная строка исходного кода
-         if lit = vbLf Then
-            гцСтр += 1
-            гцПоз = 0
-            ' Добавить строку в массив исходников
-            ReDim Preserve txtLine(countLine+1)
-            txtLine(countLine) = srcLine
-            countLine += 1
-            srcLine = ""
-         Else
-            гцПоз += 1
-            srcLine += lit
-         End If
-         End Sub
-      Function ЕслиОтсев(lit As String) As Boolean
-         Dim res As Boolean = False
-         If lit<=" " Then
-            res = True
-         End If
-         Return res
-         End Function
-      Sub Тег_Добавить(lit As string)
-         'Создать новй тэг
-         Dim tag As клсТэг = New клсТэг()
-         tag.стрТег = lit
-         tag.цСтр = гцСтр
-         tag.цПоз = гцПоз
-         ReDim Preserve теги(цТегСчёт+1)
-         теги(цТегСчёт)=tag
-         цТегСчёт += 1
-         End Sub
-      Function ЕслиВнутрТег(lit As String) As Integer
-         Dim res As Integer = 0
-         If InStr("(;)*-+.[]""'", lit) >0 Then
-            res = 1
-         Else If InStr(":<>", lit)>0 Then
-            res=2
-         End If
-         Return res
-         End Function
-      Sub ТегСложн_Добавить(lit As String)
-         Dim lit2 As String = Mid(txtSrc,1,1)
-         If InStr("=", lit2)>0 Then
-            lit += lit2
-            Поз_Получ(lit2)
-            txtSrc = Mid(txtSrc,2)
-         End If
-         Тег_Добавить(lit)
-         End Sub
-      Sub ТегВнутр_Получ(lit As String)
-         ' уже есть тег-литера и его надо распознать
-         If ЕслиВнутрТег(lit)=1 Then
-            Тег_Добавить(lit)
-         Else If ЕслиВнутрТег(lit)=2 Then
-               ТегСложн_Добавить(lit)
-         End If
-         'Позиция тут учтена раньше, можно просто вырезать
-         txtSrc = Mid(txtSrc,2)
-         End Sub
-      Sub Тег_Получ()
-         Dim lit As String
-         Dim bBreak As Boolean = False
-         гсТег=""
-         lit = Mid(txtSrc, 1,1)
-         Do While (lit>" " And (Len(txtSrc)>1))
-            If ЕслиВнутрТег(lit)=0 Then
-               гсТег += lit
-               txtSrc = Mid(txtSrc, 2)
-               lit = Mid(txtSrc, 1,1)
-               Поз_Получ(lit)
-            Else
-               bBreak = True
-               Exit Do
-            End If
-         Loop
-         If (Not bBreak) Then
-            ' Здесь гцСтр ещё не перешёл на новую строку.
-            ' теперь в тэге надо выделить внутренние разделители: ":= ( ) [ ]" . и т. д.
-            Тег_Добавить(гсТег)
-            гсТег=""
-         Else If Len(гсТег)>0 And bBreak Then
-            Тег_Добавить(гсТег)
-            ТегВнутр_Получ(lit)
-         Else If bBreak Then
-            ТегВнутр_Получ(lit)
-         End If
-         End Sub
-      Sub Разметить()
-         txtSrc = модФайл.txtFileO7 + "  "' хвост нужен, чтобы гарантированно не обрезать тег
-         Dim lit As String = ""
-         ' сканируем файл вдоль, считаем координаты
-         ' по необходимости в массив добавлем тэги
-         Do While txtSrc<>""
-            lit = Mid(txtSrc,1,1)
-            Поз_Получ(lit)' учитываем строку и позицию
-            ' фильтруем дурные символы
-            If ЕслиОтсев(lit)' отбросим мусор
-               txtSrc = Mid(txtSrc, 2)
-            Else
-               Тег_Получ()
-            End If
+        ' ==================== ПРАВИЛА ============================
+        Dim tagc As Integer = 0 ' текущий тег на анализе
+        Dim sRes As String = "" ' результат анализа
+        Dim lex(0) As clsLexem
+        Dim lex_end As Integer = 0 ' конец полезных лексем
+        Dim txtLine() As String ' список строк исходника
+        Sub Структуры_Копировать()
+            Dim i As Integer = 0
+            Dim lex_ As clsLexem
+            Do While Not IsNothing(модЛексер.теги(i)) And i < модЛексер.теги.Length - 1
+                lex_ = New clsLexem With {
+                    .цСтр = модЛексер.теги(i).цСтр,
+                    .цПоз = модЛексер.теги(i).цПоз,
+                    .стрТег = модЛексер.теги(i).стрТег
+                }
+                ReDim Preserve lex(i)
+                lex(i) = lex_
+                i += 1
             Loop
-      End Sub
-      ' ==================== ПРАВИЛА ============================
-      Dim tagc As Integer = 0 ' текущий тег на анализе
-      Dim sRes As String = "" ' результат анализа
-      Function Смещ(ind As Integer) As String
+            ReDim модЛексер.теги(0)
+
+            Dim sLine As String
+            Do While Not IsNothing(модЛексер.txtLine)
+                sLine = модЛексер.txtLine(i)
+                ReDim txtLine(i + 1)
+                txtLine(i) = sLine
+                i += 1
+            Loop
+            ReDim модЛексер.txtLine(0)
+
+        End Sub
+
+        Function Смещ(ind As Integer) As String
          Dim s As String ="^"
-         For i As Integer = 1 To ind-1
+         For i As Integer = 1 To ind
             s = " " + s
          Next
          Return s
          End Function
       Sub Пр_МОДУЛЬ()
+         Console.Write("1")
          If sRes="1.1" Then ' 1.1 МОДУЛЬ должен быть первым
-            If теги(tagc).стрТег<>"MODULE" Then
-               модКокон.Ошибка("Ошибка: стр " + Str(теги(tagc).цСтр) + " поз " + Str(теги(tagc).цПоз))
-               Console.WriteLine(txtLine(теги(tagc).цСтр-1))
-               Console.WriteLine(Смещ(теги(tagc).цПоз))
-               модКокон.Ошибка("Модуль должен начинаться с ""MODULE""")
-               sRes="err"
-            Else
-               теги(tagc).type_="MODULE"
-               tagc +=1
+         Console.WriteLine("<"+lex(0).стрТег + ">")
+         Console.WriteLine(lex(0).стрТег="MODULE")
+            If lex(0).стрТег="MODULE" Then
+               lex(0).type_="MODULE"
+               tagc =1
                sRes = "1.2"
+            Else
+               'Console.Write("3")
+               'модКокон.Ошибка("Ошибка: стр " + Str(теги(0).цСтр) + " поз " + Str(теги(0).цПоз))
+               'Console.Write("4")
+               'Console.WriteLine(txtLine(теги(1).цСтр-1))
+               'Console.Write("5")
+               'Console.WriteLine(Смещ(теги(0).цПоз))
+               'Console.Write("6")
+               'модКокон.Ошибка("Модуль должен начинаться с ""MODULE""")
+               sRes="err"
             End If
             End If
          If sRes="1.2" Then ' 1.2 У модуля должно быть имя
             If теги(tagc).стрТег=";" Then ' пропущено имя модуля
-               модКокон.Ошибка("Ошибка: стр " + Str(теги(tagc).цСтр) + " поз " + Str(теги(tagc).цПоз))
-               Console.WriteLine(txtLine(теги(tagc).цСтр-1))
-               Console.WriteLine(Смещ(теги(tagc).цПоз))
+               модКокон.Ошибка("Ошибка: стр " + Str(lex(tagc).цСтр) + " поз " + Str(lex(tagc).цПоз))
+               Console.WriteLine(модЛексер.txtLine(lex(tagc).цСтр-1))
+               Console.WriteLine(Смещ(lex(tagc).цПоз))
                модКокон.Ошибка("Модуль должен иметь имя")
                sRes="err"
             Else
-               теги(tagc).type_="name_module"
+               lex(tagc).type_="module_name"
+               lex(tagc+1).type_=";"
                tagc += 2 'Пропускаем ";"
                sRes = "1.3"
             End If
@@ -471,29 +162,29 @@ Namespace пиОк
          If sRes="1.3" Then ' 1.3 У Модуля должно быть окончание
             Dim bEnd As Boolean=False
             Dim i As Integer
-            For i = 0 To цТегСчёт-1
-               If теги(i).стрТег="END" Then ' относится ли это к концу модуля?
-                  If теги(i+2).стрТег="." Then ' конец ли это? i+2 -- через имя
+            Do While i < lex.Count
+               If lex(i).стрТег="END" Then ' относится ли это к концу модуля?
+                  If lex(i+2).стрТег="." Then ' конец ли это? i+2 -- через имя
+                     lex(i).type_="module_end"
+                     lex(i+1).type_="module_name"
+                     lex(i+2).type_="module_dot"
                      bEnd=True
                      tagc=i
-                     Exit For
+                     Exit Do
                   End If
                End If
-               Next
+               i += 1
+            Loop
             If bEnd = False Then'а конца то нет!! работаем с последним тегом
-               модКокон.Ошибка("Ошибка: стр " + Str(теги(цТегСчёт-1).цСтр) + " поз " + Str(теги(цТегСчёт-1).цПоз))
-               Console.WriteLine(txtLine(теги(цТегСчёт-1).цСтр-1))
-               Console.WriteLine(Смещ(теги(цТегСчёт-1).цПоз))
+               модКокон.Ошибка("Ошибка: стр " + Str(lex(lex.Count-1).цСтр) + " поз " + Str(lex(lex.Count-1).цПоз))
+               Console.WriteLine(txtLine(lex(lex.Count-1).цСтр-1))
+               Console.WriteLine(Смещ(lex(lex.Count-1).цПоз))
                модКокон.Ошибка("Модуль должен иметь ""END <NameModule.>""")
                sRes="err"
             Else
-               теги(tagc).type_="end_module"
                ' отбрасываем лишние тэги
-               'ReDim Preserve теги(tagc+2)
-               ' уменьшаем общее количество тэгов
-               ' Redim не умеет уменшать размер
-               ' поэтому ограничивать будем счётчиком
-               цТегСчёт = tagc+1
+               ' ограничивать будем счётчиком
+               lex_end = i
                tagc = 4' 1-модуль; 2-имя модуля; 3-";"
                sRes = "1.4"
             End If
@@ -503,45 +194,89 @@ Namespace пиОк
             ' Интересует только первая тотальная встреча
             Dim i As Integer = 0 
             Dim bKw As Boolean = True
-            For i = 4 To цТегСчёт-2 ' последние тэги мы уже выяснили
-               If теги(i).стрТег="MODULE" Then 'надо выясить, может это часть выражения, или строка
-                  If (теги(i-1).стрТег=".") Then
+            Do While i < lex_end ' последние тэги мы уже выяснили
+               If lex(i).стрТег="MODULE" Then 'надо выясить, может это часть выражения, или строка
+                  If (lex(i-1).стрТег=".") Then
                      bKw=False
-                  Else If теги(i-1).стрТег="""" And теги(i+1).стрТег="""" Then
+                  Else If lex(i-1).стрТег="""" And lex(i+1).стрТег="""" Then
                      bKw=False
-                  Else If теги(i-1).стрТег="'" And теги(i+1).стрТег="'" Then
+                  Else If lex(i-1).стрТег="'" And lex(i+1).стрТег="'" Then
                      bKw = False ' это не ключевое слово
                   Else ' да. Это не строка ,и не часть сущности!!
-                     Exit For
+                     Exit Do
                   End IF
                End If
-            Next
-            If i = цТегСчёт-1 Then
+               i += 1
+            Loop
+            If i = lex_end Then
                bKw = False
             End If
             If bKw = True Then
-               модКокон.Ошибка("Ошибка: стр " + Str(теги(i).цСтр) + " поз " + Str(теги(i).цПоз))
-               Console.WriteLine(txtLine(теги(i).цСтр-1))
-               Console.WriteLine(Смещ(теги(i).цПоз) + Str(i) + Str(цТегСчёт))
-               модКокон.Ошибка("MODULE в модуле должен быть один")
+               модКокон.Ошибка("Ошибка: стр " + Str(lex(i).цСтр) + " поз " + Str(lex(i).цПоз))
+               Console.WriteLine(txtLine(lex(i).цСтр-1))
+               Console.WriteLine(Смещ(lex(i).цПоз))
+               модКокон.Ошибка("MODULE должен быть один")
                sRes = "Err"
             ELSE
                sRes = "2.1"
             End If
             End If
          End Sub
+      Function Импорт_Конец() As Boolean
+         ' Проверяет правильн оли закончился импорт
+         Dim bRes As Boolean
+         bRes = lex(tagc).стрТег="TYPE" Or lex(tagc).стрТег="CONST" Or lex(tagc).стрТег="VAR"
+         bRes = bRes Or lex(tagc).стрТег="PROCEDURE" Or lex(tagc).стрТег="BEGIN"
+         bRes = bRes Or lex(tagc).type_="module_end"
+         Return bRes
+         End Function
       Sub Пр_ИМПОРТ()
          ' прочесали модуль, теперь проверить нет ли импорта
          If sRes="2.1" Then ' 2.1 IMPORT может идти тегом № 3 -- проверяем
-            If теги(3).стрТег="IMPORT" Then
-               теги(3).type_="import"
-               Console.WriteLine(txtLine(теги(tagc).цСтр-1))
-               Console.WriteLine(Смещ(теги(tagc).цПоз))
-               Console.WriteLine("Обнаружен импорт: стр" + Str(теги(tagc).цСтр) + " поз " + Str(теги(tagc).цПоз))
+            If lex(3).стрТег="IMPORT" Then
+               lex(3).type_="import"
                tagc = 3
                sRes = "2.2"
             End If
             End If
+         If sRes="2.2" Then ' 2.2 Проверяем весь доступный импорт
+            ' Может быть прямой импорт, а может быть и с алиасами.
+            ' Если импорт прямой, то tagc+2 будет ";", а сли алиас -- то ":="
+            tagc = 4 ' После ИМПОРТ имя файла или алиас по счёту -- 4 тег в файле
+            Do While True
+               Console.WriteLine("+0 "+lex(tagc).стрТег)
+               Console.WriteLine("+1 "+lex(tagc+1).стрТег)
+               Console.WriteLine("+2 "+lex(tagc+2).стрТег)
+               ' Импортов может быть 
+               ' прямой, c алиасом, с запятой (продолжение), с ";" -- конец импорта
+               If lex(tagc+1).стрТег="," Or lex(tagc+1).стрТег=";" Then' Первая ветка -- прямой импорт
+                  lex(tagc).type_="module"
+                  lex(tagc).name_origin = lex(tagc).стрТег
+                  tagc += 2 ' утановить счётчик на следующий тег (возможно импорта)
+                  If lex(tagc+1).стрТег=";" Then ' импорт закончить
+                     Exit Do
+                  End If
+               Else If lex(tagc+1).стрТег=":=" Then ' вторая ветка -- импорт с алиасом
+                  lex(tagc).type_="module_alias"
+                  lex(tagc).name_origin = lex(tagc+2).стрТег
+                  lex(tagc+2).type_ = "module"
+                  lex(tagc+2).name_origin = lex(tagc+2).стрТег
+                  tagc += 3 ' утановить счётчик на следующий тег (возможно импорта)
+                  If lex(tagc+3).стрТег=";" Then ' импорт закончить
+                     Exit Do
+                  End If
+               End If
+            Loop
+            If  Импорт_Конец() Then ' Если не "," и не ";" и не ":=" -- возможно нарушение инструкции импорта
+               sRes = "2.3"
+            Else ' Ошибка импорта
+               модКокон.Ошибка("Ошибка: стр " + Str(lex(tagc+2).цСтр) + " поз " + Str(lex(tagc+2).цПоз))
+               Console.WriteLine(txtLine(lex(tagc).цСтр-1))
+               Console.WriteLine(Смещ(lex(tagc+2).цПоз))
+               модКокон.Ошибка("Дожно быть имя модуля для импорта в виде <mName := modFullName;>")
+               sRes="err"
+            End If
+         End If
          End Sub
       Sub Правила()
          sRes="1.1"
@@ -549,10 +284,15 @@ Namespace пиОк
          Пр_ИМПОРТ()
          End Sub
       Public Sub Компилировать()
-         ' нарезать колбасу из исхдника с присовением координат
-         Разметить()
-         ' проверить правильность полученного исходного текста
-         Правила()
+            ' нарезать колбасу из исхдника с присовением координат
+            модЛексер.Тег_Разметить()
+            Структуры_Копировать()
+            Console.WriteLine("Len(lex) " + Str(lex.Length))
+            For i As Integer = 0 To 10
+                Console.WriteLine(Str(i) + ": " + lex(i).стрТег)
+            Next
+            ' проверить правильность полученного исходного текста
+            Правила()
          End Sub
       End Module
 End Namespace

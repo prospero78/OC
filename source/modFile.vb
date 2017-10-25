@@ -7,7 +7,7 @@ Namespace пиОк
       Public txtFileO7 as String = "" ' содержимое исходного файла Оберон-07
       Public Sub Init()
          argMod = модАрг.argMod
-      End Sub
+         End Sub
       
       Public Sub о7_Загрузить()
          If Not File.Exists(argMod.val) Then
@@ -19,6 +19,6 @@ Namespace пиОк
                sr.Close()
             End Using
          End If
-      End Sub
+         End Sub
    End Module
 End Namespace
