@@ -1,8 +1,10 @@
 
 
-MODULE modTest;;
+MODULE modTest;
 
-IMPORT mT:=modTest;
+IMPORT mT:=modTest,
+	mT1 :=modTest2,
+	mT2:=modTest2
 
 
 VAR
