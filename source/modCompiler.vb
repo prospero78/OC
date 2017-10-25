@@ -530,13 +530,23 @@ Namespace пиОк
             End If
             End If
          End Sub
-      Sub Селектор()
+      Sub Пр_ИМПОРТ()
          ' прочесали модуль, теперь проверить нет ли импорта
+         If sRes="2.1" Then ' 2.1 IMPORT может идти тегом № 3 -- проверяем
+            If теги(3).стрТег="IMPORT" Then
+               теги(3).type_="import"
+               Console.WriteLine(txtLine(теги(tagc).цСтр-1))
+               Console.WriteLine(Смещ(теги(tagc).цПоз))
+               Console.WriteLine("Обнаружен импорт: стр" + Str(теги(tagc).цСтр) + " поз " + Str(теги(tagc).цПоз))
+               tagc = 3
+               sRes = "2.2"
+            End If
+            End If
          End Sub
       Sub Правила()
          sRes="1.1"
          Пр_МОДУЛЬ()
-         Импорт()
+         Пр_ИМПОРТ()
          End Sub
       Public Sub Компилировать()
          ' нарезать колбасу из исхдника с присовением координат
