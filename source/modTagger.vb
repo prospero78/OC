@@ -64,9 +64,7 @@ Namespace пиОк
             res = singletag
          ElseIf InStr(":<>()*", lit) > 0 Then
             res = doubletag
-         ElseIf InStr("0123456789_", lit) > 0 Or
-              InStr("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvw", lit) > 0 Or
-              InStr("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя", lit) > 0 Then
+         ElseIf модУтиль.ЕслиЦифра(lit) Or модУтиль.ЕслиБуква(lit) Or lit = "_" Then
             res = multitag
          End If
          Return res

@@ -1,15 +1,15 @@
 (* комментарий, который компилятор должен игнорировать *)
 
-MODULE modTest;
+MODULE _modTest;
 
 IMPORT mT:=modTest,
-	modTest1,
-	mT2:=modTest2;
+   modTest1,
+   mT2:=modTest2;
 (*   mT3:=modTest3; *)
 CONST
-	tal = 9;
-	tal2 = 34;
-	tal3 = 34;
+   tal = 9;
+   tal2 = 34;
+   tal3 = 34;
 
 VAR
    a:INTEGER;

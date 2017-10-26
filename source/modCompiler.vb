@@ -199,21 +199,33 @@ Namespace пиОк
                модКокон.Ошибка("Крд: " + Str(lex(1).цСтр) + " -" + Str(lex(1).цПоз))
                Console.WriteLine(txtLine(lex(1).цСтр))
                Console.WriteLine(Смещ(lex(1).цПоз))
-               модКокон.Ошибка("Имя модуля указано не верно")
+               модКокон.Ошибка("Пропущено имя модуля")
                sRes = "err"
-            Else
+               Exit Sub
+            End If
+            ' проверка на допустимое имя. Должно начинаться либо с "_"  либо с буквы
+            If модУтиль.ЕслиНачИмени(Mid(lex(1).стрТег, 1, 1)) Then
                lex(1).type_ = "module_name"
-               If lex(2).стрТег = ";" Then
-                  lex(2).type_ = ";"
-                  sRes = "1.3"
-               Else
-                  '  а нет разделителя после имени модуля!
-                  модКокон.Ошибка("Крд: " + Str(lex(1).цСтр + 1) + " -" + Str(lex(1).цПоз))
-                  Console.WriteLine(txtLine(lex(1).цСтр + 1))
-                  Console.WriteLine(Смещ(lex(1).цПоз))
-                  модКокон.Ошибка("Нет разделителя для имени модуля")
-                  sRes = "err"
-               End If
+            Else
+               модКокон.Ошибка("Крд: " + Str(lex(1).цСтр) + " -" + Str(lex(1).цПоз))
+               Console.WriteLine(txtLine(lex(1).цСтр))
+               Console.WriteLine(Смещ(lex(1).цПоз))
+               модКокон.Ошибка("Имя модуля начинается только с буквы и ""_""")
+               sRes = "err"
+               Exit Sub
+            End If
+            ' проверка на разделитель
+            If lex(2).стрТег = ";" Then
+               lex(2).type_ = ";"
+               sRes = "1.3"
+            Else
+               '  а нет разделителя после имени модуля!
+               модКокон.Ошибка("Крд: " + Str(lex(1).цСтр + 1) + " -" + Str(lex(1).цПоз))
+               Console.WriteLine(txtLine(lex(1).цСтр + 1))
+               Console.WriteLine(Смещ(lex(1).цПоз))
+               модКокон.Ошибка("Нет разделителя для имени модуля")
+               sRes = "err"
+               Exit Sub
             End If
          End If
          If sRes = "1.3" Then ' 1.3 У Модуля должно быть окончание
@@ -419,25 +431,20 @@ Namespace пиОк
                         End If
                      End If
                   End If
-                  End If
+               End If
             Loop
          End If
       End Sub
       Sub Правила()
-         Console.WriteLine("Len(lex_old)=" + Str(lex.Length))
+         ' проверить правильность полученного исходного текста
+         Debug.WriteLine("Проверка правил")
+         Debug.WriteLine("Len(lex_old)=" + Str(lex.Length))
          sRes = "comment"
          Пр_КОММЕНТАРИЙ(sRes)
-         Console.WriteLine("Len(lex_new)=" + Str(lex.Length))
+         Debug.WriteLine("Len(lex_new)=" + Str(lex.Length))
          Пр_МОДУЛЬ()
          Пр_ИМПОРТ()
          Пр_КОНСТ()
-         Dim i As Integer = 0
-         Do While i < lex.Length - 1
-            Console.WriteLine(Str(i) + ": " + lex(i).стрТег)
-            i += 1
-         Loop
-         ' проверить правильность полученного исходного текста
-         Debug.WriteLine("Проверка правил")
       End Sub
       Public Sub Компилировать()
          ' нарезать колбасу из исхдника с присовением координат
@@ -447,9 +454,13 @@ Namespace пиОк
          Структуры_Копировать()
          Console.WriteLine("Len(lex) " + Str(lex.Length))
          Правила()
+         Dim i As Integer = 0
+         Do While i < lex.Length - 1
+            Console.WriteLine(Str(i) + ": " + lex(i).стрТег)
+            i += 1
+         Loop
          Console.Write("...end...")
          Console.Read()
-
       End Sub
    End Module
 End Namespace
