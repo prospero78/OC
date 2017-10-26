@@ -301,7 +301,7 @@ Namespace пиОк
                sRes = "err"
                Exit Sub
             Else
-               sRes = "2.1"
+               sRes = "import"
             End If
          End If
       End Sub
@@ -314,13 +314,13 @@ Namespace пиОк
       End Sub
       Sub Пр_ИМПОРТ()
          ' прочесали модуль, теперь проверить нет ли импорта
-         If sRes = "2.1" Then ' 2.1 IMPORT может идти тегом № 3 -- проверяем
+         If sRes = "import" Then ' 2.1 IMPORT может идти тегом № 3 -- проверяем
             If lex(3).стрТег = "IMPORT" Then
                sRes = "2.2"
-
             End If
          End If
-         If sRes = "2.2" Then ' 2.2 Проверяем весь доступный импорт
+         ' 2.2 Проверяем весь доступный импорт
+         If sRes = "2.2" Then
             ' Может быть прямой импорт, а может быть и с алиасами.
             ' Если импорт прямой, то tagc+2 будет ";", а сли алиас -- то ":="
             ' После ИМПОРТ имя файла или алиас по счёту -- 4 тег в файле
@@ -329,13 +329,12 @@ Namespace пиОк
                ' Импортов может быть 
                ' прямой, c алиасом, с запятой (продолжение), с ";" -- конец импорта
                If lex(tagc + 1).стрТег = "," Or lex(tagc + 1).стрТег = ";" Then ' Первая ветка -- прямой импорт
-                  lex(tagc).type_ = "module_alias"
-
-                  ' проверить ия модуля и алиас на допустимость
-                  If модУтиль.ЕслиНачИмени(Mid(lex(tagc + 1).стрТег, 1, 1)) Then
-                     lex(tagc).name_origin = lex(tagc + 1).стрТег
-                  Else
-                     ' TODO: сделать дома процедуру неправильного имени
+                  ' проверить имя модуля и алиас на допустимость
+                  If Not модУтиль.ЕслиНачИмени(Mid(lex(tagc).стрТег, 1, 1)) Then
+                     '  неправильное имени
+                     ОшибкаИмени("IMPORT", tagc + 1)
+                     sRes = "err"
+                     Exit Sub
                   End If
                   If IsNothing(prog.import) Then
                      ReDim prog.import(0)
@@ -343,62 +342,88 @@ Namespace пиОк
                      ReDim Preserve prog.import(prog.import.Length + 1)
                   End If
                   Dim imp As clsImport = New clsImport With {
-                  .name = lex(tagc + 1).стрТег,
-                  .alias_ = lex(tagc + 1).стрТег
+                  .name = lex(tagc).стрТег,
+                  .alias_ = lex(tagc).стрТег
                   }
                   prog.import(prog.import.Length - 1) = imp
-                  If lex(tagc + 1).стрТег = "," Then
-                     lex(tagc + 1).type_ = ","
-                  Else
-                     lex(tagc + 1).type_ = ";"
-                  End If
-                  If lex(tagc + 1).type_ = "," Then 'импорт может закончился?
+                  If lex(tagc + 1).стрТег = "," Then 'импорт может закончился?
                      tagc += 2
                      Continue Do
-                  ElseIf lex(tagc + 1).type_ = ";" Then ' импорт закончить
+                  ElseIf lex(tagc + 1).стрТег = ";" Then ' импорт закончить
                      tagc += 2
+                     sRes = "2.3"
                      Exit Do
                   Else ' а это уже ошибка!!
                      Импорт_Ошибка()
-                     Exit Do
+                     Exit Sub
                   End If
                ElseIf lex(tagc + 1).стрТег = ":=" Then ' вторая ветка -- импорт с алиасом
-                  lex(tagc).type_ = "module_alias" ' имя алиаса
-                  lex(tagc).name_origin = lex(tagc + 2).стрТег
-                  If lex(tagc + 3).стрТег = "," Then
-                     lex(tagc + 3).type_ = ","
-                  ElseIf lex(tagc + 3).стрТег = ";" Then
-                     lex(tagc + 3).type_ = ";"
-                  Else ' а вот это уже ошибка
-                     tagc += 2
-                     Импорт_Ошибка()
-                     Exit Do
+                  ' проверка имени
+                  If Not модУтиль.ЕслиНачИмени(Mid(lex(tagc + 2).стрТег, 1, 1)) Then
+                     '  неправильное имени
+                     ОшибкаИмени("IMPORT", tagc + 2)
+                     sRes = "err"
+                     Exit Sub
                   End If
-                  If lex(tagc + 3).type_ = "," Then 'импорт может закончился?
+                  ' проверка алиаса
+                  If Not модУтиль.ЕслиНачИмени(Mid(lex(tagc).стрТег, 1, 1)) Then
+                     '  неправильное имени
+                     ОшибкаИмени("IMPORT", tagc + 1)
+                     sRes = "err"
+                     Exit Sub
+                  End If
+                  ' значит добавить элемент импрота
+                  If IsNothing(prog.import) Then
+                     ReDim prog.import(0)
+                  Else
+                     ReDim Preserve prog.import(prog.import.Length + 1)
+                  End If
+                  Dim imp As clsImport = New clsImport With {
+                  .name = lex(tagc + 2).стрТег,
+                  .alias_ = lex(tagc).стрТег
+                  }
+                  prog.import(prog.import.Length - 1) = imp
+                  ' проверка на продолжение
+                  If lex(tagc + 3).стрТег = "," Then 'импорт может закончился?
                      tagc += 4
                      Continue Do
-                  ElseIf lex(tagc + 3).type_ = ";" Then ' импорт закончить
+                  ElseIf lex(tagc + 3).стрТег = ";" Then ' импорт закончить
                      tagc += 4
-                     sRes = "3.1"
+                     sRes = "2.3"
                      Exit Do
                   Else ' а это уже ошибка!!
                      Импорт_Ошибка()
-                     Exit Do
+                     sRes = "err"
+                     Exit Sub
                   End If
                Else
-                  модКокон.Ошибка("Крд: " + Str(lex(tagc).цСтр) + " -" + Str(lex(tagc).цПоз))
-                  Console.WriteLine(txtLine(lex(tagc).цСтр))
-                  Console.WriteLine(Смещ(lex(tagc).цПоз))
-                  модКокон.Ошибка("Нарушение порядка импорта>")
+                  Импорт_Ошибка()
                   sRes = "err"
-                  Exit Do
+                  Exit Sub
                End If
             Loop
+         End If
+         ' 2.3 Проверка на ошибку досрочного окончания импорта
+         If sRes = "2.3" Then
+            If (lex(tagc).стрТег = "CONST" Or lex(tagc).стрТег = "TYPE" Or
+                  lex(tagc).стрТег = "VAR" Or lex(tagc).стрТег = "PROCEDURE" Or
+                  lex(tagc).стрТег = "BEGIN") Or
+                  (lex(prog.tag_end - 2).стрТег = lex(tagc).стрТег And
+                  lex(prog.tag_end).стрТег = ".") Then
+               ' здесь вообще варианты. Но все дальше должны проверить
+               sRes = "const"
+            Else
+               tagc -= 1
+               Импорт_Ошибка()
+               модКокон.Ошибка("Досрочное прекращение импорта")
+               sRes = "err"
+               Exit Sub
+            End If
          End If
       End Sub
       Sub Пр_КОНСТ()
          ' Проверяет правильность объявления констант
-         If sRes = "3.1" Then ' Правило объявления инструкции CONST
+         If sRes = "const" Then ' Правило объявления инструкции CONST
             If lex(tagc).стрТег <> "CONST" Then ' возможно просто нет такой секции
                sRes = "4.1"
                Exit Sub
