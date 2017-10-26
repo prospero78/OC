@@ -279,12 +279,12 @@ Namespace пиОк
                      Exit Do
                   End If
                ElseIf lex(tagc + 1).стрТег = ":=" Then ' вторая ветка -- импорт с алиасом
-                  Console.WriteLine(Str(tagc + 1) + " " + lex(tagc + 1).стрТег)
+                  Console.WriteLine(Str(tagc + 2) + " " + lex(tagc + 2).стрТег)
                   lex(tagc).type_ = "module_alias" ' имя алиаса
                   lex(tagc).name_origin = lex(tagc + 2).стрТег
                   If lex(tagc + 3).стрТег = "," Then
                      lex(tagc + 3).type_ = ","
-                  ElseIf lex(tagc + 3).type_ = ";" Then
+                  ElseIf lex(tagc + 3).стрТег = ";" Then
                      lex(tagc + 3).type_ = ";"
                   Else ' а вот это уже ошибка
                      tagc += 2
@@ -333,12 +333,14 @@ Namespace пиОк
          Debug.WriteLine("Копирование структур")
          Структуры_Копировать()
          Console.WriteLine("Len(lex) " + Str(lex.Length))
-         For i As Integer = 0 To lex.Length - 1
-            Console.WriteLine(Str(i) + ": " + lex(i).стрТег)
-         Next
-         ' проверить правильность полученного исходного текста
-         Debug.WriteLine("Проверка правил")
-         Правила()
+         If lex.Length > 6 Then
+            For i As Integer = 0 To lex.Length - 1
+               Console.WriteLine(Str(i) + ": " + lex(i).стрТег)
+            Next
+            ' проверить правильность полученного исходного текста
+            Debug.WriteLine("Проверка правил")
+            Правила()
+         End If
          Console.Write("...end...")
          Console.Read()
 

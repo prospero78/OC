@@ -3,9 +3,9 @@
 Namespace пиОк
    Public Module модКокон ' Consol Colorize
 
-      Const txtObcomp As String = "|     Oberon-07 compiler 2017 BSD-2  |"
-      Const txtBuild As String = "|     Build 0046   2017-10-25 23:08  |"
-      Const txtAuthor As String = "|     KBK Technicks Ltd.     (c)     |"
+      Const txtObcomp As String = "|   Oberon-07 compiler   2017 BSD-2  |"
+      Const txtBuild_ As String = "|   Build 0048     2017-10-26 09:50  |"
+      Const txtAuthor As String = "|   KBK Technicks Ltd.       (c)     |"
 
       Public Sub Инфо(ByRef txt As String) ' нужен для вывода информационных сообщений белыми буквами на синем фоне
          Static FoneColor As System.ConsoleColor
@@ -34,7 +34,7 @@ Namespace пиОк
          Console.Write("                 ")
          Инфо(txtObcomp)
          Console.Write("                 ")
-         Инфо(txtBuild)
+         Инфо(txtBuild_)
          Console.Write("                 ")
          Инфо(txtAuthor)
          Console.Write("                 ")
