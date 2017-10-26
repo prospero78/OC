@@ -3,7 +3,7 @@
 MODULE modTest;
 
 IMPORT mT:=modTest,
-	mT1 :=modTest2,
+	modTest1,
 	mT2:=modTest2
 
 
