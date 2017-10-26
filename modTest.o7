@@ -4,8 +4,12 @@ MODULE modTest;
 
 IMPORT mT:=modTest,
 	modTest1,
-	mT2:=modTest2
+	mT2:=modTest2;
 
+CONST
+	tal = 9;
+	tal2 = 34;
+	tal3 = 34;
 
 VAR
    a:INTEGER;

@@ -9,7 +9,7 @@ Namespace пиОк
    End Class
    Public Module модТеггер
       ' попытка сделать по уму
-      Const multitag = 0
+      Public Const multitag = 0
       Const doubletag = 2
       Const singletag = 1
       Public теги() As клсТег
@@ -58,7 +58,7 @@ Namespace пиОк
          End If
          теги(теги.Length - 1) = tag
       End Sub
-      Function ЕслиВнутрТег(lit As String) As Integer
+      Public Function ЕслиВнутрТег(lit As String) As Integer
          Dim res As Integer = -1
          If InStr(",(;)*-+.[""]'=", lit) > 0 Then
             res = singletag

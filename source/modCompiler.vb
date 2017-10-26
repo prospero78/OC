@@ -1,4 +1,5 @@
 ' Главный модуль компилятора
+' TODO: Для анализатора -- надо проверять, чтобы имена не начинались  с цифер
 Imports System.IO
 Imports System.Diagnostics
 
@@ -241,6 +242,7 @@ Namespace пиОк
          Console.WriteLine(txtLine(lex(tagc).цСтр))
          Console.WriteLine(Смещ(lex(tagc).цПоз))
          модКокон.Ошибка("Нарушение порядка импорта>")
+         sRes = "err"
       End Sub
       Sub Пр_ИМПОРТ()
          ' прочесали модуль, теперь проверить нет ли импорта
@@ -279,7 +281,6 @@ Namespace пиОк
                      Exit Do
                   End If
                ElseIf lex(tagc + 1).стрТег = ":=" Then ' вторая ветка -- импорт с алиасом
-                  Console.WriteLine(Str(tagc + 2) + " " + lex(tagc + 2).стрТег)
                   lex(tagc).type_ = "module_alias" ' имя алиаса
                   lex(tagc).name_origin = lex(tagc + 2).стрТег
                   If lex(tagc + 3).стрТег = "," Then
@@ -296,6 +297,7 @@ Namespace пиОк
                      Continue Do
                   ElseIf lex(tagc + 3).type_ = ";" Then ' импорт закончить
                      tagc += 4
+                     sRes = "3.1"
                      Exit Do
                   Else ' а это уже ошибка!!
                      Импорт_Ошибка()
@@ -310,21 +312,81 @@ Namespace пиОк
                   Exit Do
                End If
             Loop
-            'If Импорт_Конец() Then ' Если не "," и не ";" и не ":=" -- возможно нарушение инструкции импорта
-            'sRes = "2.3"
-            'Else ' Ошибка импорта
-            'модКокон.Ошибка("Ошибка: стр " + Str(lex(tagc).цСтр + 2) + " поз " + Str(lex(tagc + 2).цПоз))
-            'Console.WriteLine(txtLine(lex(tagc + 2).цСтр))
-            'Console.WriteLine(Смещ(lex(tagc + 2).цПоз))
-            'модКокон.Ошибка("Дожно быть имя модуля для импорта в виде <mName := modFullName;>")
-            'sRes = "err"
-            'End If
+         End If
+      End Sub
+      Sub Пр_КОНСТ()
+         ' Проверяет правильность объявления констант
+         If sRes = "3.1" Then ' Правило объявления инструкции CONST
+            If lex(tagc).стрТег <> "CONST" Then ' возможно просто нет такой секции
+               sRes = "4.1"
+               Exit Sub
+            Else ' такая инструкция есть
+               sRes = "3.2"
+               tagc += 1
+            End If
+         End If
+         If sRes = "3.2" Then ' начинаем разбор констант
+            Do
+               ' секция CONST может быть пустой
+               If lex(tagc).стрТег = "TYPE" Or lex(tagc).стрТег = "VAR" Or
+                     lex(tagc).стрТег = "PROCEDURE" Or lex(tagc).стрТег = "BEGIN" Or
+                     (lex(tagc).стрТег = "END" And lex(tagc + 2).стрТег = ".") Then
+                  tagc += 1
+                  sRes = "4.1"
+                  Exit Do
+               End If
+               If ЕслиВнутрТег(Mid(lex(tagc).стрТег, 1, 1)) <> модТеггер.multitag Then ' имя не может быть пустым
+                  модКокон.Ошибка("Крд: " + Str(lex(tagc).цСтр) + " -" + Str(lex(tagc).цПоз))
+                  Console.WriteLine(txtLine(lex(tagc).цСтр))
+                  Console.WriteLine(Смещ(lex(tagc).цПоз))
+                  модКокон.Ошибка("Пропущено имя константы")
+                  sRes = "err"
+                  Exit Do
+               Else
+                  lex(tagc).type_ = "const_name"
+                  tagc += 1
+                  If lex(tagc).стрТег <> "=" Then
+                     модКокон.Ошибка("Крд: " + Str(lex(tagc).цСтр) + " -" + Str(lex(tagc).цПоз))
+                     Console.WriteLine(txtLine(lex(tagc).цСтр))
+                     Console.WriteLine(Смещ(lex(tagc).цПоз))
+                     модКокон.Ошибка("Нарушение присовения константы")
+                     sRes = "err"
+                     Exit Do
+                  Else
+                     lex(tagc).type_ = "="
+                     tagc += 1
+                     If lex(tagc).стрТег = "" Then ' Константа не может быть пустой
+                        модКокон.Ошибка("Крд: " + Str(lex(tagc).цСтр) + " -" + Str(lex(tagc).цПоз))
+                        Console.WriteLine(txtLine(lex(tagc).цСтр))
+                        Console.WriteLine(Смещ(lex(tagc).цПоз))
+                        модКокон.Ошибка("Нет значения для присвоения константы")
+                        sRes = "err"
+                        Exit Do
+                     Else
+                        lex(tagc).type_ = "const_value"
+                        tagc += 1
+                        If lex(tagc).стрТег <> ";" Then ' Константа не может быть пустой
+                           модКокон.Ошибка("Крд: " + Str(lex(tagc - 1).цСтр) + " -" + Str(lex(tagc - 1).цПоз))
+                           Console.WriteLine(txtLine(lex(tagc - 1).цСтр))
+                           Console.WriteLine(Смещ(lex(tagc - 1).цПоз))
+                           модКокон.Ошибка("Нет ограничения присвоения константы")
+                           sRes = "err"
+                           Exit Do
+                        Else
+                           lex(tagc).type_ = ";"
+                           tagc += 1
+                        End If
+                     End If
+                  End If
+                  End If
+            Loop
          End If
       End Sub
       Sub Правила()
          sRes = "1.1"
          Пр_МОДУЛЬ()
          Пр_ИМПОРТ()
+         Пр_КОНСТ()
       End Sub
       Public Sub Компилировать()
          ' нарезать колбасу из исхдника с присовением координат
