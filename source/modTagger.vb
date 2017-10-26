@@ -60,9 +60,9 @@ Namespace пиОк
       End Sub
       Public Function ЕслиВнутрТег(lit As String) As Integer
          Dim res As Integer = -1
-         If InStr(",(;)*-+.[""]'=", lit) > 0 Then
+         If InStr(",;-+.[""]'=", lit) > 0 Then
             res = singletag
-         ElseIf InStr(":<>", lit) > 0 Then
+         ElseIf InStr(":<>()*", lit) > 0 Then
             res = doubletag
          ElseIf InStr("0123456789_", lit) > 0 Or
               InStr("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvw", lit) > 0 Or
@@ -93,18 +93,26 @@ Namespace пиОк
             End If
             If ЕслиВнутрТег(lit) = doubletag Then ' если сложный тег
                lit2 = Mid(txtSrc, 2, 1)
-               If InStr("=", lit2) > 0 Then
+               If InStr(":><", lit) > 0 And lit2 = "=" Then
+                  txtSrc = Mid(txtSrc, 2)
+                  Поз_Получ(lit2)
+                  Тег_Добавить(lit + lit2)
+               ElseIf lit = "(" And lit2 = "*" Then
+                  txtSrc = Mid(txtSrc, 2)
+                  Поз_Получ(lit2)
+                  Тег_Добавить(lit + lit2)
+               ElseIf lit = "*" And lit2 = ")" Then
                   txtSrc = Mid(txtSrc, 2)
                   Поз_Получ(lit2)
                   Тег_Добавить(lit + lit2)
                Else
                   Тег_Добавить(lit)
+                  End If
+                  txtSrc = Mid(txtSrc, 2)
+                  lit = Mid(txtSrc, 1, 1)
+                  Поз_Получ(lit)
                End If
-               txtSrc = Mid(txtSrc, 2)
-               lit = Mid(txtSrc, 1, 1)
-               Поз_Получ(lit)
-            End If
-            If ЕслиВнутрТег(lit) = multitag Then
+               If ЕслиВнутрТег(lit) = multitag Then
 
                Do While ЕслиВнутрТег(lit) = multitag ' если многосимвольный тэг
                   гсТег += lit

@@ -136,8 +136,51 @@ Namespace пиОк
          Next
          Return s
       End Function
+      Sub Пр_КОММЕНТАРИЙ(sr As String)
+         ' правило ищет комметарии и иключает их из кода
+         Dim count As Integer = 0
+         Dim bStrip As Boolean
+         Dim tmpLex() As clsLexem = Nothing
+         Dim i As Integer = 0
+         Do While count < lex.Length
+            If lex(count).стрТег = "(*" Then ' начало коммента
+               bStrip = True
+            End If
+            If bStrip = True Then ' пропускаем комментарий
+               If lex(count).стрТег <> "*)" Then
+                  count += 1
+               Else
+                  bStrip = False
+                  count += 1
+               End If
+            End If
+            If bStrip = False Then ' копирование остального
+               If IsNothing(txtLine) Then
+                  ReDim tmpLex(0)
+               Else
+                  ReDim Preserve tmpLex(i + 1)
+               End If
+               tmpLex(i) = lex(count)
+               i += 1
+               count += 1
+            End If
+         Loop
+         lex = tmpLex
+         tmpLex = Nothing
+         If sr = "comment" Then
+            If bStrip = True Then
+               модКокон.Ошибка("Крд: " + Str(lex(lex.Length - 1).цСтр) + " -" + Str(lex(lex.Length - 1).цПоз))
+               Console.WriteLine(txtLine(lex(lex.Length - 1).цСтр))
+               Console.WriteLine(Смещ(lex(lex.Length - 2).цПоз))
+               модКокон.Ошибка("Блок комментария не закрыт")
+               sRes = "err"
+            Else
+               sRes = "MODULE"
+            End If
+         End If
+      End Sub
       Sub Пр_МОДУЛЬ()
-         If sRes = "1.1" Then ' 1.1 МОДУЛЬ должен быть первым
+         If sRes = "MODULE" Then ' 1.1 МОДУЛЬ должен быть первым
             If lex(0).стрТег = "MODULE" Then
                lex(0).type_ = "MODULE"
                tagc = 1
@@ -237,7 +280,6 @@ Namespace пиОк
          End If
       End Sub
       Sub Импорт_Ошибка()
-         Console.WriteLine("!!!")
          модКокон.Ошибка("Крд: " + Str(lex(tagc).цСтр) + " -" + Str(lex(tagc).цПоз))
          Console.WriteLine(txtLine(lex(tagc).цСтр))
          Console.WriteLine(Смещ(lex(tagc).цПоз))
@@ -259,7 +301,6 @@ Namespace пиОк
             ' После ИМПОРТ имя файла или алиас по счёту -- 4 тег в файле
             tagc = 4 ' за именем -- либо разделитель, либо присвоение алиаса
             Do While True
-               Console.WriteLine(Str(tagc) + " " + lex(tagc).стрТег)
                ' Импортов может быть 
                ' прямой, c алиасом, с запятой (продолжение), с ";" -- конец импорта
                If lex(tagc + 1).стрТег = "," Or lex(tagc + 1).стрТег = ";" Then ' Первая ветка -- прямой импорт
@@ -383,10 +424,20 @@ Namespace пиОк
          End If
       End Sub
       Sub Правила()
-         sRes = "1.1"
+         Console.WriteLine("Len(lex_old)=" + Str(lex.Length))
+         sRes = "comment"
+         Пр_КОММЕНТАРИЙ(sRes)
+         Console.WriteLine("Len(lex_new)=" + Str(lex.Length))
          Пр_МОДУЛЬ()
          Пр_ИМПОРТ()
          Пр_КОНСТ()
+         Dim i As Integer = 0
+         Do While i < lex.Length - 1
+            Console.WriteLine(Str(i) + ": " + lex(i).стрТег)
+            i += 1
+         Loop
+         ' проверить правильность полученного исходного текста
+         Debug.WriteLine("Проверка правил")
       End Sub
       Public Sub Компилировать()
          ' нарезать колбасу из исхдника с присовением координат
@@ -395,14 +446,7 @@ Namespace пиОк
          Debug.WriteLine("Копирование структур")
          Структуры_Копировать()
          Console.WriteLine("Len(lex) " + Str(lex.Length))
-         If lex.Length > 6 Then
-            For i As Integer = 0 To lex.Length - 1
-               Console.WriteLine(Str(i) + ": " + lex(i).стрТег)
-            Next
-            ' проверить правильность полученного исходного текста
-            Debug.WriteLine("Проверка правил")
-            Правила()
-         End If
+         Правила()
          Console.Write("...end...")
          Console.Read()
 

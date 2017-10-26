@@ -1,11 +1,11 @@
-
+(* комментарий, который компилятор должен игнорировать *)
 
 MODULE modTest;
 
 IMPORT mT:=modTest,
 	modTest1,
 	mT2:=modTest2;
-
+(*   mT3:=modTest3; *)
 CONST
 	tal = 9;
 	tal2 = 34;
