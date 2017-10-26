@@ -85,7 +85,18 @@ Namespace пиОк
       Public type_ As String = "" ' тип тега
       Public name_alias As String = "" ' алиас для имени модуля
       Public name_origin As String = "" ' настоящее имя модуля
-
+   End Class
+   Public Class clsImport ' содержит имена модулей для имопрта и их алиасы
+      Public name As String = ""
+      Public alias_ As String = ""
+   End Class
+   Public Class clsModule ' Описывает модуль целиком
+      Inherits clsLexem
+      Public tag_end As Integer = 0 'номер последнего значимого тега
+      Public level As Integer = 0 ' 0 -- это главный
+      Public loaded As Boolean
+      Public import() As clsImport  ' Список модулей импорта
+      Public proc As Integer
    End Class
    Public Module модКомпиль2
       ' ==================== ПРАВИЛА ============================
@@ -94,6 +105,7 @@ Namespace пиОк
       Dim lex(0) As clsLexem
       Dim lex_end As Integer = 0 ' конец полезных лексем
       Dim txtLine() As String ' список строк исходника
+      Dim prog As clsModule ' объект главного модуля есть программа
       Sub Структуры_Копировать()
          Dim i As Integer = 0
          Dim lex_ As clsLexem
@@ -180,10 +192,13 @@ Namespace пиОк
          End If
       End Sub
       Sub Пр_МОДУЛЬ()
-         If sRes = "MODULE" Then ' 1.1 МОДУЛЬ должен быть первым
+         ' 1.1 МОДУЛЬ должен быть первым
+         If sRes = "MODULE" Then
             If lex(0).стрТег = "MODULE" Then
                lex(0).type_ = "MODULE"
                tagc = 1
+               ' открываем наш модуль
+               prog.loaded = True
                sRes = "1.2"
             Else
                модКокон.Ошибка("Крд: " + Str(lex(0).цСтр) + " -" + Str(lex(0).цПоз))
@@ -193,7 +208,8 @@ Namespace пиОк
                sRes = "err"
             End If
          End If
-         If sRes = "1.2" Then ' 1.2 У модуля должно быть имя
+         '1.2 У модуля должно быть имя
+         If sRes = "1.2" Then
             ' имя модуля -- № 1, разделитель -- № 2
             If lex(2).стрТег <> ";" Then ' пропущено имя модуля
                модКокон.Ошибка("Крд: " + Str(lex(1).цСтр) + " -" + Str(lex(1).цПоз))
@@ -206,6 +222,7 @@ Namespace пиОк
             ' проверка на допустимое имя. Должно начинаться либо с "_"  либо с буквы
             If модУтиль.ЕслиНачИмени(Mid(lex(1).стрТег, 1, 1)) Then
                lex(1).type_ = "module_name"
+               prog.стрТег = lex(1).стрТег
             Else
                модКокон.Ошибка("Крд: " + Str(lex(1).цСтр) + " -" + Str(lex(1).цПоз))
                Console.WriteLine(txtLine(lex(1).цСтр))
@@ -228,7 +245,8 @@ Namespace пиОк
                Exit Sub
             End If
          End If
-         If sRes = "1.3" Then ' 1.3 У Модуля должно быть окончание
+         ' 1.3 У Модуля должно быть окончание
+         If sRes = "1.3" Then
             Dim bEnd As Boolean = False
             Dim i As Integer = 3 ' начинаем отсчёт сразу за определением модуля
             Do While i < lex.Count
@@ -305,6 +323,7 @@ Namespace пиОк
                lex(3).type_ = "import"
                tagc = 3
                sRes = "2.2"
+
             End If
          End If
          If sRes = "2.2" Then ' 2.2 Проверяем весь доступный импорт
@@ -317,47 +336,59 @@ Namespace пиОк
                ' прямой, c алиасом, с запятой (продолжение), с ";" -- конец импорта
                If lex(tagc + 1).стрТег = "," Or lex(tagc + 1).стрТег = ";" Then ' Первая ветка -- прямой импорт
                   lex(tagc).type_ = "module_alias"
-                  lex(tagc).name_origin = lex(tagc + 1).стрТег
-                  If lex(tagc + 1).стрТег = "," Then
-                     lex(tagc + 1).type_ = ","
+
+                  ' проверить ия модуля и алиас на допустимость
+                  If модУтиль.ЕслиНачИмени(Mid(lex(tagc + 1).стрТег), 1, 1) Then
+                     lex(tagc).name_origin = lex(tagc + 1).стрТег
                   Else
-                     lex(tagc + 1).type_ = ";"
+                     ' TODO: сделать дома процедуру неправильного имени
                   End If
-                  If lex(tagc + 1).type_ = "," Then 'импорт может закончился?
-                     tagc += 2
-                     Continue Do
-                  ElseIf lex(tagc + 1).type_ = ";" Then ' импорт закончить
-                     tagc += 2
-                     Exit Do
-                  Else ' а это уже ошибка!!
-                     Импорт_Ошибка()
-                     Exit Do
-                  End If
-               ElseIf lex(tagc + 1).стрТег = ":=" Then ' вторая ветка -- импорт с алиасом
-                  lex(tagc).type_ = "module_alias" ' имя алиаса
-                  lex(tagc).name_origin = lex(tagc + 2).стрТег
-                  If lex(tagc + 3).стрТег = "," Then
-                     lex(tagc + 3).type_ = ","
-                  ElseIf lex(tagc + 3).стрТег = ";" Then
-                     lex(tagc + 3).type_ = ";"
-                  Else ' а вот это уже ошибка
-                     tagc += 2
-                     Импорт_Ошибка()
-                     Exit Do
-                  End If
-                  If lex(tagc + 3).type_ = "," Then 'импорт может закончился?
-                     tagc += 4
-                     Continue Do
-                  ElseIf lex(tagc + 3).type_ = ";" Then ' импорт закончить
-                     tagc += 4
-                     sRes = "3.1"
-                     Exit Do
-                  Else ' а это уже ошибка!!
-                     Импорт_Ошибка()
-                     Exit Do
-                  End If
-               Else
-                  модКокон.Ошибка("Крд: " + Str(lex(tagc).цСтр) + " -" + Str(lex(tagc).цПоз))
+                  If IsNothing(prog.import) Then
+                        ReDim prog.import(0)
+                     Else
+                        ReDim Preserve prog.import(prog.import.Length + 1)
+                     End If
+                     prog.import(prog.import.Length - 1).name = lex(tagc + 1).стрТег
+                     If lex(tagc + 1).стрТег = "," Then
+                        lex(tagc + 1).type_ = ","
+                     Else
+                        lex(tagc + 1).type_ = ";"
+                     End If
+                     If lex(tagc + 1).type_ = "," Then 'импорт может закончился?
+                        tagc += 2
+                        Continue Do
+                     ElseIf lex(tagc + 1).type_ = ";" Then ' импорт закончить
+                        tagc += 2
+                        Exit Do
+                     Else ' а это уже ошибка!!
+                        Импорт_Ошибка()
+                        Exit Do
+                     End If
+                  ElseIf lex(tagc + 1).стрТег = ":=" Then ' вторая ветка -- импорт с алиасом
+                     lex(tagc).type_ = "module_alias" ' имя алиаса
+                     lex(tagc).name_origin = lex(tagc + 2).стрТег
+                     If lex(tagc + 3).стрТег = "," Then
+                        lex(tagc + 3).type_ = ","
+                     ElseIf lex(tagc + 3).стрТег = ";" Then
+                        lex(tagc + 3).type_ = ";"
+                     Else ' а вот это уже ошибка
+                        tagc += 2
+                        Импорт_Ошибка()
+                        Exit Do
+                     End If
+                     If lex(tagc + 3).type_ = "," Then 'импорт может закончился?
+                        tagc += 4
+                        Continue Do
+                     ElseIf lex(tagc + 3).type_ = ";" Then ' импорт закончить
+                        tagc += 4
+                        sRes = "3.1"
+                        Exit Do
+                     Else ' а это уже ошибка!!
+                        Импорт_Ошибка()
+                        Exit Do
+                     End If
+                  Else
+                     модКокон.Ошибка("Крд: " + Str(lex(tagc).цСтр) + " -" + Str(lex(tagc).цПоз))
                   Console.WriteLine(txtLine(lex(tagc).цСтр))
                   Console.WriteLine(Смещ(lex(tagc).цПоз))
                   модКокон.Ошибка("Нарушение порядка импорта>")
@@ -437,11 +468,8 @@ Namespace пиОк
       End Sub
       Sub Правила()
          ' проверить правильность полученного исходного текста
-         Debug.WriteLine("Проверка правил")
-         Debug.WriteLine("Len(lex_old)=" + Str(lex.Length))
          sRes = "comment"
          Пр_КОММЕНТАРИЙ(sRes)
-         Debug.WriteLine("Len(lex_new)=" + Str(lex.Length))
          Пр_МОДУЛЬ()
          Пр_ИМПОРТ()
          Пр_КОНСТ()
@@ -452,7 +480,9 @@ Namespace пиОк
          модТеггер.Тег_Разметить()
          Debug.WriteLine("Копирование структур")
          Структуры_Копировать()
-         Console.WriteLine("Len(lex) " + Str(lex.Length))
+         ' создать объект програмы и упаковать его
+         prog = New clsModule()
+         Debug.WriteLine("Отработать правила")
          Правила()
          Dim i As Integer = 0
          Do While i < lex.Length - 1
