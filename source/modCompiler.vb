@@ -15,7 +15,6 @@ Namespace пиОк
          sw = File.CreateText("out.vb")
          Using sw
             sw.Write(txtOut)
-            sw.Close()
          End Using
       End Sub
 
@@ -102,8 +101,7 @@ Namespace пиОк
       ' ==================== ПРАВИЛА ============================
       Dim tagc As Integer = 0 ' текущий тег на анализе
       Dim sRes As String = "" ' результат анализа
-      Dim lex(0) As clsLexem
-      Dim lex_end As Integer = 0 ' конец полезных лексем
+      Dim lex() As clsLexem
       Dim txtLine() As String ' список строк исходника
       Dim prog As clsModule ' объект главного модуля есть программа
       Sub Структуры_Копировать()
@@ -140,7 +138,6 @@ Namespace пиОк
          ReDim модТеггер.txtLine(0)
 
       End Sub
-
       Function Смещ(ind As Integer) As String
          Dim s As String = "^"
          For i As Integer = 1 To ind - 1
@@ -148,55 +145,63 @@ Namespace пиОк
          Next
          Return s
       End Function
-      Sub Пр_КОММЕНТАРИЙ(sr As String)
+      Sub ОшибкаИмени(msg As String, t As Integer)
+         модКокон.Ошибка(msg + ":" + Str(t) + " >" + Str(lex(t).цСтр) + "<")
+         модКокон.Ошибка("Крд: " + Str(lex(t).цСтр) + " -" + Str(lex(t).цПоз))
+         Console.WriteLine(txtLine(lex(t).цСтр))
+         Console.WriteLine(Смещ(lex(t).цПоз))
+         модКокон.Ошибка("Имя должно начинается с буквы или ""_""")
+      End Sub
+      Sub Пр_КОММЕНТАРИЙ()
          ' правило ищет комметарии и иключает их из кода
          Dim count As Integer = 0
          Dim bStrip As Boolean
          Dim tmpLex() As clsLexem = Nothing
          Dim i As Integer = 0
-         Do While count < lex.Length
-            If lex(count).стрТег = "(*" Then ' начало коммента
-               bStrip = True
-            End If
-            If bStrip = True Then ' пропускаем комментарий
-               If lex(count).стрТег <> "*)" Then
-                  count += 1
-               Else
-                  bStrip = False
-                  count += 1
+         If sRes = "comment" Then
+            Do While count < lex.Length
+               If lex(count).стрТег = "(*" Then ' начало коммента
+                  bStrip = True
                End If
-            End If
-            If bStrip = False Then ' копирование остального
-               If IsNothing(txtLine) Then
-                  ReDim tmpLex(0)
-               Else
-                  ReDim Preserve tmpLex(i + 1)
+               If bStrip = True Then ' пропускаем комментарий
+                  If lex(count).стрТег = "*)" Then
+                     bStrip = False
+                  End If
+                  count += 1
+               Else ' копирование остального
+                  If Not IsNothing(lex(count)) Then
+                     If IsNothing(txtLine) Then
+                        ReDim tmpLex(0)
+                     Else
+                        ReDim Preserve tmpLex(i)
+                     End If
+
+                     tmpLex(i) = lex(count)
+                     i += 1
+                     count += 1
+                  End If
                End If
-               tmpLex(i) = lex(count)
-               i += 1
-               count += 1
-            End If
-         Loop
-         lex = tmpLex
-         tmpLex = Nothing
-         If sr = "comment" Then
+            Loop
+
+            lex = tmpLex
+            tmpLex = Nothing
+
             If bStrip = True Then
-               модКокон.Ошибка("Крд: " + Str(lex(lex.Length - 1).цСтр) + " -" + Str(lex(lex.Length - 1).цПоз))
-               Console.WriteLine(txtLine(lex(lex.Length - 1).цСтр))
-               Console.WriteLine(Смещ(lex(lex.Length - 2).цПоз))
+               модКокон.Ошибка("Крд: " + Str(lex(lex.Length - 1).цСтр + 1) + " -" + Str(lex(lex.Length - 1).цПоз))
+               Console.WriteLine(txtLine(lex(lex.Length - 1).цСтр + 1))
+               Console.WriteLine(Смещ(lex(lex.Length - 1).цПоз))
                модКокон.Ошибка("Блок комментария не закрыт")
                sRes = "err"
+               Exit Sub
             Else
-               sRes = "MODULE"
+               sRes = "module"
             End If
          End If
       End Sub
       Sub Пр_МОДУЛЬ()
          ' 1.1 МОДУЛЬ должен быть первым
-         If sRes = "MODULE" Then
+         If sRes = "module" Then
             If lex(0).стрТег = "MODULE" Then
-               lex(0).type_ = "MODULE"
-               tagc = 1
                ' открываем наш модуль
                prog.loaded = True
                sRes = "1.2"
@@ -206,6 +211,7 @@ Namespace пиОк
                Console.WriteLine(Смещ(lex(0).цПоз))
                модКокон.Ошибка("Модуль должен начинаться с ""MODULE""")
                sRes = "err"
+               Exit Sub
             End If
          End If
          '1.2 У модуля должно быть имя
@@ -215,32 +221,16 @@ Namespace пиОк
                модКокон.Ошибка("Крд: " + Str(lex(1).цСтр) + " -" + Str(lex(1).цПоз))
                Console.WriteLine(txtLine(lex(1).цСтр))
                Console.WriteLine(Смещ(lex(1).цПоз))
-               модКокон.Ошибка("Пропущено имя модуля")
+               модКокон.Ошибка("Пропущено имя модуля или разделитель")
                sRes = "err"
                Exit Sub
             End If
             ' проверка на допустимое имя. Должно начинаться либо с "_"  либо с буквы
             If модУтиль.ЕслиНачИмени(Mid(lex(1).стрТег, 1, 1)) Then
-               lex(1).type_ = "module_name"
                prog.стрТег = lex(1).стрТег
-            Else
-               модКокон.Ошибка("Крд: " + Str(lex(1).цСтр) + " -" + Str(lex(1).цПоз))
-               Console.WriteLine(txtLine(lex(1).цСтр))
-               Console.WriteLine(Смещ(lex(1).цПоз))
-               модКокон.Ошибка("Имя модуля начинается только с буквы и ""_""")
-               sRes = "err"
-               Exit Sub
-            End If
-            ' проверка на разделитель
-            If lex(2).стрТег = ";" Then
-               lex(2).type_ = ";"
                sRes = "1.3"
             Else
-               '  а нет разделителя после имени модуля!
-               модКокон.Ошибка("Крд: " + Str(lex(1).цСтр + 1) + " -" + Str(lex(1).цПоз))
-               Console.WriteLine(txtLine(lex(1).цСтр + 1))
-               Console.WriteLine(Смещ(lex(1).цПоз))
-               модКокон.Ошибка("Нет разделителя для имени модуля")
+               ОшибкаИмени("MODULE", 1)
                sRes = "err"
                Exit Sub
             End If
@@ -252,58 +242,64 @@ Namespace пиОк
             Do While i < lex.Count
                If lex(i).стрТег = "END" Then ' относится ли это к концу модуля?
                   If lex(i + 2).стрТег = "." Then ' конец ли это? i+2 -- через имя
-                     lex(i).type_ = "module_end"
-                     lex(i + 1).type_ = "module_name"
-                     lex(i + 2).type_ = "module_dot"
                      bEnd = True
+                     ' отбрасываем лишние тэги
+                     ' ограничивать будем полем структуры программы
+                     prog.tag_end = i + 2
                      sRes = "1.4"
                      Exit Do
                   End If
                End If
                i += 1
             Loop
-            If bEnd = False Then 'а конца то нет!! работаем с последним тегом
+            If Not bEnd Then 'а конца то нет!! работаем с последним тегом
                модКокон.Ошибка("Крд: " + Str(lex(lex.Count - 1).цСтр) + " -" + Str(lex(lex.Count - 1).цПоз))
                Console.WriteLine(txtLine(lex(lex.Count - 1).цСтр))
                Console.WriteLine(Смещ(lex(lex.Count - 1).цПоз))
                модКокон.Ошибка("Модуль должен иметь ""END <NameModule.>""")
                sRes = "err"
-            Else
-               ' отбрасываем лишние тэги
-               ' ограничивать будем счётчиком
-               lex_end = i
-               sRes = "1.4"
             End If
          End If
-         If sRes = "1.4" Then ' 1.4 Модуль должен быть один
+         '1.4 Модуль должен быть один
+         If sRes = "1.4" Then
             ' Организуем цикл в поиске МОДУЛЬ с учётом, что это может быть строка
             ' Интересует только первая тотальная встреча
             Dim i As Integer = 1 ' нельзя брать 0, так как это и есть модуль
             Dim bKw As Boolean = True
-            Do While i < lex_end ' последние тэги мы уже выяснили
+            Do While i < prog.tag_end  ' последние тэги мы уже выяснили
                If lex(i).стрТег = "MODULE" Then 'надо выясить, может это часть выражения, или строка
                   If (lex(i - 1).стрТег = ".") Then
-                     bKw = False
+                     bKw = False ' часть сущности
                   ElseIf lex(i - 1).стрТег = """" And lex(i + 1).стрТег = """" Then
-                     bKw = False
+                     bKw = False ' строка
                   ElseIf lex(i - 1).стрТег = "'" And lex(i + 1).стрТег = "'" Then
-                     bKw = False ' это не ключевое слово
+                     bKw = False ' строка
                   Else ' да. Это не строка, и не часть сущности!!
                      bKw = True
-                     Exit Do
+                     модКокон.Ошибка("Крд: " + Str(lex(i).цСтр + 1) + " -" + Str(lex(i).цПоз))
+                     Console.WriteLine(txtLine(lex(i).цСтр + 1))
+                     Console.WriteLine(Смещ(lex(i).цПоз))
+                     модКокон.Ошибка("MODULE должен быть один")
+                     sRes = "err"
+                     Exit Sub
                   End If
                End If
                i += 1
             Loop
-            If i = lex_end Then
+            If i = prog.tag_end Then
                bKw = False
+               sRes = "1.5"
             End If
-            If bKw = True Then
-               модКокон.Ошибка("Крд: " + Str(lex(i).цСтр + 1) + " -" + Str(lex(i).цПоз))
-               Console.WriteLine(txtLine(lex(i).цСтр + 1))
-               Console.WriteLine(Смещ(lex(i).цПоз))
-               модКокон.Ошибка("MODULE должен быть один")
-               sRes = "Err"
+         End If
+         ' 1.5 Имя модуля и имя конца должны совпадать
+         If sRes = "1.5" Then
+            If prog.стрТег <> lex(prog.tag_end - 1).стрТег Then
+               ' это залёт!
+               Console.WriteLine(txtLine(lex(0).цСтр))
+               Console.WriteLine(txtLine(lex(prog.tag_end - 1).цСтр))
+               модКокон.Ошибка("Имя модуля несогласовано")
+               sRes = "err"
+               Exit Sub
             Else
                sRes = "2.1"
             End If
@@ -320,8 +316,6 @@ Namespace пиОк
          ' прочесали модуль, теперь проверить нет ли импорта
          If sRes = "2.1" Then ' 2.1 IMPORT может идти тегом № 3 -- проверяем
             If lex(3).стрТег = "IMPORT" Then
-               lex(3).type_ = "import"
-               tagc = 3
                sRes = "2.2"
 
             End If
@@ -338,57 +332,61 @@ Namespace пиОк
                   lex(tagc).type_ = "module_alias"
 
                   ' проверить ия модуля и алиас на допустимость
-                  If модУтиль.ЕслиНачИмени(Mid(lex(tagc + 1).стрТег), 1, 1) Then
+                  If модУтиль.ЕслиНачИмени(Mid(lex(tagc + 1).стрТег, 1, 1)) Then
                      lex(tagc).name_origin = lex(tagc + 1).стрТег
                   Else
                      ' TODO: сделать дома процедуру неправильного имени
                   End If
                   If IsNothing(prog.import) Then
-                        ReDim prog.import(0)
-                     Else
-                        ReDim Preserve prog.import(prog.import.Length + 1)
-                     End If
-                     prog.import(prog.import.Length - 1).name = lex(tagc + 1).стрТег
-                     If lex(tagc + 1).стрТег = "," Then
-                        lex(tagc + 1).type_ = ","
-                     Else
-                        lex(tagc + 1).type_ = ";"
-                     End If
-                     If lex(tagc + 1).type_ = "," Then 'импорт может закончился?
-                        tagc += 2
-                        Continue Do
-                     ElseIf lex(tagc + 1).type_ = ";" Then ' импорт закончить
-                        tagc += 2
-                        Exit Do
-                     Else ' а это уже ошибка!!
-                        Импорт_Ошибка()
-                        Exit Do
-                     End If
-                  ElseIf lex(tagc + 1).стрТег = ":=" Then ' вторая ветка -- импорт с алиасом
-                     lex(tagc).type_ = "module_alias" ' имя алиаса
-                     lex(tagc).name_origin = lex(tagc + 2).стрТег
-                     If lex(tagc + 3).стрТег = "," Then
-                        lex(tagc + 3).type_ = ","
-                     ElseIf lex(tagc + 3).стрТег = ";" Then
-                        lex(tagc + 3).type_ = ";"
-                     Else ' а вот это уже ошибка
-                        tagc += 2
-                        Импорт_Ошибка()
-                        Exit Do
-                     End If
-                     If lex(tagc + 3).type_ = "," Then 'импорт может закончился?
-                        tagc += 4
-                        Continue Do
-                     ElseIf lex(tagc + 3).type_ = ";" Then ' импорт закончить
-                        tagc += 4
-                        sRes = "3.1"
-                        Exit Do
-                     Else ' а это уже ошибка!!
-                        Импорт_Ошибка()
-                        Exit Do
-                     End If
+                     ReDim prog.import(0)
                   Else
-                     модКокон.Ошибка("Крд: " + Str(lex(tagc).цСтр) + " -" + Str(lex(tagc).цПоз))
+                     ReDim Preserve prog.import(prog.import.Length + 1)
+                  End If
+                  Dim imp As clsImport = New clsImport With {
+                  .name = lex(tagc + 1).стрТег,
+                  .alias_ = lex(tagc + 1).стрТег
+                  }
+                  prog.import(prog.import.Length - 1) = imp
+                  If lex(tagc + 1).стрТег = "," Then
+                     lex(tagc + 1).type_ = ","
+                  Else
+                     lex(tagc + 1).type_ = ";"
+                  End If
+                  If lex(tagc + 1).type_ = "," Then 'импорт может закончился?
+                     tagc += 2
+                     Continue Do
+                  ElseIf lex(tagc + 1).type_ = ";" Then ' импорт закончить
+                     tagc += 2
+                     Exit Do
+                  Else ' а это уже ошибка!!
+                     Импорт_Ошибка()
+                     Exit Do
+                  End If
+               ElseIf lex(tagc + 1).стрТег = ":=" Then ' вторая ветка -- импорт с алиасом
+                  lex(tagc).type_ = "module_alias" ' имя алиаса
+                  lex(tagc).name_origin = lex(tagc + 2).стрТег
+                  If lex(tagc + 3).стрТег = "," Then
+                     lex(tagc + 3).type_ = ","
+                  ElseIf lex(tagc + 3).стрТег = ";" Then
+                     lex(tagc + 3).type_ = ";"
+                  Else ' а вот это уже ошибка
+                     tagc += 2
+                     Импорт_Ошибка()
+                     Exit Do
+                  End If
+                  If lex(tagc + 3).type_ = "," Then 'импорт может закончился?
+                     tagc += 4
+                     Continue Do
+                  ElseIf lex(tagc + 3).type_ = ";" Then ' импорт закончить
+                     tagc += 4
+                     sRes = "3.1"
+                     Exit Do
+                  Else ' а это уже ошибка!!
+                     Импорт_Ошибка()
+                     Exit Do
+                  End If
+               Else
+                  модКокон.Ошибка("Крд: " + Str(lex(tagc).цСтр) + " -" + Str(lex(tagc).цПоз))
                   Console.WriteLine(txtLine(lex(tagc).цСтр))
                   Console.WriteLine(Смещ(lex(tagc).цПоз))
                   модКокон.Ошибка("Нарушение порядка импорта>")
@@ -469,7 +467,7 @@ Namespace пиОк
       Sub Правила()
          ' проверить правильность полученного исходного текста
          sRes = "comment"
-         Пр_КОММЕНТАРИЙ(sRes)
+         Пр_КОММЕНТАРИЙ()
          Пр_МОДУЛЬ()
          Пр_ИМПОРТ()
          Пр_КОНСТ()
@@ -478,19 +476,19 @@ Namespace пиОк
          ' нарезать колбасу из исхдника с присовением координат
          Debug.WriteLine("Разметка тегов")
          модТеггер.Тег_Разметить()
-         Debug.WriteLine("Копирование структур")
+         Console.WriteLine("Копирование структур")
          Структуры_Копировать()
          ' создать объект програмы и упаковать его
          prog = New clsModule()
-         Debug.WriteLine("Отработать правила")
+         Console.WriteLine("Отработать правила")
          Правила()
          Dim i As Integer = 0
-         Do While i < lex.Length - 1
+         Do While i < lex.Length - 1 And i < 20
             Console.WriteLine(Str(i) + ": " + lex(i).стрТег)
             i += 1
          Loop
-         Console.Write("...end...")
-         Console.Read()
+         Console.WriteLine("_end_")
+
       End Sub
    End Module
 End Namespace

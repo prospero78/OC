@@ -10,6 +10,7 @@ Namespace пиОк
       Public argOc As clsArgs  'Указатель на путь к компилятору
       Public argMod As clsArgs 'Указатель на модуль для компиляции
       Public optOc As Integer = 0 'Число распознанных опций компилятора
+      Public sRes As String = "" ' результат разбора строки параметров
 
       Public Sub Парам_Получ()
          Static NumArg As Integer = 0
@@ -36,6 +37,8 @@ Namespace пиОк
          If optOc < 2 Then ' аргументов недостаточно
             модКокон.Ошибка("Нет параметров для работы")
             модСправка.Справа_Показать()
+            sRes = "err"
+            Exit Sub
          Else
             Console.WriteLine("Командная строка:  <" + arg + ">")
             Console.WriteLine("Число аргументов: <" + Str(args.Length) + ">")
