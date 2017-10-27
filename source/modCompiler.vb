@@ -89,12 +89,18 @@ Namespace пиОк
       Public name As String = ""
       Public alias_ As String = ""
    End Class
+   Public Class clsConst ' класс содержащий константу
+      Public name As String
+      Public val As String
+      Public type_ As String
+   End Class
    Public Class clsModule ' Описывает модуль целиком
       Inherits clsLexem
       Public tag_end As Integer = 0 'номер последнего значимого тега
       Public level As Integer = 0 ' 0 -- это главный
       Public loaded As Boolean
       Public import() As clsImport  ' Список модулей импорта
+      Public const_() As clsConst 'список констант
       Public proc As Integer
    End Class
    Public Module модКомпиль2
@@ -425,11 +431,21 @@ Namespace пиОк
          ' Проверяет правильность объявления констант
          If sRes = "const" Then ' Правило объявления инструкции CONST
             If lex(tagc).стрТег <> "CONST" Then ' возможно просто нет такой секции
+               tagc += 1
                sRes = "4.1"
                Exit Sub
-            Else ' такая инструкция есть
-               sRes = "3.2"
+            Else ' такая инструкция есть";"-- запрещено
                tagc += 1
+               If lex(tagc).стрТег = ";" Then
+                  модКокон.Ошибка("Крд: " + Str(lex(tagc).цСтр) + " -" + Str(lex(tagc).цПоз))
+                  Console.WriteLine(txtLine(lex(tagc).цСтр))
+                  Console.WriteLine(Смещ(lex(tagc).цПоз))
+                  модКокон.Ошибка("Пропущено имя константы")
+                  sRes = "err"
+                  Exit Sub
+               Else
+                  sRes = "3.2"
+               End If
             End If
          End If
          If sRes = "3.2" Then ' начинаем разбор констант
@@ -448,40 +464,60 @@ Namespace пиОк
                   Console.WriteLine(Смещ(lex(tagc).цПоз))
                   модКокон.Ошибка("Пропущено имя константы")
                   sRes = "err"
-                  Exit Do
+                  Exit Sub
                Else
-                  lex(tagc).type_ = "const_name"
-                  tagc += 1
-                  If lex(tagc).стрТег <> "=" Then
-                     модКокон.Ошибка("Крд: " + Str(lex(tagc).цСтр) + " -" + Str(lex(tagc).цПоз))
-                     Console.WriteLine(txtLine(lex(tagc).цСтр))
-                     Console.WriteLine(Смещ(lex(tagc).цПоз))
-                     модКокон.Ошибка("Нарушение присовения константы")
+                  ' Добавляем константу в секцию констант
+                  If (Not ЕслиНачИмени(Mid(lex(tagc).стрТег, 1, 1))) Then
+                     ОшибкаИмени("Константы:", tagc)
                      sRes = "err"
-                     Exit Do
+                     Exit Sub
                   Else
-                     lex(tagc).type_ = "="
+                     If IsNothing(prog.const_) Then
+                        ReDim prog.const_(0)
+                     Else
+                        ReDim Preserve prog.const_(prog.const_.Length + 1)
+                     End If
+                     Dim const_ As clsConst = New clsConst With {
+                        .name = lex(tagc).стрТег}
+                     prog.const_(prog.const_.Length - 1) = const_
                      tagc += 1
-                     If lex(tagc).стрТег = "" Then ' Константа не может быть пустой
+                     If lex(tagc).стрТег <> "=" Then
                         модКокон.Ошибка("Крд: " + Str(lex(tagc).цСтр) + " -" + Str(lex(tagc).цПоз))
                         Console.WriteLine(txtLine(lex(tagc).цСтр))
                         Console.WriteLine(Смещ(lex(tagc).цПоз))
-                        модКокон.Ошибка("Нет значения для присвоения константы")
+                        модКокон.Ошибка("Нарушение присвоения константы")
                         sRes = "err"
-                        Exit Do
+                        Exit Sub
                      Else
-                        lex(tagc).type_ = "const_value"
                         tagc += 1
-                        If lex(tagc).стрТег <> ";" Then ' Константа не может быть пустой
-                           модКокон.Ошибка("Крд: " + Str(lex(tagc - 1).цСтр) + " -" + Str(lex(tagc - 1).цПоз))
-                           Console.WriteLine(txtLine(lex(tagc - 1).цСтр))
-                           Console.WriteLine(Смещ(lex(tagc - 1).цПоз))
-                           модКокон.Ошибка("Нет ограничения присвоения константы")
-                           sRes = "err"
-                           Exit Do
-                        Else
-                           lex(tagc).type_ = ";"
+                        'TODO: тут надо выяснять что за тип данных
+                        ' тут могут быть BOOLEAN, CHAR, STRING, INTEGER, REAL
+                        If lex(tagc).стрТег = """" And lex(tagc + 2).стрТег = """" Then 'Это строка
+                           prog.const_(tagc + 1).val = lex(tagc).стрТег
+                           prog.const_(tagc + 1).type_ = "string"
+                           tagc += 3
+                        ElseIf lex(tagc).стрТег = "TRUE" Or lex(tagc).стрТег = "FALSE" Then
+                           prog.const_(tagc).val = lex(tagc).стрТег
+                           prog.const_(tagc).type_ = "boolean"
                            tagc += 1
+                           ' проверка на real
+                        ElseIf модУтиль.ЕслиЦелое(lex(tagc).стрТег) And InStr(".", lex(tagc + 1).стрТег) > 0 And
+                               модУтиль.ЕслиЦелое(lex(tagc + 2).стрТег) Then
+                           prog.const_(tagc).val = lex(tagc).стрТег + lex(tagc + 1).стрТег + lex(tagc + 2).стрТег
+                           prog.const_(tagc).type_ = "real"
+                           tagc += 3
+                        ElseIf модУтиль.ЕслиЦелое(lex(tagc).стрТег) And InStr(";", lex(tagc + 1).стрТег) > 0 Then
+                           prog.const_(tagc).val = lex(tagc).стрТег
+                           prog.const_(tagc).type_ = "integer"
+                           tagc += 2
+                        Else
+                           модКокон.Ошибка("Крд: " + Str(lex(tagc).цСтр) + " -" + Str(lex(tagc).цПоз))
+                           Console.WriteLine(txtLine(lex(tagc).цСтр))
+                           Console.WriteLine(Смещ(lex(tagc).цПоз))
+                           модКокон.Ошибка("Нарушение присвоения константы")
+                           sRes = "err"
+                           Exit Sub
+
                         End If
                      End If
                   End If
