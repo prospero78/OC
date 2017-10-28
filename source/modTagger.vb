@@ -1,18 +1,56 @@
 ' Модуль разбивает исходник на лексемы
-
+#Disable Warning IDE1006
 Namespace пиОк
-   Public Class клсТег
+   ' Стили именования
+   Public Class clsCoord
+      ' Стили именования
+      Dim _pos As Integer = 0
+      Dim _str As Integer = 0
+      Public ReadOnly Property iPos() As Integer
+         Get
+            Return Me._pos
+         End Get
+      End Property
+      Public ReadOnly Property iStr() As Integer
+         Get
+            Return Me._str
+         End Get
+      End Property
+      Public Sub New(Optional pos_ As Int64 = 0, Optional str_ As Int64 = 0)
+         If pos_ < 0 Then
+            Throw New ApplicationException("Позиция не может быть отрицательной val=" + Str(_pos))
+         Else
+            Me._pos = _pos
+         End If
+         If str_ < 0 Then
+            Throw New ApplicationException("Cтрока не может быть отрицательной val=" + Str(_str))
+         Else
+            Me._str = _str
+         End If
+      End Sub
+   End Class
+   ' Стили именования
+   Public Class clsTag
+      ' Стили именования
       ' хранит в себе последовательно кусочек нераспознанного кода с координатами
-      Public цСтр As Integer = 0
-      Public цПоз As Integer = 0
-      Public стрТег As String = ""
+      Public ReadOnly coord As clsCoord
+      Private ReadOnly _strTag As String = ""
+      Public ReadOnly Property strTag() As String
+         Get
+            Return Me._strTag
+         End Get
+      End Property
+      Public Sub New(_strTag As String, _iStr As Int64, _iPoz As Int64)
+         Me.coord = New clsCoord(_iPoz, _iStr)
+         Me._strTag = _strTag
+      End Sub
    End Class
    Public Module модТеггер
       ' попытка сделать по уму
       Public Const multitag = 0
       Const doubletag = 2
       Const singletag = 1
-      Public теги() As клсТег
+      Public tags() As clsTag
       Dim txtSrc As String = "" ' текст исходника
       Public txtLine() As String ' исходник разбитый построчно
       Public гцСтр As Integer = 0
@@ -46,17 +84,13 @@ Namespace пиОк
       End Function
       Sub Тег_Добавить(lit As String)
          'Создать новый тэг
-         Dim tag As клсТег = New клсТег With {
-             .стрТег = lit,
-             .цСтр = гцСтр,
-             .цПоз = гцПоз
-         }
-         If IsNothing(теги) Then
-            ReDim Preserve теги(0)
+         Dim tag As clsTag = New clsTag(lit, гцСтр, гцПоз)
+         If IsNothing(tags) Then
+            ReDim Preserve tags(0)
          Else
-            ReDim Preserve теги(теги.Length)
+            ReDim Preserve tags(tags.Length)
          End If
-         теги(теги.Length - 1) = tag
+         tags(tags.Length - 1) = tag
       End Sub
       Public Function ЕслиВнутрТег(lit As String) As Integer
          Dim res As Integer = -1
@@ -105,12 +139,12 @@ Namespace пиОк
                   Тег_Добавить(lit + lit2)
                Else
                   Тег_Добавить(lit)
-                  End If
-                  txtSrc = Mid(txtSrc, 2)
-                  lit = Mid(txtSrc, 1, 1)
-                  Поз_Получ(lit)
                End If
-               If ЕслиВнутрТег(lit) = multitag Then
+               txtSrc = Mid(txtSrc, 2)
+               lit = Mid(txtSrc, 1, 1)
+               Поз_Получ(lit)
+            End If
+            If ЕслиВнутрТег(lit) = multitag Then
 
                Do While ЕслиВнутрТег(lit) = multitag ' если многосимвольный тэг
                   гсТег += lit

@@ -45,6 +45,16 @@
          End If
          Return bRes
       End Function
+      Public Function ЕслиИмя(lit As String) As String
+         'проверить, что не пусто
+         If lit = "" Then
+            Return "Имя не может быть пустой строкой"
+         ElseIf Not ЕслиНачИмени(Mid(lit, 1, 1)) Then
+            Return "Неправильное начало имени"
+         Else
+            Return ""
+         End If
+      End Function
    End Module
 End Namespace
 
