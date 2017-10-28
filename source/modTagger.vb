@@ -31,12 +31,14 @@ Namespace пиОк
       End Property
       Public Sub New(Optional pos_ As Integer = 0, Optional str_ As Integer = 0)
          If pos_ < 0 Then
-            Throw New ApplicationException("Позиция не может быть отрицательной val=" + Str(_pos))
+            модКокон.Ошибка("Позиция не может быть отрицательной val=" + Str(_pos))
+            Environment.Exit(1)
          Else
             Me._pos = _pos
          End If
          If str_ < 0 Then
-            Throw New ApplicationException("Cтрока не может быть отрицательной val=" + Str(_str))
+            модКокон.Ошибка("Cтрока не может быть отрицательной val=" + Str(_str))
+            Environment.Exit(1)
          Else
             Me._str = _str
          End If
@@ -45,16 +47,19 @@ Namespace пиОк
       '''По литере определяет налчие новой строки. В любом случае, обновляет координаты
       '''</summary>
       Public Function Coord_Update(lit As String) As Boolean
+         Dim bRes As Boolean
          If lit = "" Then
-            Throw New Exception("Литера не может быть пустой для установки её позиции. lit=" + lit)
-         ElseIf lit = vbCrLf Then
+            модКокон.Ошибка("Литера не может быть пустой для установки её позиции. lit=" + lit)
+            Environment.Exit(1)
+         ElseIf lit = vbCr Then
             Me._pos = 0
             Me._str += 1
-            Return True
+            bRes = True
          Else
             Me._pos += 1
-            Return False
+            bRes = False
          End If
+         Return bRes
       End Function
    End Class
    Public Class clsTag
@@ -81,12 +86,14 @@ Namespace пиОк
       ' =================== ТЕГИРОВАНИЕ =======================
       Sub Pos_Get(lit As String)
          Static srcLine As String = "" ' очередная строка исходного кода
-         If IsNothing(txtLine) Then
-            ReDim txtLine(0)
-         End If
+
          If gCoord.Coord_Update(lit) Then ' если новая строка
             ' Добавить строку в массив исходников
-            ReDim Preserve txtLine(txtLine.Length + 1)
+            If IsNothing(txtLine) Then
+               ReDim txtLine(0)
+            Else
+               ReDim Preserve txtLine(txtLine.Length)
+            End If
             txtLine(txtLine.Length - 1) = srcLine
             srcLine = ""
          Else
