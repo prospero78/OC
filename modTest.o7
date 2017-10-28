@@ -1,13 +1,13 @@
 (* комментарий, который компилятор должен игнорировать *)
 
-aMODULE _modTest;
+MODULE _modTest;
 
 IMPORT mT:=modTest,
    modTest1,
    mT2:=modTest2;
 (*   mT3:=modTest3; *)
-CONST
-   tal = 9;
+CONST 
+   tal = 9;;
    tal2 = 34;
    tal3 = 34;
 

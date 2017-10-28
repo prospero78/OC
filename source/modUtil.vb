@@ -1,5 +1,5 @@
 ﻿Namespace пиОк
-   Public Module модУтиль
+   Public Module modUtil
       Public Function ЕслиДробное(lit As String) As Boolean
          Dim bRes As Boolean = False
          Dim res As Double = 0
@@ -37,6 +37,7 @@
       Public Function ЕслиНачИмени(lit As String) As Boolean
          ' имя должно начинаться с "_" или буквы
          Dim bRes As Boolean = False
+         lit = Mid(lit, 1, 1)
          If (lit = "_" Or ЕслиБуква(lit)) And (Not ЕслиЦифра(lit)) Then
             bRes = True
          End If

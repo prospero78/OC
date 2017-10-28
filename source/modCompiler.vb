@@ -21,7 +21,7 @@ Namespace пиОк
          End Get
          Set(value As String)
             Dim res As String
-            res = модУтиль.ЕслиИмя(value)
+            res = modUtil.ЕслиИмя(value)
             If res = "" Then
                Me._name = value
             Else
@@ -44,8 +44,8 @@ Namespace пиОк
       ''' Строковое предствление тега для лексемы.
       ''' </summary>
       Public litName As clsName ' настоящее имя модуля
-      Public Sub New(_strTag As String, iStr As Integer, iPoz As Integer)
-         MyBase.New(_strTag, iStr, iPoz)
+      Public Sub New(_strTag As String, _coord As clsCoord)
+         MyBase.New(_strTag, _coord)
          Me.litName = New clsName(_strTag)
       End Sub
    End Class
@@ -59,12 +59,53 @@ Namespace пиОк
          Me.name = New clsName(_name)
          Me.alias_ = New clsName(_alias)
       End Sub
+      Public Sub Import_Error(txtLine As String, _lex As clsLex)
+         модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + " -" + Str(_lex.coord.iPos))
+         Console.WriteLine(txtLine)
+         Console.WriteLine(Смещ(_lex.coord.iPos))
+         модКокон.Ошибка("Нарушение порядка импорта>")
+         Environment.Exit(1)
+      End Sub
    End Class
    Public Class clsConst ' класс содержащий константу
-      ' Стили именования
-      Public name As String
-      Public val As String
-      Public type_ As String
+      Public lex As clsLex ' содержит строкове представление и координаты
+      Public exp() As clsLex ' тут может быть целое выражение!!
+      Public type_ As String ' тип константы
+      ''' <summary>
+      ''' Выводится при отсутствии имени константы
+      ''' </summary>
+      ''' <param name="txtLine">Строка, в которой ошибка</param>
+      ''' <param name="_lex">Неверная лексема</param>
+      Public Sub ErrorMissingName(txtLine As String, _lex As clsLex)
+         модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + " -" + Str(_lex.coord.iPos))
+         Console.WriteLine(txtLine)
+         Console.WriteLine(Смещ(_lex.coord.iPos))
+         модКокон.Ошибка("Пропущено имя константы")
+         Environment.Exit(1)
+      End Sub
+      ''' <summary>
+      ''' Сообщение об запрете пустого имени константы
+      ''' </summary>
+      ''' <param name="txtLine">Строка с ошибочным именем</param>
+      ''' <param name="_lex">Ошибочная лексема</param>
+      Public Sub ErrorEmptyName(txtLine As String, _lex As clsLex)
+         модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + " -" + Str(_lex.coord.iPos))
+         Console.WriteLine(txtLine)
+         Console.WriteLine(Смещ(_lex.coord.iPos))
+         модКокон.Ошибка("Пропущено имя константы")
+      End Sub
+      ''' <summary>
+      '''  Выводится сообщение при отсутствии присвоения константе
+      ''' </summary>
+      ''' <param name="txtLine">Строка с ошибочным присвоение</param>
+      ''' <param name="_lex">Ошибочная лексема на месте присвоения</param>
+      Public Sub ErrorAsign(txtLine As String, _lex As clsLex)
+         модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + "-" + Str(_lex.coord.iPos))
+         Console.WriteLine(txtLine)
+         Console.WriteLine(Смещ(_lex.coord.iPos))
+         модКокон.Ошибка("Нарушение присвоения константы")
+         Environment.Exit(1)
+      End Sub
    End Class
    Public Class clsModule ' Описывает модуль целиком
       Public tag_end As Integer = 0 'номер последнего значимого тега
@@ -74,11 +115,77 @@ Namespace пиОк
       Public const_() As clsConst 'список констант
       Public proc As Integer
       Public name As String = ""
+      ''' <summary>
+      ''' Сообщение об отсутствии кейворда MODULE
+      ''' </summary>
+      ''' <param name="txtLine">Строка, где MODULE не встречено </param>
+      ''' <param name="_mLex">Лексема, которая должна была содржать MODULE</param>
       Public Sub ErrorOpen(txtLine As String, _mLex As clsLex)
          модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + " -" + Str(_mLex.coord.iPos))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_mLex.coord.iPos))
          модКокон.Ошибка("Модуль должен начинаться с ""MODULE""")
+         Environment.Exit(1)
+      End Sub
+      ''' <summary>
+      ''' Сообщение о том, что не найден разделитель имени модуля
+      ''' </summary>
+      ''' <param name="txtLine">Строка с именем модуля</param>
+      ''' <param name="_mLex">ошибочная лексема</param>
+      Public Sub ErrorEndName(txtLine As String, _mLex As clsLex)
+         модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + " -" + Str(_mLex.coord.iPos))
+         Console.WriteLine(txtLine)
+         Console.WriteLine(Смещ(_mLex.coord.iPos))
+         модКокон.Ошибка("Нет разделителя имени модуля")
+         Environment.Exit(1)
+      End Sub
+      ''' <summary>
+      ''' Сообщение при отсутствии маркера конца модуля
+      ''' </summary>
+      ''' <param name="txtLine">Последняя строка</param>
+      ''' <param name="_mLex">Последняя лексема</param>
+      Public Sub BadEndNModule(txtLine As String, _mLex As clsLex)
+         модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + "-" + Str(_mLex.coord.iPos))
+         Console.WriteLine(txtLine)
+         Console.WriteLine(Смещ(_mLex.coord.iPos))
+         модКокон.Ошибка("Модуль должен иметь ""END <NameModule.>""")
+         Environment.Exit(1)
+      End Sub
+      ''' <summary>
+      ''' Сообщение о ошибке, что MODULE не один
+      ''' </summary>
+      ''' <param name="txtLine">Строка в которой встречен второй MODULE</param>
+      ''' <param name="_mLex">лексема запрещённый второй MODULE</param>
+      Public Sub ErrorDoubleNModule(txtLine As String, _mLex As clsLex)
+         модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + " -" + Str(_mLex.coord.iPos))
+         Console.WriteLine(txtLine)
+         Console.WriteLine(Смещ(_mLex.coord.iPos))
+         модКокон.Ошибка("MODULE должен быть один")
+         Environment.Exit(1)
+      End Sub
+      ''' <summary>
+      ''' Сообщение о том, что имя модуля в начале, и имя модуля в конце
+      ''' не совпадают.
+      ''' </summary>
+      ''' <param name="txtLine">Строка содержащая имя модуля</param>
+      ''' <param name="_mLex">Лексема содержащая имя модуля</param>
+      Public Sub MissMathName(txtLine1 As String, txtLine2 As String)
+         Console.WriteLine(txtLine1)
+         Console.WriteLine(txtLine2)
+         модКокон.Ошибка("Имя модуля несогласовано")
+         Environment.Exit(1)
+      End Sub
+      ''' <summary>
+      ''' Сообщение об ошибке, что неправильно записана инструкция
+      ''' за разделителем имени модуля.
+      ''' </summary>
+      ''' <param name="txtLine">Строка в которой встречена запрещённая инструкция</param>
+      ''' <param name="_mLex">Лексема запрещённая инструкция</param>
+      Public Sub ErrorNextStatement(txtLine As String, _mLex As clsLex)
+         модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + " -" + Str(_mLex.coord.iPos))
+         Console.WriteLine(txtLine)
+         Console.WriteLine(Смещ(_mLex.coord.iPos))
+         модКокон.Ошибка("Запрещённая лексема в этом месте")
          Environment.Exit(1)
       End Sub
    End Class
@@ -170,8 +277,7 @@ Namespace пиОк
          If Not IsNothing(modTagger.tags) Then
             Do While (i < modTagger.tags.Length)
                lex_ = New clsLex(modTagger.tags(i).strTag,
-                                      modTagger.tags(i).coord.iStr,
-                                      modTagger.tags(i).coord.iPos)
+                                      modTagger.tags(i).coord)
                If IsNothing(mLex) Then
                   ReDim mLex(0)
                Else
@@ -206,11 +312,12 @@ Namespace пиОк
          Return s
       End Function
       Sub ОшибкаИмени(msg As String, t As Integer)
-         модКокон.Ошибка(msg + ":" + Str(t) + " >" + Str(mLex(t).strTag) + "<")
+         модКокон.Ошибка(msg + ":" + t.ToString() + " >" + mLex(t).strTag + "<")
          модКокон.Ошибка("Крд: " + Str(mLex(t).coord.iStr) + " -" + Str(mLex(t).coord.iPos))
          Console.WriteLine(txtLine(mLex(t).coord.iStr))
          Console.WriteLine(Смещ(mLex(t).coord.iPos))
          модКокон.Ошибка("Имя должно начинается с буквы или ""_""")
+         Environment.Exit(1)
       End Sub
       Sub Пр_КОММЕНТАРИЙ()
          ' правило ищет комметарии и иключает их из кода
@@ -266,56 +373,45 @@ Namespace пиОк
             If mLex(0).strTag = "MODULE" Then
                ' открываем наш модуль
                sRes = "1.2"
-            Else
+            Else ' если тег не оказался MODULE
                prog.ErrorOpen(txtLine(mLex(0).coord.iStr), mLex(0))
-               Exit Sub
             End If
          End If
          '1.2 У модуля должно быть имя
          If sRes = "1.2" Then
-            ' имя модуля -- № 1, разделитель -- № 2
-            If mLex(2).strTag <> ";" Then ' пропущено имя модуля
-               модКокон.Ошибка("Крд: " + Str(mLex(1).coord.iStr) + " -" + Str(mLex(1).coord.iPos))
-               Console.WriteLine(txtLine(mLex(1).coord.iStr))
-               Console.WriteLine(Смещ(mLex(1).coord.iPos))
-               модКокон.Ошибка("Пропущено имя модуля или разделитель")
-               sRes = "err"
-               Exit Sub
-            End If
             ' проверка на допустимое имя. Должно начинаться либо с "_"  либо с буквы
-            If модУтиль.ЕслиНачИмени(Mid(mLex(1).strTag, 1, 1)) Then
+            If modUtil.ЕслиНачИмени(mLex(1).strTag) Then
                prog.name = mLex(1).strTag
-               sRes = "1.3"
             Else
                ОшибкаИмени("MODULE", 1)
-               sRes = "err"
-               Exit Sub
+               Environment.Exit(1)
+            End If
+
+            ' имя модуля -- № 1, разделитель -- № 2
+            If mLex(2).strTag <> ";" Then ' пропущен разделитель
+               prog.ErrorEndName(txtLine(mLex(1).coord.iStr), mLex(1))
+            Else
+               sRes = "1.3"
             End If
          End If
          ' 1.3 У Модуля должно быть окончание
          If sRes = "1.3" Then
             Dim bEnd As Boolean = False
             Dim i As Integer = 3 ' начинаем отсчёт сразу за определением модуля
-            Do While i < mLex.Length
-               If mLex(i).strTag = "END" Then ' относится ли это к концу модуля?
-                  If mLex(i + 2).strTag = "." Then ' конец ли это? i+2 -- через имя
-                     bEnd = True
-                     ' отбрасываем лишние тэги
-                     ' ограничивать будем полем структуры программы
-                     prog.tag_end = i + 2
-                     sRes = "1.4"
-                     Exit Do
-                  End If
+            Do While i < mLex.Length - 2 ' учитываем ссылку вперёд на точку
+               ' конец ли это? i+2 -- через имя
+               If mLex(i).strTag = "END" And modUtil.ЕслиИмя(mLex(i + 1).strTag) = "" And
+                   mLex(i + 2).strTag = "." Then
+                  bEnd = True
+                  ' ограничивать будем полем структуры программы
+                  prog.tag_end = i + 2
+                  sRes = "1.4"
+                  Exit Do
                End If
                i += 1
             Loop
             If Not bEnd Then 'а конца то нет!! работаем с последним тегом
-               модКокон.Ошибка("Крд: " + Str(mLex(mLex.Length - 1).coord.iStr) + " -" +
-                               Str(mLex(mLex.Length - 1).coord.iPos))
-               Console.WriteLine(txtLine(mLex(mLex.Length - 1).coord.iStr))
-               Console.WriteLine(Смещ(mLex(mLex.Length - 1).coord.iPos))
-               модКокон.Ошибка("Модуль должен иметь ""END <NameModule.>""")
-               sRes = "err"
+               prog.BadEndNModule(txtLine(mLex(mLex.Length - 1).coord.iStr - 1), mLex(mLex.Length - 1))
             End If
          End If
          '1.4 Модуль должен быть один
@@ -323,52 +419,47 @@ Namespace пиОк
             ' Организуем цикл в поиске МОДУЛЬ с учётом, что это может быть строка
             ' Интересует только первая тотальная встреча
             Dim i As Integer = 1 ' нельзя брать 0, так как это и есть модуль
-            Dim bKw As Boolean = True
             Do While i < prog.tag_end  ' последние тэги мы уже выяснили
                If mLex(i).strTag = "MODULE" Then 'надо выясить, может это часть выражения, или строка
                   If (mLex(i - 1).strTag = ".") Then
-                     bKw = False ' часть сущности
+                     i += 1
+                     Continue Do
                   ElseIf mLex(i - 1).strTag = """" And mLex(i + 1).strTag = """" Then
-                     bKw = False ' строка
+                     i += 1
+                     Continue Do
                   ElseIf mLex(i - 1).strTag = "'" And mLex(i + 1).strTag = "'" Then
-                     bKw = False ' строка
+                     i += 1
+                     Continue Do
                   Else ' да. Это не строка, и не часть сущности!!
-                     bKw = True
-                     модКокон.Ошибка("Крд: " + Str(mLex(i).coord.iStr + 1) + " -" + Str(mLex(i).coord.iPos))
-                     Console.WriteLine(txtLine(mLex(i).coord.iStr + 1))
-                     Console.WriteLine(Смещ(mLex(i).coord.iPos))
-                     модКокон.Ошибка("MODULE должен быть один")
-                     sRes = "err"
-                     Exit Sub
+                     prog.ErrorDoubleNModule(txtLine(mLex(i).coord.iStr), mLex(i))
                   End If
                End If
                i += 1
             Loop
-            If i = prog.tag_end Then
-               bKw = False
-               sRes = "1.5"
-            End If
+            sRes = "1.5"
          End If
          ' 1.5 Имя модуля и имя конца должны совпадать
          If sRes = "1.5" Then
             If prog.name <> mLex(prog.tag_end - 1).strTag Then
                ' это залёт!
-               Console.WriteLine(txtLine(mLex(0).coord.iStr))
-               Console.WriteLine(txtLine(mLex(prog.tag_end - 1).coord.iStr))
-               модКокон.Ошибка("Имя модуля несогласовано")
-               sRes = "err"
-               Exit Sub
+               prog.MissMathName(txtLine(mLex(0).coord.iStr), txtLine(mLex(prog.tag_end - 1).coord.iStr))
             Else
-               sRes = "import"
+               sRes = "1.6"
             End If
          End If
-      End Sub
-      Sub Импорт_Ошибка()
-         модКокон.Ошибка("Крд: " + Str(mLex(tagc).coord.iStr) + " -" + Str(mLex(tagc).coord.iPos))
-         Console.WriteLine(txtLine(mLex(tagc).coord.iStr))
-         Console.WriteLine(Смещ(mLex(tagc).coord.iPos))
-         модКокон.Ошибка("Нарушение порядка импорта>")
-         sRes = "err"
+         ' дальше должно идти на выбор: IMPORT CONST TYPE VAR PROCEDURE BEGIN
+         If sRes = "1.6" Then
+            tagc = 3 ' первая инструкция после разделителя имени модуля
+            If mLex(tagc).strTag = "IMPORT" Or mLex(tagc).strTag = "CONST" Or
+                  mLex(tagc).strTag = "TYPE" Or mLex(tagc).strTag = "VAR" Or
+                  mLex(tagc).strTag = "PROCEDURE" Or mLex(tagc).strTag = "BEGIN" Then
+               sRes = "import"
+            Else
+               ' запрещённый символ
+               Console.WriteLine(">" + mLex(tagc).strTag + "<")
+               prog.ErrorNextStatement(txtLine(mLex(tagc).coord.iStr), mLex(tagc))
+            End If
+         End If
       End Sub
       Sub Пр_ИМПОРТ()
          ' прочесали модуль, теперь проверить нет ли импорта
@@ -388,44 +479,38 @@ Namespace пиОк
                ' прямой, c алиасом, с запятой (продолжение), с ";" -- конец импорта
                If mLex(tagc + 1).strTag = "," Or mLex(tagc + 1).strTag = ";" Then ' Первая ветка -- прямой импорт
                   ' проверить имя модуля и алиас на допустимость
-                  If Not модУтиль.ЕслиНачИмени(Mid(mLex(tagc).strTag, 1, 1)) Then
+                  If modUtil.ЕслиИмя(mLex(tagc).strTag) <> "" Then
                      '  неправильное имени
                      ОшибкаИмени("IMPORT", tagc + 1)
-                     sRes = "err"
-                     Exit Sub
                   End If
                   If IsNothing(prog.import) Then
                      ReDim prog.import(0)
                   Else
-                     ReDim Preserve prog.import(prog.import.Length + 1)
+                     ReDim Preserve prog.import(prog.import.Length)
                   End If
                   Dim imp As clsImport = New clsImport(mLex(tagc).strTag)
                   prog.import(prog.import.Length - 1) = imp
-                  If mLex(tagc + 1).strTag = "," Then 'импорт может закончился?
-                     tagc += 2
+                  tagc += 1 ' ищем разделитель импорта
+                  If mLex(tagc).strTag = "," Then 'импорт может закончился?
+                     tagc += 1
                      Continue Do
-                  ElseIf mLex(tagc + 1).strTag = ";" Then ' импорт закончить
-                     tagc += 2
+                  ElseIf mLex(tagc).strTag = ";" Then ' импорт закончить
+                     tagc += 1
                      sRes = "2.3"
                      Exit Do
                   Else ' а это уже ошибка!!
-                     Импорт_Ошибка()
-                     Exit Sub
+                     prog.import(prog.import.Length - 1).Import_Error(txtLine(mLex(tagc + 1).coord.iStr), mLex(tagc + 1))
                   End If
                ElseIf mLex(tagc + 1).strTag = ":=" Then ' вторая ветка -- импорт с алиасом
                   ' проверка имени
-                  If Not модУтиль.ЕслиНачИмени(Mid(mLex(tagc + 2).strTag, 1, 1)) Then
+                  If modUtil.ЕслиИмя(mLex(tagc + 2).strTag) <> "" Then
                      '  неправильное имени
                      ОшибкаИмени("IMPORT", tagc + 2)
-                     sRes = "err"
-                     Exit Sub
                   End If
                   ' проверка алиаса
-                  If Not модУтиль.ЕслиНачИмени(Mid(mLex(tagc).strTag, 1, 1)) Then
+                  If modUtil.ЕслиИмя(mLex(tagc).strTag) <> "" Then
                      '  неправильное имени
-                     ОшибкаИмени("IMPORT", tagc + 1)
-                     sRes = "err"
-                     Exit Sub
+                     ОшибкаИмени("IMPORT", tagc)
                   End If
                   ' значит добавить элемент импрота
                   If IsNothing(prog.import) Then
@@ -441,36 +526,15 @@ Namespace пиОк
                      Continue Do
                   ElseIf mLex(tagc + 3).strTag = ";" Then ' импорт закончить
                      tagc += 4
-                     sRes = "2.3"
+                     sRes = "const"
                      Exit Do
                   Else ' а это уже ошибка!!
-                     Импорт_Ошибка()
-                     sRes = "err"
-                     Exit Sub
+                     prog.import(prog.import.Length - 1).Import_Error(txtLine(mLex(tagc + 3).coord.iStr), mLex(tagc + 3))
                   End If
                Else
-                  Импорт_Ошибка()
-                  sRes = "err"
-                  Exit Sub
+                  prog.import(prog.import.Length - 1).Import_Error(txtLine(mLex(tagc + 1).coord.iStr), mLex(tagc + 1))
                End If
             Loop
-         End If
-         ' 2.3 Проверка на ошибку досрочного окончания импорта
-         If sRes = "2.3" Then
-            If (mLex(tagc).strTag = "CONST" Or mLex(tagc).strTag = "TYPE" Or
-                  mLex(tagc).strTag = "VAR" Or mLex(tagc).strTag = "PROCEDURE" Or
-                  mLex(tagc).strTag = "BEGIN") Or
-                  (mLex(prog.tag_end - 2).strTag = mLex(tagc).strTag And
-                  mLex(prog.tag_end).strTag = ".") Then
-               ' здесь вообще варианты. Но все дальше должны проверить
-               sRes = "const"
-            Else
-               tagc -= 1
-               Импорт_Ошибка()
-               модКокон.Ошибка("Досрочное прекращение импорта")
-               sRes = "err"
-               Exit Sub
-            End If
          End If
       End Sub
       Sub Пр_КОНСТ()
@@ -480,15 +544,13 @@ Namespace пиОк
                tagc += 1
                sRes = "4.1"
                Exit Sub
-            Else ' такая инструкция есть";"-- запрещено
+            Else ' такая инструкция есть, сразу должно идти имя. Остальное запрещено
                tagc += 1
-               If mLex(tagc).strTag = ";" Then
-                  модКокон.Ошибка("Крд: " + Str(mLex(tagc).coord.iStr) + " -" + Str(mLex(tagc).coord.iPos))
-                  Console.WriteLine(txtLine(mLex(tagc).coord.iStr))
-                  Console.WriteLine(Смещ(mLex(tagc).coord.iPos))
-                  модКокон.Ошибка("Пропущено имя константы")
-                  sRes = "err"
-                  Exit Sub
+               If modUtil.ЕслиИмя(mLex(tagc).strTag) <> "" Then
+                  If IsNothing(prog.const_) Then
+                     ReDim prog.const_(0)
+                  End If
+                  prog.const_(0).ErrorMissingName(txtLine(mLex(tagc).coord.iStr), mLex(tagc))
                Else
                   sRes = "3.2"
                End If
@@ -499,60 +561,50 @@ Namespace пиОк
                ' секция CONST может быть пустой
                If mLex(tagc).strTag = "TYPE" Or mLex(tagc).strTag = "VAR" Or
                      mLex(tagc).strTag = "PROCEDURE" Or mLex(tagc).strTag = "BEGIN" Or
-                     (mLex(tagc).strTag = "END" And mLex(tagc + 2).strTag = ".") Then
+                     (mLex(tagc).strTag = "END" And mLex(tagc).strTag = prog.name And
+                     mLex(tagc + 2).strTag = ".") Then
                   tagc += 1
                   sRes = "4.1"
                   Exit Do
                End If
-               If ClassTag(Mid(mLex(tagc).strTag, 1, 1)) <> modConst.multitag Then ' имя не может быть пустым
-                  модКокон.Ошибка("Крд: " + Str(mLex(tagc).coord.iStr) + " -" + Str(mLex(tagc).coord.iPos))
-                  Console.WriteLine(txtLine(mLex(tagc).coord.iStr))
-                  Console.WriteLine(Смещ(mLex(tagc).coord.iPos))
-                  модКокон.Ошибка("Пропущено имя константы")
-                  sRes = "err"
-                  Exit Sub
+               ' имя не может быть пустым
+               If ClassTag(Mid(mLex(tagc).strTag, 1, 1)) <> modConst.multitag Then
+                  prog.const_(0).ErrorEmptyName(txtLine(mLex(tagc).coord.iStr), mLex(tagc))
                Else
                   ' Добавляем константу в секцию констант
-                  If (Not ЕслиНачИмени(Mid(mLex(tagc).strTag, 1, 1))) Then
+                  If modUtil.ЕслиИмя(mLex(tagc).strTag) <> "" Then
                      ОшибкаИмени("Константы:", tagc)
-                     sRes = "err"
-                     Exit Sub
                   Else
                      If IsNothing(prog.const_) Then
                         ReDim prog.const_(0)
                      Else
-                        ReDim Preserve prog.const_(prog.const_.Length + 1)
+                        ReDim Preserve prog.const_(prog.const_.Length)
                      End If
                      Dim const_ As clsConst = New clsConst With {
-                        .name = mLex(tagc).strTag}
+                        .lex.strtag = mLex(tagc).strTag}
                      prog.const_(prog.const_.Length - 1) = const_
                      tagc += 1
                      If mLex(tagc).strTag <> "=" Then
-                        модКокон.Ошибка("Крд: " + Str(mLex(tagc).coord.iStr) + " -" + Str(mLex(tagc).coord.iPos))
-                        Console.WriteLine(txtLine(mLex(tagc).coord.iStr))
-                        Console.WriteLine(Смещ(mLex(tagc).coord.iPos))
-                        модКокон.Ошибка("Нарушение присвоения константы")
-                        sRes = "err"
-                        Exit Sub
+                        prog.const_(0).ErrorAsign(txtLine(mLex(tagc).coord.iStr), mLex(tagc))
                      Else
                         tagc += 1
                         'TODO: тут надо выяснять что за тип данных
                         ' тут могут быть BOOLEAN, CHAR, STRING, INTEGER, REAL
                         If mLex(tagc).strTag = """" And mLex(tagc + 2).strTag = """" Then 'Это строка
-                           prog.const_(tagc + 1).val = mLex(tagc).strTag
+                           prog.const_(tagc + 1).lex.strTag = mLex(tagc).strTag
                            prog.const_(tagc + 1).type_ = "string"
                            tagc += 3
                         ElseIf mLex(tagc).strTag = "TRUE" Or mLex(tagc).strTag = "FALSE" Then
-                           prog.const_(tagc).val = mLex(tagc).strTag
+                           prog.const_(tagc).lex.strTag = mLex(tagc).strTag
                            prog.const_(tagc).type_ = "boolean"
                            tagc += 1
                            ' проверка на real
-                        ElseIf модУтиль.ЕслиЦелое(mLex(tagc).strTag) And InStr(".", mLex(tagc + 1).strTag) > 0 And
-                               модУтиль.ЕслиЦелое(mLex(tagc + 2).strTag) Then
+                        ElseIf modUtil.ЕслиЦелое(mLex(tagc).strTag) And InStr(".", mLex(tagc + 1).strTag) > 0 And
+                               modUtil.ЕслиЦелое(mLex(tagc + 2).strTag) Then
                            prog.const_(tagc).val = mLex(tagc).strTag + mLex(tagc + 1).strTag + mLex(tagc + 2).strTag
                            prog.const_(tagc).type_ = "real"
                            tagc += 3
-                        ElseIf модУтиль.ЕслиЦелое(mLex(tagc).strTag) And InStr(";", mLex(tagc + 1).strTag) > 0 Then
+                        ElseIf modUtil.ЕслиЦелое(mLex(tagc).strTag) And InStr(";", mLex(tagc + 1).strTag) > 0 Then
                            prog.const_(tagc).val = mLex(tagc).strTag
                            prog.const_(tagc).type_ = "integer"
                            tagc += 2
@@ -576,7 +628,7 @@ Namespace пиОк
          sRes = "comment"
          Пр_КОММЕНТАРИЙ()
          Dim i As Integer = 0
-         Do While i < mLex.Length - 1
+         Do While i < mLex.Length - 2
             Console.Write(Str(i) + ")" + mLex(i).strTag + vbTab)
             i += 1
             Console.Write(Str(i) + ")" + mLex(i).strTag + vbTab)
@@ -585,6 +637,7 @@ Namespace пиОк
             i += 1
          Loop
          Пр_МОДУЛЬ()
+         Console.WriteLine("Len(mLex)=" + mLex.Length.ToString)
          Пр_ИМПОРТ()
          Пр_КОНСТ()
       End Sub
@@ -594,7 +647,7 @@ Namespace пиОк
          modTagger.Тег_Разметить()
          Console.WriteLine("All tags:" + Str(modTagger.tags.Length))
          Dim i As Integer = 0
-         Do While i < modTagger.tags.Length
+         Do While i < modTagger.tags.Length - 12
             Console.Write(Str(i) + ")" + modTagger.tags(i).strTag + vbTab)
             i += 1
             Console.Write(Str(i) + ")" + modTagger.tags(i).strTag + vbTab)
@@ -613,6 +666,7 @@ Namespace пиОк
             Console.WriteLine(Str(i) + ": " + mLex(i).strTag)
             i += 1
          Loop
+         Console.Read()
          Console.WriteLine("_end_")
 
       End Sub

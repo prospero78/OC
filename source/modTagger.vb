@@ -8,17 +8,17 @@ Namespace пиОк
       '''<summary>
       '''Позиция тега в строке
       '''</summary>
-      Dim _pos As Integer = 0
+      Dim pos As Integer = 0
       '''<summary>
       '''Номер строки в исходном тексте
       '''</summary>
-      Dim _str As Integer = 0
+      Dim str As Integer = 0
       '''<summary>
       '''Позиция тега в строке
       '''</summary>
       Public ReadOnly Property iPos() As Integer
          Get
-            Return Me._pos
+            Return Me.pos
          End Get
       End Property
       '''<summary>
@@ -26,21 +26,21 @@ Namespace пиОк
       '''</summary>
       Public ReadOnly Property iStr() As Integer
          Get
-            Return Me._str
+            Return Me.str
          End Get
       End Property
-      Public Sub New(Optional pos_ As Integer = 0, Optional str_ As Integer = 0)
-         If pos_ < 0 Then
-            модКокон.Ошибка("Позиция не может быть отрицательной val=" + Str(_pos))
+      Public Sub New(Optional _str As Integer = 0, Optional _pos As Integer = 0)
+         If _pos < 0 Then
+            модКокон.Ошибка("Позиция в строке не может быть отрицательной val=" + _pos.ToString())
             Environment.Exit(1)
          Else
-            Me._pos = _pos
+            Me.pos = _pos
          End If
-         If str_ < 0 Then
-            модКокон.Ошибка("Cтрока не может быть отрицательной val=" + Str(_str))
+         If _str < 0 Then
+            модКокон.Ошибка("Номер строки не может быть отрицательной val=" + _str.ToString())
             Environment.Exit(1)
          Else
-            Me._str = _str
+            Me.str = _str
          End If
       End Sub
       '''<summary>
@@ -51,12 +51,12 @@ Namespace пиОк
          If lit = "" Then
             модКокон.Ошибка("Литера не может быть пустой для установки её позиции. lit=" + lit)
             Environment.Exit(1)
-         ElseIf lit = vbCr Then
-            Me._pos = 0
-            Me._str += 1
+         ElseIf lit = vbLf Then
+            Me.pos = 0
+            Me.str += 1
             bRes = True
          Else
-            Me._pos += 1
+            Me.pos += 1
             bRes = False
          End If
          Return bRes
@@ -72,8 +72,8 @@ Namespace пиОк
             Return Me._strTag
          End Get
       End Property
-      Public Sub New(_strTag As String, _iStr As Integer, _iPoz As Integer)
-         Me.coord = New clsCoord(_iPoz, _iStr)
+      Public Sub New(_strTag As String, _coord As clsCoord)
+         Me.coord = New clsCoord(_coord.iStr, _coord.iPos)
          Me._strTag = _strTag
       End Sub
    End Class
@@ -109,13 +109,16 @@ Namespace пиОк
       End Function
       Sub Тег_Добавить(lit As String)
          'Создать новый тэг
-         Dim tag As clsTag = New clsTag(lit, gCoord.iStr, gCoord.iPos)
+         Dim tag As clsTag = New clsTag(lit, gCoord)
          If IsNothing(tags) Then
             ReDim Preserve tags(0)
          Else
             ReDim Preserve tags(tags.Length)
          End If
          tags(tags.Length - 1) = tag
+         If gCoord.iStr > 0 And gCoord.iStr < 3 Then
+            Console.WriteLine(tag.strTag + " " + gCoord.iStr.ToString() + "-" + gCoord.iPos.ToString())
+         End If
       End Sub
       Public Function ClassTag(lit As String) As Integer
          ' описывает типы тегов в зависимости от длины:
@@ -128,7 +131,7 @@ Namespace пиОк
             res = modConst.singletag
          ElseIf InStr(":<>()*", lit) > 0 Then
             res = modConst.doubletag
-         ElseIf модУтиль.ЕслиЦифра(lit) Or модУтиль.ЕслиБуква(lit) Or lit = "_" Then
+         ElseIf modUtil.ЕслиЦифра(lit) Or modUtil.ЕслиБуква(lit) Or lit = "_" Then
             res = modConst.multitag
          End If
          Return res
@@ -139,7 +142,6 @@ Namespace пиОк
          Pos_Get(sRes)
          Return sRes
       End Function
-
       Public Sub Тег_Разметить()
          Dim lit, lit2 As String
          Dim гсТег As String = "" ' глобальный текущий тэгg
