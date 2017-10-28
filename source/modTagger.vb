@@ -1,22 +1,35 @@
 ' Модуль разбивает исходник на лексемы
-#Disable Warning IDE1006
+
 Namespace пиОк
-   ' Стили именования
+   '''<summary>
+   '''Класс хранит координаты позиции кода в исходном месте. Позволяет сканировать текст на новую строку.
+   '''</summary>
    Public Class clsCoord
-      ' Стили именования
+      '''<summary>
+      '''Позиция тега в строке
+      '''</summary>
       Dim _pos As Integer = 0
+      '''<summary>
+      '''Номер строки в исходном тексте
+      '''</summary>
       Dim _str As Integer = 0
+      '''<summary>
+      '''Позиция тега в строке
+      '''</summary>
       Public ReadOnly Property iPos() As Integer
          Get
             Return Me._pos
          End Get
       End Property
+      '''<summary>
+      '''Номер строки в исходном тексте, содержащий текущий тег
+      '''</summary>
       Public ReadOnly Property iStr() As Integer
          Get
             Return Me._str
          End Get
       End Property
-      Public Sub New(Optional pos_ As Int64 = 0, Optional str_ As Int64 = 0)
+      Public Sub New(Optional pos_ As Integer = 0, Optional str_ As Integer = 0)
          If pos_ < 0 Then
             Throw New ApplicationException("Позиция не может быть отрицательной val=" + Str(_pos))
          Else
@@ -28,8 +41,22 @@ Namespace пиОк
             Me._str = _str
          End If
       End Sub
+      '''<summary>
+      '''По литере определяет налчие новой строки. В любом случае, обновляет координаты
+      '''</summary>
+      Public Function Coord_Update(lit As String) As Boolean
+         If lit = "" Then
+            Throw New Exception("Литера не может быть пустой для установки её позиции. lit=" + lit)
+         ElseIf lit = vbCrLf Then
+            Me._pos = 0
+            Me._str += 1
+            Return True
+         Else
+            Me._pos += 1
+            Return False
+         End If
+      End Function
    End Class
-   ' Стили именования
    Public Class clsTag
       ' Стили именования
       ' хранит в себе последовательно кусочек нераспознанного кода с координатами
@@ -40,38 +67,29 @@ Namespace пиОк
             Return Me._strTag
          End Get
       End Property
-      Public Sub New(_strTag As String, _iStr As Int64, _iPoz As Int64)
+      Public Sub New(_strTag As String, _iStr As Integer, _iPoz As Integer)
          Me.coord = New clsCoord(_iPoz, _iStr)
          Me._strTag = _strTag
       End Sub
    End Class
-   Public Module модТеггер
+   Public Module modTagger
       ' попытка сделать по уму
-      Public Const multitag = 0
-      Const doubletag = 2
-      Const singletag = 1
       Public tags() As clsTag
       Dim txtSrc As String = "" ' текст исходника
       Public txtLine() As String ' исходник разбитый построчно
-      Public гцСтр As Integer = 0
-      Dim гцПоз As Integer = 0
+      Public gCoord As clsCoord ' хранит глобальные координаты
       ' =================== ТЕГИРОВАНИЕ =======================
-      Sub Поз_Получ(lit As String)
+      Sub Pos_Get(lit As String)
          Static srcLine As String = "" ' очередная строка исходного кода
-         If lit = vbLf Then
-
-            гцПоз = 0
+         If IsNothing(txtLine) Then
+            ReDim txtLine(0)
+         End If
+         If gCoord.Coord_Update(lit) Then ' если новая строка
             ' Добавить строку в массив исходников
-            If IsNothing(txtLine) Then
-               ReDim txtLine(0)
-            Else
-               ReDim Preserve txtLine(гцСтр + 1)
-            End If
-            txtLine(гцСтр) = srcLine
-            гцСтр += 1
+            ReDim Preserve txtLine(txtLine.Length + 1)
+            txtLine(txtLine.Length - 1) = srcLine
             srcLine = ""
          Else
-            гцПоз += 1
             srcLine += lit
          End If
       End Sub
@@ -84,7 +102,7 @@ Namespace пиОк
       End Function
       Sub Тег_Добавить(lit As String)
          'Создать новый тэг
-         Dim tag As clsTag = New clsTag(lit, гцСтр, гцПоз)
+         Dim tag As clsTag = New clsTag(lit, gCoord.iStr, gCoord.iPos)
          If IsNothing(tags) Then
             ReDim Preserve tags(0)
          Else
@@ -92,80 +110,73 @@ Namespace пиОк
          End If
          tags(tags.Length - 1) = tag
       End Sub
-      Public Function ЕслиВнутрТег(lit As String) As Integer
+      Public Function ClassTag(lit As String) As Integer
+         ' описывает типы тегов в зависимости от длины:
+         '   синглетег -- одиночная литера
+         '   дублетег -- двойная литера
+         '   мультитег -- мультилитера
          Dim res As Integer = -1
+
          If InStr(",;-+.[""]'=", lit) > 0 Then
-            res = singletag
+            res = modConst.singletag
          ElseIf InStr(":<>()*", lit) > 0 Then
-            res = doubletag
+            res = modConst.doubletag
          ElseIf модУтиль.ЕслиЦифра(lit) Or модУтиль.ЕслиБуква(lit) Or lit = "_" Then
-            res = multitag
+            res = modConst.multitag
          End If
          Return res
       End Function
+      Public Function New_Lit() As String
+         txtSrc = Mid(txtSrc, 2)
+         Dim sRes As String = Mid(txtSrc, 1, 1)
+         Pos_Get(sRes)
+         Return sRes
+      End Function
+
       Public Sub Тег_Разметить()
          Dim lit, lit2 As String
-         Dim гсТег As String = "" ' глобальный текущий тэг
+         Dim гсТег As String = "" ' глобальный текущий тэгg
+         gCoord = New clsCoord()
          txtSrc = модФайл.txtFileO7 + "  " ' хвост нужен, чтобы гарантированно не обрезать тег
          lit = Mid(txtSrc, 1, 1)
-         Поз_Получ(lit)
-         Do While Len(txtSrc) > 1 ' общий цикл с правильными литерами
+         Pos_Get(lit)
+         Do While txtSrc.Length > 1 ' общий цикл с правильными литерами
             If ЕслиОтсев(lit) Then ' отбросим мусор
                ' Пропуск символов-мусора
-               txtSrc = Mid(txtSrc, 2)
-               lit = Mid(txtSrc, 1, 1)
-               Поз_Получ(lit)
+               lit = New_Lit()
             End If
-            If ЕслиВнутрТег(lit) = singletag Then ' если тег-одиночка
+            If ClassTag(lit) = modConst.singletag Then ' если тег-одиночка
                Тег_Добавить(lit)
-
-               txtSrc = Mid(txtSrc, 2)
-               lit = Mid(txtSrc, 1, 1)
-               Поз_Получ(lit)
+               lit = New_Lit()
             End If
-            If ЕслиВнутрТег(lit) = doubletag Then ' если сложный тег
+            If ClassTag(lit) = modConst.doubletag Then ' если сложный тег
                lit2 = Mid(txtSrc, 2, 1)
                If InStr(":><", lit) > 0 And lit2 = "=" Then
                   txtSrc = Mid(txtSrc, 2)
-                  Поз_Получ(lit2)
+                  Pos_Get(lit2)
                   Тег_Добавить(lit + lit2)
                ElseIf lit = "(" And lit2 = "*" Then
                   txtSrc = Mid(txtSrc, 2)
-                  Поз_Получ(lit2)
+                  Pos_Get(lit2)
                   Тег_Добавить(lit + lit2)
                ElseIf lit = "*" And lit2 = ")" Then
                   txtSrc = Mid(txtSrc, 2)
-                  Поз_Получ(lit2)
+                  Pos_Get(lit2)
                   Тег_Добавить(lit + lit2)
                Else
                   Тег_Добавить(lit)
                End If
-               txtSrc = Mid(txtSrc, 2)
-               lit = Mid(txtSrc, 1, 1)
-               Поз_Получ(lit)
+               lit = New_Lit()
             End If
-            If ЕслиВнутрТег(lit) = multitag Then
-
-               Do While ЕслиВнутрТег(lit) = multitag ' если многосимвольный тэг
+            If ClassTag(lit) = modConst.multitag Then
+               Do While ClassTag(lit) = modConst.multitag ' если многосимвольный тэг
                   гсТег += lit
-                  txtSrc = Mid(txtSrc, 2)
-                  lit = Mid(txtSrc, 1, 1)
-                  Поз_Получ(lit)
+                  lit = New_Lit()
                Loop
                Тег_Добавить(гсТег)
                гсТег = ""
             End If
          Loop
-
-         'If Not IsNothing(теги) Then
-         '   Console.WriteLine("Вывод лексера:")
-         '   Console.WriteLine("Len(теги)" + Str(теги.Count))
-         '   Dim i As Integer = 0
-         '   Do While i < теги.Count
-         '      Console.WriteLine(Str(i) + ":" + теги(i).стрТег)
-         '      i += 1
-         '   Loop
-         'End If
       End Sub
    End Module
 End Namespace

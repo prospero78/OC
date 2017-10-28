@@ -13,7 +13,7 @@ Namespace пиОк
             txtOb = Mid(txtOb, 2)
          Loop
          If Len(txtOb) = 0 Then
-            iSym = модКонст.eot
+            iSym = modConst.eot
          End If
       End Sub
       Public Sub Сканировать()

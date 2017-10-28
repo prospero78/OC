@@ -12,15 +12,12 @@
          Return bRes
       End Function
       Public Function ЕслиЦелое(lit As String) As Boolean
-         Dim bRes As Boolean = False
-         Dim res As Single = 0
-         Try
-            res = Convert.ToInt64(lit)
-            bRes = True
-         Finally
-            bRes = False
-         End Try
-         Return bRes
+         For i As Integer = 1 To lit.Length
+            If InStr("0123456789", Mid(lit, i, 1)) = 0 Then
+               Return False
+            End If
+         Next
+         Return True
       End Function
       Public Function ЕслиЦифра(lit As String) As Boolean
          Dim bRes As Boolean = False

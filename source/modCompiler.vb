@@ -1,6 +1,6 @@
 ' Главный модуль компилятора
 ' TODO: Для анализатора -- надо проверять, чтобы имена не начинались  с цифер
-#Disable Warning IDE1006
+
 Imports System.IO
 Imports System.Diagnostics
 
@@ -155,33 +155,33 @@ Namespace пиОк
       Sub Структуры_Копировать()
          Dim i As Integer = 0
          Dim lex_ As clsLex
-         If Not IsNothing(модТеггер.tags) Then
-            Do While (i < модТеггер.tags.Length)
-               lex_ = New clsLex(модТеггер.tags(i).strTag,
-                                      модТеггер.tags(i).coord.iStr,
-                                      модТеггер.tags(i).coord.iPos)
+         If Not IsNothing(modTagger.tags) Then
+            Do While (i < modTagger.tags.Length)
+               lex_ = New clsLex(modTagger.tags(i).strTag,
+                                      modTagger.tags(i).coord.iStr,
+                                      modTagger.tags(i).coord.iPos)
                ReDim Preserve lex(i)
                lex(i) = lex_
                i += 1
             Loop
          End If
-         ReDim модТеггер.tags(0)
+         ReDim modTagger.tags(0)
 
          i = 0
-         If Not IsNothing(модТеггер.txtLine) Then
-            Do While i <= модТеггер.гцСтр
+         If Not IsNothing(modTagger.txtLine) Then
+            Do While i <= modTagger.gCoord.iStr
                If IsNothing(txtLine) Then
                   ReDim txtLine(0)
                Else
                   ReDim Preserve txtLine(i + 1)
                End If
 
-               txtLine(i) = модТеггер.txtLine(i)
+               txtLine(i) = modTagger.txtLine(i)
                i += 1
             Loop
          End If
 
-         ReDim модТеггер.txtLine(0)
+         ReDim modTagger.txtLine(0)
 
       End Sub
       Function Смещ(ind As Integer) As String
@@ -500,7 +500,7 @@ Namespace пиОк
                   sRes = "4.1"
                   Exit Do
                End If
-               If ЕслиВнутрТег(Mid(lex(tagc).strTag, 1, 1)) <> модТеггер.multitag Then ' имя не может быть пустым
+               If ClassTag(Mid(lex(tagc).strTag, 1, 1)) <> modConst.multitag Then ' имя не может быть пустым
                   модКокон.Ошибка("Крд: " + Str(lex(tagc).coord.iStr) + " -" + Str(lex(tagc).coord.iPos))
                   Console.WriteLine(txtLine(lex(tagc).coord.iStr))
                   Console.WriteLine(Смещ(lex(tagc).coord.iPos))
@@ -578,14 +578,20 @@ Namespace пиОк
       Public Sub Компилировать()
          ' нарезать колбасу из исхдника с присовением координат
          Debug.WriteLine("Разметка тегов")
-         модТеггер.Тег_Разметить()
+         modTagger.Тег_Разметить()
+         Console.WriteLine("All tags:" + Str(modTagger.tags.Length))
+         Dim i As Integer = 0
+         Do While i < modTagger.tags.Length
+            Console.WriteLine(Str(i) + ":" + modTagger.tags(i).strTag)
+            i += 1
+         Loop
          Console.WriteLine("Копирование структур")
          Структуры_Копировать()
          ' создать объект програмы и упаковать его
          prog = New clsModule()
          Console.WriteLine("Отработать правила")
          Правила()
-         Dim i As Integer = 0
+         i = 0
          Do While i < lex.Length - 1 And i < 20
             Console.WriteLine(Str(i) + ": " + lex(i).strTag)
             i += 1
