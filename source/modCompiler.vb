@@ -22,7 +22,7 @@ Namespace пиОк
          Set(value As String)
             Dim res As String
             res = modUtil.ЕслиИмя(value)
-            If res = "" Then
+            If res = "_name_" Then
                Me._name = value
             Else
                Throw New Exception(Me._name + ":" + res + " val=" + value)
@@ -117,6 +117,40 @@ Namespace пиОк
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_lex.coord.iPos))
          модКокон.Ошибка("Нет ограничителя константы")
+         Environment.Exit(1)
+      End Sub
+      ''' <summary>
+      '''  Проверяет, если вместо имени константы встречено ключевое слово
+      ''' </summary>
+      ''' <param name="strTag">Строка с ключевым словом вместо имени</param>
+      Public Function NextKeyword(strTag As String) As Boolean
+         Dim bRes As Boolean = False
+         Dim ts(9) As String
+         ts(0) = "TYPE"
+         ts(1) = "VAR"
+         ts(2) = "PROCEDURE"
+         ts(3) = "BEGIN"
+         ts(5) = "END"
+         ts(6) = "^"
+         ts(7) = ":"
+         ts(8) = ","
+         Dim sr() As String
+         sr = Filter(ts, strTag, True, CompareMethod.Binary)
+         If sr.Length <> 0 Then
+            bRes = True
+         End If
+         Return bRes
+      End Function
+      ''' <summary>
+      '''  Выводит сообщение, если в этом месте выражения константы ключевое слово запрещено
+      ''' </summary>
+      ''' <param name="txtLine">Строка с запрещённым ключевым словом</param>
+      ''' <param name="_lex">Само ключевое слово</param>
+      Public Sub ErrorKeyword(txtLine As String, _lex As clsLex)
+         модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + "-" + Str(_lex.coord.iPos))
+         Console.WriteLine(txtLine)
+         Console.WriteLine(Смещ(_lex.coord.iPos))
+         модКокон.Ошибка("В этом месте ключевое слово запрещено")
          Environment.Exit(1)
       End Sub
    End Class
@@ -413,7 +447,7 @@ Namespace пиОк
             Dim i As Integer = 3 ' начинаем отсчёт сразу за определением модуля
             Do While i < mLex.Length - 2 ' учитываем ссылку вперёд на точку
                ' конец ли это? i+2 -- через имя
-               If mLex(i).strTag = "END" And modUtil.ЕслиИмя(mLex(i + 1).strTag) = "" And
+               If mLex(i).strTag = "END" And modUtil.ЕслиИмя(mLex(i + 1).strTag) = "_name_" And
                    mLex(i + 2).strTag = "." Then
                   bEnd = True
                   ' ограничивать будем полем структуры программы
@@ -492,7 +526,7 @@ Namespace пиОк
                ' прямой, c алиасом, с запятой (продолжение), с ";" -- конец импорта
                If mLex(tagc + 1).strTag = "," Or mLex(tagc + 1).strTag = ";" Then ' Первая ветка -- прямой импорт
                   ' проверить имя модуля и алиас на допустимость
-                  If modUtil.ЕслиИмя(mLex(tagc).strTag) <> "" Then
+                  If modUtil.ЕслиИмя(mLex(tagc).strTag) <> "_name_" Then
                      '  неправильное имени
                      ОшибкаИмени("IMPORT", tagc + 1)
                   End If
@@ -516,12 +550,12 @@ Namespace пиОк
                   End If
                ElseIf mLex(tagc + 1).strTag = ":=" Then ' вторая ветка -- импорт с алиасом
                   ' проверка имени
-                  If modUtil.ЕслиИмя(mLex(tagc + 2).strTag) <> "" Then
+                  If modUtil.ЕслиИмя(mLex(tagc + 2).strTag) <> "_name_" Then
                      '  неправильное имени
                      ОшибкаИмени("IMPORT", tagc + 2)
                   End If
                   ' проверка алиаса
-                  If modUtil.ЕслиИмя(mLex(tagc).strTag) <> "" Then
+                  If modUtil.ЕслиИмя(mLex(tagc).strTag) <> "_name_" Then
                      '  неправильное имени
                      ОшибкаИмени("IMPORT", tagc)
                   End If
@@ -557,11 +591,21 @@ Namespace пиОк
                tagc += 1
                sRes = "4.1"
                Exit Sub
-            Else ' такая инструкция есть, сразу должно идти имя. Остальное запрещено
+               ' такая инструкция есть, но сразу вместо имени может идти ключевое слово.
+               ' Остальное запрещено
+            Else
                tagc += 1
-               If modUtil.ЕслиИмя(mLex(tagc).strTag) = "" Then
+               ' может имя, а может ключевое слово
+               If modUtil.ЕслиИмя(mLex(tagc).strTag) = "_name_" Then
+                  Dim cst As clsConst = New clsConst()
+                  ' если имя оказалось ключевым словом -- идти к следующему блоку
+                  If cst.NextKeyword(mLex(tagc).strTag) Then
+                     tagc += 1
+                     sRes = "4.1"
+                     Exit Sub
+                  End If
                   sRes = "3.2"
-               Else
+               Else ' если имя пустое
                   If IsNothing(prog.const_) Then
                      ReDim prog.const_(0)
                   End If
@@ -575,8 +619,18 @@ Namespace пиОк
                ' может быть что угодно в выражении, но не ";". Пока не разбираем что именно
                ' Добавляем тег в секцию констант
                ' сначала добавить имя константы, проверим на правильность имени
-               If modUtil.ЕслиИмя(mLex(tagc).strTag) <> "" Then
+               If modUtil.ЕслиИмя(mLex(tagc).strTag) <> "_name_" Then
                   ОшибкаИмени("Константы:", tagc)
+               End If
+               ' проверить на следующее ключевое слово
+               If IsNothing(prog.const_) Then
+                  ReDim prog.const_(0)
+                  prog.const_(0) = New clsConst()
+               End If
+               ' В это месте ключевое слово разрешено, и если что -- выход
+               If prog.const_(0).NextKeyword(mLex(tagc).strTag) Then
+                  tagc += 1
+                  Exit Sub
                End If
                ' теперь создать лексему-имя в константу
                Dim _lex As clsLex = mLex(tagc)
@@ -601,32 +655,37 @@ Namespace пиОк
                      ' здесь надо прервать внутренний цикл с выходом на внешний
                      Exit Do
                   End If
+                  ' TODO: двоеточие в выражениях запрещена (и для SET запятую надо переделать!!!)
+                  If _const.NextKeyword(mLex(tagc).strTag) Then
+                     ' здесь надо вообще покончить с разбором (пока)
+                     prog.const_(0).ErrorKeyword(txtLine(mLex(tagc).coord.iStr), mLex(tagc))
+                  End If
                   ' заполняем выражение
                   If IsNothing(_exp) Then
-                     ReDim _exp(0)
-                  Else
-                     ReDim Preserve _exp(_exp.Length)
-                  End If
-                  _exp(_exp.Length - 1) = mLex(tagc)
-                  tagc += 1
-               Loop
-               ' если достигнут конец, а ограничителя всё нет -- закончить
-               If tagc = prog.tag_end Then ' это ошибка!!
-                  _const.ErrorEndSource(txtLine(prog.tag_end), mLex(tagc))
-               End If
-               ' создать новую константу в массиве констант модуля
-               If IsNothing(prog.const_) Then
-                  ReDim prog.const_(0)
-               Else
-                  ReDim Preserve prog.const_(prog.const_.Length)
-               End If
-               ' добавить выражение константы
-               _const.exp = _exp
-               ' сохранить новую константу
-               prog.const_(prog.const_.Length - 1) = _const
-               ' перейти к следующей литере
-               tagc += 1
-            Loop
+            ReDim _exp(0)
+         Else
+            ReDim Preserve _exp(_exp.Length)
+         End If
+         _exp(_exp.Length - 1) = mLex(tagc)
+         tagc += 1
+         Loop
+         ' если достигнут конец, а ограничителя всё нет -- закончить
+         If tagc = prog.tag_end Then ' это ошибка!!
+            _const.ErrorEndSource(txtLine(prog.tag_end), mLex(tagc))
+         End If
+         ' создать новую константу в массиве констант модуля
+         If IsNothing(prog.const_) Then
+            ReDim prog.const_(0)
+         Else
+            ReDim Preserve prog.const_(prog.const_.Length)
+         End If
+         ' добавить выражение константы
+         _const.exp = _exp
+         ' сохранить новую константу
+         prog.const_(prog.const_.Length - 1) = _const
+         ' перейти к следующей литере
+         tagc += 1
+         Loop
          End If
       End Sub
       Sub Правила()

@@ -7,10 +7,12 @@ IMPORT mT:=modTest,
    mT2:=modTest2;
 (*   mT3:=modTest3; *)
 CONST 
-   tal = 9;;
-   tal2 = 34;
-   tal3 = 34;
+   tal = 9;
+   tal2 = (tal + 34)*(-34.82);
+   tal3 = 34
 
+TYPE
+	st : INTEGER;
 VAR
    a:INTEGER;
 

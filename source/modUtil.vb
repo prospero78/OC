@@ -50,7 +50,7 @@
          ElseIf Not ЕслиНачИмени(Mid(lit, 1, 1)) Then
             Return "Неправильное начало имени"
          Else
-            Return ""
+            Return "_name_"
          End If
       End Function
    End Module
