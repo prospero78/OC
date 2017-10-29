@@ -12,7 +12,8 @@ CONST
    tal3 = 34;
 
 TYPE
-	st : INTEGER;
+   st = RECORDw
+   END;
 VAR
    a:INTEGER;
 

@@ -43,12 +43,47 @@
          Me._name = _Name
       End Sub
    End Class
+   ''' <summary>
+   '''  Класс описывает еденицу типа
+   ''' </summary>
+   Public Class clsType
+      Inherits clsLex
+      Public base As String = "_none_" ' базовый класс
+      Public Sub New(_strTag As String, _coord As clsCoord)
+         MyBase.New(_strTag, _coord)
+      End Sub
+      ''' <summary>
+      ''' Ошибка в разделителе между именем типа и описанием типа
+      ''' </summary>
+      ''' <param name="txtLine">Строка с описанием типа</param>
+      ''' <param name="_mLex">Лекссема с ошибкой</param>
+      Public Sub ErrorTerminal(txtLine As String, _mLex As clsLex)
+         модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + " -" + Str(_mLex.coord.iPos))
+         Console.WriteLine(txtLine)
+         Console.WriteLine(Смещ(_mLex.coord.iPos))
+         модКокон.Ошибка("Ошибочный разделитель между именем типа и его описателем")
+         Environment.Exit(1)
+      End Sub
+      ''' <summary>
+      '''  Сообщение, при неверном определении типа
+      ''' </summary>
+      ''' <param name="txtLine">Строка с неверным определением</param>
+      ''' <param name="_mLex">Ошибочная лексема</param>
+      Public Sub ErrorKeywordType(txtLine As String, _mLex As clsLex)
+         модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + " -" + Str(_mLex.coord.iPos))
+         Console.WriteLine(txtLine)
+         Console.WriteLine(Смещ(_mLex.coord.iPos))
+         модКокон.Ошибка("Ошибочный описатель типа")
+         Environment.Exit(1)
+      End Sub
+   End Class
    Public Class clsModule ' Описывает модуль целиком
       Public tag_end As Integer = 0 'номер последнего значимого тега
       Public level As Integer = 0 ' 0 -- это главный
       Public loaded As Boolean
       Public import() As clsImport  ' Список модулей импорта
       Public const_() As clsConst 'список констант
+      Public type_() As clsType ' список объявленных типов в модуле
       Public proc As Integer
       Public name As String = ""
       ''' <summary>
@@ -230,13 +265,6 @@
          Environment.Exit(1)
       End Sub
    End Class
-   ''' <summary>
-   '''  Класс описывает объект типа.
-   ''' </summary>
-   Public Class clsType
-
-   End Class
-
    ''' <summary>
    '''  Модуль описывает клас лексера для проверки правильности построения модуля
    ''' </summary>
@@ -650,17 +678,39 @@
             ' секция типов может быть пустая
             If mLex(tagc).strTag = "VAR" Or mLex(tagc).strTag = "PROCEDURE" Or
                   mLex(tagc).strTag = "BEGIN" Or
-                  (mLex(prog.tag_end - 2).strTag = "END" And mLex(prog.tag_end - 1).strTag = prog.name And
-                  mLex(prog.tag_end).strTag = ".") Then
+                  (mLex(tagc).strTag = "END" And mLex(tagc + 1).strTag = prog.name And
+                  mLex(tagc + 2).strTag = ".") Then
                tagc += 1
                sRes = "var"
                Exit Sub
             End If
-            ' это не следующая секция, это имя типа
-            If modUtil.ЕслиИмя(mLex(tagc).strTag) = "_name_" Then
-               ' добавить новый тип
-               Dim _type As clsType = New clsType()
-            End If
+            ' это не следующая секция, это имя типа. Начать перебор
+            Do
+               If modUtil.ЕслиИмя(mLex(tagc).strTag) = "_name_" Then
+                  ' добавить новый тип
+                  Dim _type As clsType = New clsType(mLex(tagc).strTag, mLex(tagc).coord)
+                  tagc += 1
+                  ' проверка на разделитель
+                  If mLex(tagc).strTag = "=" Then
+                     Console.WriteLine("Обнаружен правильный разделитель типа")
+                     tagc += 1
+                  Else
+                     _type.ErrorTerminal(txtLine(mLex(tagc).coord.iStr), mLex(tagc))
+                  End If
+                  ' проверка на ключевое слово RECORD
+                  If mLex(tagc).strTag = "RECORD" Then
+                     _type.type_ = "record"
+                     tagc += 1
+                     ' проверка на POINTER TO RECORD
+                  ElseIf mLex(tagc).strTag = "POINTER" And mLex(tagc + 1).strTag = "TO" _
+                         And mLex(tagc + 2).strTag = "RECORD" Then
+                     _type.type_ = "pointer to record"
+                     tagc += 3
+                  Else ' в противом случае -- непонятная запись
+                     _type.ErrorKeywordType(txtLine(mLex(tagc).coord.iStr), mLex(tagc))
+                  End If
+               End If
+            Loop
          End If
       End Sub
       ''' <summary>

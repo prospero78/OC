@@ -65,16 +65,11 @@ Namespace пиОк
    Public Class clsTag
       ' Стили именования
       ' хранит в себе последовательно кусочек нераспознанного кода с координатами
-      Public ReadOnly coord As clsCoord
-      Private ReadOnly _strTag As String = ""
-      Public ReadOnly Property strTag() As String
-         Get
-            Return Me._strTag
-         End Get
-      End Property
+      Public coord As clsCoord
+      Public strTag As String = ""
       Public Sub New(_strTag As String, _coord As clsCoord)
          Me.coord = New clsCoord(_coord.iStr, _coord.iPos)
-         Me._strTag = _strTag
+         Me.strTag = _strTag
       End Sub
    End Class
    Public Module modTagger
