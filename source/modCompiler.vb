@@ -92,7 +92,8 @@ Namespace пиОк
          модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + " -" + Str(_lex.coord.iPos))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_lex.coord.iPos))
-         модКокон.Ошибка("Пропущено имя константы")
+         модКокон.Ошибка("Пустое имя константы")
+         Environment.Exit(1)
       End Sub
       ''' <summary>
       '''  Выводится сообщение при отсутствии присвоения константе
@@ -104,6 +105,18 @@ Namespace пиОк
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_lex.coord.iPos))
          модКокон.Ошибка("Нарушение присвоения константы")
+         Environment.Exit(1)
+      End Sub
+      ''' <summary>
+      '''  Вызывается, если достигнут конец кода, а окончания выражения константы нет
+      ''' </summary>
+      ''' <param name="txtLine">Строка константы с выражением</param>
+      ''' <param name="_lex">Последняя просмотренная лексема</param>
+      Public Sub ErrorEndSource(txtLine As String, _lex As clsLex)
+         модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + "-" + Str(_lex.coord.iPos))
+         Console.WriteLine(txtLine)
+         Console.WriteLine(Смещ(_lex.coord.iPos))
+         модКокон.Ошибка("Нет ограничителя константы")
          Environment.Exit(1)
       End Sub
    End Class
@@ -316,7 +329,7 @@ Namespace пиОк
          модКокон.Ошибка("Крд: " + Str(mLex(t).coord.iStr) + " -" + Str(mLex(t).coord.iPos))
          Console.WriteLine(txtLine(mLex(t).coord.iStr))
          Console.WriteLine(Смещ(mLex(t).coord.iPos))
-         модКокон.Ошибка("Имя должно начинается с буквы или ""_""")
+         модКокон.Ошибка("Имя должно начинаться с буквы или ""_""")
          Environment.Exit(1)
       End Sub
       Sub Пр_КОММЕНТАРИЙ()
@@ -546,80 +559,73 @@ Namespace пиОк
                Exit Sub
             Else ' такая инструкция есть, сразу должно идти имя. Остальное запрещено
                tagc += 1
-               If modUtil.ЕслиИмя(mLex(tagc).strTag) <> "" Then
+               If modUtil.ЕслиИмя(mLex(tagc).strTag) = "" Then
+                  sRes = "3.2"
+               Else
                   If IsNothing(prog.const_) Then
                      ReDim prog.const_(0)
                   End If
                   prog.const_(0).ErrorMissingName(txtLine(mLex(tagc).coord.iStr), mLex(tagc))
-               Else
-                  sRes = "3.2"
                End If
             End If
          End If
-         If sRes = "3.2" Then ' начинаем разбор констант
+         If sRes = "3.2" Then ' начинаем разбор выражения константы
+            ' номер тега уже содержит имя константы
             Do
-               ' секция CONST может быть пустой
-               If mLex(tagc).strTag = "TYPE" Or mLex(tagc).strTag = "VAR" Or
-                     mLex(tagc).strTag = "PROCEDURE" Or mLex(tagc).strTag = "BEGIN" Or
-                     (mLex(tagc).strTag = "END" And mLex(tagc).strTag = prog.name And
-                     mLex(tagc + 2).strTag = ".") Then
-                  tagc += 1
-                  sRes = "4.1"
-                  Exit Do
+               ' может быть что угодно в выражении, но не ";". Пока не разбираем что именно
+               ' Добавляем тег в секцию констант
+               ' сначала добавить имя константы, проверим на правильность имени
+               If modUtil.ЕслиИмя(mLex(tagc).strTag) <> "" Then
+                  ОшибкаИмени("Константы:", tagc)
                End If
-               ' имя не может быть пустым
-               If ClassTag(Mid(mLex(tagc).strTag, 1, 1)) <> modConst.multitag Then
-                  prog.const_(0).ErrorEmptyName(txtLine(mLex(tagc).coord.iStr), mLex(tagc))
+               ' теперь создать лексему-имя в константу
+               Dim _lex As clsLex = mLex(tagc)
+               ' теперь создать саму константу с её выражением для присвоения
+               Dim _const As clsConst = New clsConst With {.lex = _lex} ' заполнение константы
+               ' в константе может быть выражение для присвоения
+               ' перейти к следующему символу для проверки
+               tagc += 1
+               ' если нет "равно" -- сообщить об ошибке, иначе продолжать
+               If mLex(tagc).strTag <> "=" Then
+                  prog.const_(0).ErrorAsign(txtLine(mLex(tagc).coord.iStr), mLex(tagc))
                Else
-                  ' Добавляем константу в секцию констант
-                  If modUtil.ЕслиИмя(mLex(tagc).strTag) <> "" Then
-                     ОшибкаИмени("Константы:", tagc)
-                  Else
-                     If IsNothing(prog.const_) Then
-                        ReDim prog.const_(0)
-                     Else
-                        ReDim Preserve prog.const_(prog.const_.Length)
-                     End If
-                     Dim const_ As clsConst = New clsConst With {
-                        .lex.strtag = mLex(tagc).strTag}
-                     prog.const_(prog.const_.Length - 1) = const_
-                     tagc += 1
-                     If mLex(tagc).strTag <> "=" Then
-                        prog.const_(0).ErrorAsign(txtLine(mLex(tagc).coord.iStr), mLex(tagc))
-                     Else
-                        tagc += 1
-                        'TODO: тут надо выяснять что за тип данных
-                        ' тут могут быть BOOLEAN, CHAR, STRING, INTEGER, REAL
-                        If mLex(tagc).strTag = """" And mLex(tagc + 2).strTag = """" Then 'Это строка
-                           prog.const_(tagc + 1).lex.strTag = mLex(tagc).strTag
-                           prog.const_(tagc + 1).type_ = "string"
-                           tagc += 3
-                        ElseIf mLex(tagc).strTag = "TRUE" Or mLex(tagc).strTag = "FALSE" Then
-                           prog.const_(tagc).lex.strTag = mLex(tagc).strTag
-                           prog.const_(tagc).type_ = "boolean"
-                           tagc += 1
-                           ' проверка на real
-                        ElseIf modUtil.ЕслиЦелое(mLex(tagc).strTag) And InStr(".", mLex(tagc + 1).strTag) > 0 And
-                               modUtil.ЕслиЦелое(mLex(tagc + 2).strTag) Then
-                           prog.const_(tagc).val = mLex(tagc).strTag + mLex(tagc + 1).strTag + mLex(tagc + 2).strTag
-                           prog.const_(tagc).type_ = "real"
-                           tagc += 3
-                        ElseIf modUtil.ЕслиЦелое(mLex(tagc).strTag) And InStr(";", mLex(tagc + 1).strTag) > 0 Then
-                           prog.const_(tagc).val = mLex(tagc).strTag
-                           prog.const_(tagc).type_ = "integer"
-                           tagc += 2
-                        Else
-                           модКокон.Ошибка("Крд: " + Str(mLex(tagc).coord.iStr) + " -" + Str(mLex(tagc).coord.iPos))
-                           Console.WriteLine(txtLine(mLex(tagc).coord.iStr))
-                           Console.WriteLine(Смещ(mLex(tagc).coord.iPos))
-                           модКокон.Ошибка("Нарушение присвоения константы")
-                           sRes = "err"
-                           Exit Sub
-
-                        End If
-                     End If
-                  End If
+                  tagc += 1
                End If
+               ' создать массив лексем для выражения
+               Dim _exp() As clsLex = Nothing
+               tagc += 1
+               ' перебирать лексемы, пока не закончится выражение, либо не закончится код
+               Do While tagc < prog.tag_end
+                  ' если встречен ";"
+                  If mLex(tagc).strTag = ";" Then
+                     ' здесь надо прервать внутренний цикл с выходом на внешний
+                     Exit Do
+                  End If
+                  ' заполняем выражение
+                  If IsNothing(_exp) Then
+                     ReDim _exp(0)
+                  Else
+                     ReDim Preserve _exp(_exp.Length)
+                  End If
+                  _exp(_exp.Length - 1) = mLex(tagc)
+                  tagc += 1
+               Loop
+               ' если достигнут конец, а ограничителя всё нет -- закончить
+               If tagc = prog.tag_end Then ' это ошибка!!
+                  _const.ErrorEndSource(txtLine(prog.tag_end), mLex(tagc))
+               End If
+               ' создать новую константу в массиве констант модуля
+               If IsNothing(prog.const_) Then
+                  ReDim prog.const_(0)
+               Else
+                  ReDim Preserve prog.const_(prog.const_.Length)
+               End If
+               ' добавить выражение константы
+               _const.exp = _exp
+               ' сохранить новую константу
+               prog.const_(prog.const_.Length - 1) = _const
+               ' перейти к следующей литере
+               tagc += 1
             Loop
          End If
       End Sub
