@@ -1,6 +1,49 @@
 ' Модуль разбивает исходник на лексемы
 
 Namespace пиОк
+   ''' <summary>
+   ''' Содержит имя объекта и методы обработки имени
+   ''' </summary>
+   Public Class clsName
+      Dim _name As String = ""
+      ''' <summary>
+      ''' Строкове обозначение имени объекта.
+      ''' </summary>
+      ''' <returns>возвращает строкове значение</returns>
+      Public Property strVal() As String
+         Get
+            Return Me._name
+         End Get
+         Set(value As String)
+            Dim res As String
+            res = modUtil.ЕслиИмя(value)
+            If res = "_name_" Then
+               Me._name = value
+            Else
+               Throw New Exception(Me._name + ":" + res + " val=" + value)
+            End If
+         End Set
+      End Property
+      Public Sub New(_Name As String)
+         Me._name = _Name
+      End Sub
+   End Class
+   ''' <summary>
+   ''' Содержит распознанный тэг -- лексему.
+   '''наследуется от clsTag 
+   ''' </summary>
+   Public Class clsLex
+      Inherits clsTag
+      Public type_ As String = "" ' тип тега
+      ''' <summary>
+      ''' Строковое предствление тега для лексемы.
+      ''' </summary>
+      Public litName As clsName ' настоящее имя модуля
+      Public Sub New(_strTag As String, _coord As clsCoord)
+         MyBase.New(_strTag, _coord)
+         Me.litName = New clsName(_strTag)
+      End Sub
+   End Class
    '''<summary>
    '''Класс хранит координаты позиции кода в исходном месте. Позволяет сканировать текст на новую строку.
    '''</summary>

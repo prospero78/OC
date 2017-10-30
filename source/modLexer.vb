@@ -1,82 +1,4 @@
 ﻿Namespace пиОк
-   ''' <summary>
-   ''' Содержит распознанный тэг -- лексему.
-   '''наследуется от clsTag 
-   ''' </summary>
-   Public Class clsLex
-      Inherits clsTag
-      Public type_ As String = "" ' тип тега
-      ''' <summary>
-      ''' Строковое предствление тега для лексемы.
-      ''' </summary>
-      Public litName As clsName ' настоящее имя модуля
-      Public Sub New(_strTag As String, _coord As clsCoord)
-         MyBase.New(_strTag, _coord)
-         Me.litName = New clsName(_strTag)
-      End Sub
-   End Class
-   ''' <summary>
-   ''' Содержит имя объекта и методы обработки имени
-   ''' </summary>
-   Public Class clsName
-      Dim _name As String = ""
-      ''' <summary>
-      ''' Строкове обозначение имени объекта.
-      ''' </summary>
-      ''' <param name="_str"></param>
-      ''' <returns></returns>
-      Public Property strVal() As String
-         Get
-            Return Me._name
-         End Get
-         Set(value As String)
-            Dim res As String
-            res = modUtil.ЕслиИмя(value)
-            If res = "_name_" Then
-               Me._name = value
-            Else
-               Throw New Exception(Me._name + ":" + res + " val=" + value)
-            End If
-         End Set
-      End Property
-      Public Sub New(_Name As String)
-         Me._name = _Name
-      End Sub
-   End Class
-   ''' <summary>
-   '''  Класс описывает еденицу типа
-   ''' </summary>
-   Public Class clsType
-      Inherits clsLex
-      Public base As String = "_none_" ' базовый класс
-      Public Sub New(_strTag As String, _coord As clsCoord)
-         MyBase.New(_strTag, _coord)
-      End Sub
-      ''' <summary>
-      ''' Ошибка в разделителе между именем типа и описанием типа
-      ''' </summary>
-      ''' <param name="txtLine">Строка с описанием типа</param>
-      ''' <param name="_mLex">Лекссема с ошибкой</param>
-      Public Sub ErrorTerminal(txtLine As String, _mLex As clsLex)
-         модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + " -" + Str(_mLex.coord.iPos))
-         Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_mLex.coord.iPos))
-         модКокон.Ошибка("Ошибочный разделитель между именем типа и его описателем")
-         Environment.Exit(1)
-      End Sub
-      ''' <summary>
-      '''  Сообщение, при неверном определении типа
-      ''' </summary>
-      ''' <param name="txtLine">Строка с неверным определением</param>
-      ''' <param name="_mLex">Ошибочная лексема</param>
-      Public Sub ErrorKeywordType(txtLine As String, _mLex As clsLex)
-         модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + " -" + Str(_mLex.coord.iPos))
-         Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_mLex.coord.iPos))
-         модКокон.Ошибка("Ошибочный описатель типа")
-         Environment.Exit(1)
-      End Sub
-   End Class
    Public Class clsModule ' Описывает модуль целиком
       Public tag_end As Integer = 0 'номер последнего значимого тега
       Public level As Integer = 0 ' 0 -- это главный
@@ -138,8 +60,8 @@
       ''' Сообщение о том, что имя модуля в начале, и имя модуля в конце
       ''' не совпадают.
       ''' </summary>
-      ''' <param name="txtLine">Строка содержащая имя модуля</param>
-      ''' <param name="_mLex">Лексема содержащая имя модуля</param>
+      ''' <param name="txtLine1">Строка содержащая имя модуля</param>
+      ''' <param name="txtLine2">Строка содержащая имя модуля в конце модуля</param>
       Public Sub MissMathName(txtLine1 As String, txtLine2 As String)
          Console.WriteLine(txtLine1)
          Console.WriteLine(txtLine2)
@@ -274,13 +196,6 @@
       Dim prog As clsModule ' объект главного модуля есть программ
       Dim tagc As Integer = 0 ' текущий тег на анализе
       Dim txtLine() As String ' список строк исходника
-      Function Смещ(ind As Integer) As String
-         Dim s As String = "^"
-         For i As Integer = 1 To ind - 1
-            s = " " + s
-         Next
-         Return s
-      End Function
       Sub Структуры_Копировать()
          Dim i As Integer = 0
          Dim lex_ As clsLex
@@ -697,6 +612,51 @@
                   Else
                      _type.ErrorTerminal(txtLine(mLex(tagc).coord.iStr), mLex(tagc))
                   End If
+                  ' простые типы
+                  ' Группа ARRAY
+                  If mLex(tagc).strTag = "ARRAY" Then
+                     tagc += 1
+                     _type.type_ = "ARRAY"
+                     ' ARRAY <N>
+                     If modUtil.ЕслиЦелое(mLex(tagc).strTag) Then
+                        _type.lenAr = CInt(mLex(tagc).strTag)
+                        tagc += 1
+                        ' дальше ДОЛЖНО идти OF
+                        If mLex(tagc).strTag = "OF" Then
+                           tagc += 1
+                           'имя типа
+                           Dim t As String = modType.SelectType(mLex(tagc).strTag)
+                           If t <> "_not_" Then
+                              _type.strOf = t
+                              tagc += 1
+                              ' проверка на завершение типа-массива
+                              If mLex(tagc).strTag = ";" Then
+                                 ' добавить тип в модуль
+                                 If IsNothing(prog.type_) Then
+                                    ReDim prog.type_(0)
+                                 Else
+                                    ReDim Preserve prog.type_(prog.type_.Length)
+                                 End If
+                                 prog.type_(prog.type_.Length - 1) = _type
+                                 tagc += 1
+                                 Continue Do
+                              Else
+                                 ' нет разделителя определения типа массива
+                                 modType.ErrorEndArray(txtLine(mLex(tagc - 1).coord.iStr), mLex(tagc - 1))
+                              End If
+                           Else
+                              ' ошибка по типу элеметов массива
+                              modType.ErrorToElArray(txtLine(mLex(tagc).coord.iStr), mLex(tagc))
+                           End If
+                        Else
+                           ' нет элемента OF
+                           modType.ErrorOfArray(txtLine(mLex(tagc).coord.iStr), mLex(tagc))
+                        End If
+                     Else
+                        ' размерность типа должна быть числом
+                        modType.ErrorNumArray(txtLine(mLex(tagc).coord.iStr), mLex(tagc))
+                     End If
+                  End If
                   ' проверка на ключевое слово RECORD
                   If mLex(tagc).strTag = "RECORD" Then
                      _type.type_ = "record"
@@ -706,9 +666,17 @@
                          And mLex(tagc + 2).strTag = "RECORD" Then
                      _type.type_ = "pointer to record"
                      tagc += 3
+                     ' проверка на POINTER TO <TypeName>
+                  ElseIf mLex(tagc).strTag = "POINTER" And mLex(tagc + 1).strTag = "TO" _
+                         And modUtil.ЕслиИмя(mLex(tagc + 2).strTag) = "_name_" Then
+                     _type.type_ = "pointer to _name_"
+                     tagc += 3
                   Else ' в противом случае -- непонятная запись
                      _type.ErrorKeywordType(txtLine(mLex(tagc).coord.iStr), mLex(tagc))
                   End If
+                  ' Gh
+               Else
+                  ОшибкаИмени("TYPE:", tagc)
                End If
             Loop
          End If

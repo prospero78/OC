@@ -53,6 +53,13 @@
             Return "_name_"
          End If
       End Function
+      Function Смещ(ind As Integer) As String
+         Dim s As String = "^"
+         For i As Integer = 1 To ind - 1
+            s = " " + s
+         Next
+         Return s
+      End Function
    End Module
 End Namespace
 

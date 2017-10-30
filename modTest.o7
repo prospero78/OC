@@ -12,7 +12,12 @@ CONST
    tal3 = 34;
 
 TYPE
-   st = RECORDw
+   s1 = ARRAY 256 OF CHAR;
+   s2 = ARRAY 256 OF INTEGER
+   s3 = ARRAY 256 OF BOOLEAN;
+
+
+   st = RECORD;
    END;
 VAR
    a:INTEGER;
