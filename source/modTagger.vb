@@ -34,7 +34,7 @@ Namespace пиОк
    ''' </summary>
    Public Class clsLex
       Inherits clsTag
-      Public type_ As String = "" ' тип тега
+      'Public type_ As String = "" ' тип тега
       ''' <summary>
       ''' Строковое предствление тега для лексемы.
       ''' </summary>
@@ -127,11 +127,7 @@ Namespace пиОк
 
          If gCoord.Coord_Update(lit) Then ' если новая строка
             ' Добавить строку в массив исходников
-            If IsNothing(txtLine) Then
-               ReDim txtLine(0)
-            Else
-               ReDim Preserve txtLine(txtLine.Length)
-            End If
+            ReDim Preserve txtLine(txtLine.Length)
             txtLine(txtLine.Length - 1) = srcLine
             srcLine = ""
          Else
@@ -148,11 +144,7 @@ Namespace пиОк
       Sub Тег_Добавить(lit As String)
          'Создать новый тэг
          Dim tag As clsTag = New clsTag(lit, gCoord)
-         If IsNothing(tags) Then
-            ReDim Preserve tags(0)
-         Else
-            ReDim Preserve tags(tags.Length)
-         End If
+         ReDim Preserve tags(tags.Length)
          tags(tags.Length - 1) = tag
          If gCoord.iStr > 0 And gCoord.iStr < 3 Then
             Console.WriteLine(tag.strTag + " " + gCoord.iStr.ToString() + "-" + gCoord.iPos.ToString())
@@ -183,6 +175,8 @@ Namespace пиОк
       Public Sub Тег_Разметить()
          Dim lit, lit2 As String
          Dim гсТег As String = "" ' глобальный текущий тэгg
+         ReDim txtLine(0)
+         ReDim tags(0)
          gCoord = New clsCoord()
          txtSrc = модФайл.txtFileO7 + "  " ' хвост нужен, чтобы гарантированно не обрезать тег
          lit = Mid(txtSrc, 1, 1)
