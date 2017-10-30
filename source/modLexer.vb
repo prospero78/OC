@@ -223,22 +223,14 @@
       Sub Структуры_Копировать()
          Dim i As Integer = 0
          Dim lex_ As clsLex
-         Do While (i < modTagger.tags.Length)
-            lex_ = New clsLex(modTagger.tags(i).strTag,
-                                      modTagger.tags(i).coord)
+         Do While (i < modTagger.tags.len)
+            lex_ = New clsLex(modTagger.tags(i),
+                                      modTagger.tags.tags(i).coord)
             mLex(mLex.Length - 1) = lex_
             ReDim Preserve mLex(mLex.Length)
             i += 1
          Loop
          modTagger.tags = Nothing
-
-         i = 0
-         Do While i < modTagger.gCoord.iStr
-            txtLine(txtLine.Length - 1) = modTagger.txtLine(i)
-            ReDim Preserve txtLine(txtLine.Length)
-            i += 1
-         Loop
-         modTagger.txtLine = Nothing
       End Sub
       Sub ОшибкаИмени(msg As String, t As Integer)
          модКокон.Ошибка(msg + ":" + t.ToString() + " >" + mLex(t).strTag + "<")

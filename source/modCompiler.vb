@@ -85,14 +85,14 @@ Namespace пиОк
          ' нарезать колбасу из исходника с присвоением координат
          Console.WriteLine("Разметка тегов")
          modTagger.Тег_Разметить()
-         Console.WriteLine("All tags:" + Str(modTagger.tags.Length))
+         Console.WriteLine("All tags:" + Str(modTagger.tags.len))
          Dim i As Integer = 0
-         Do While i < modTagger.tags.Length - 12
-            Console.Write(Str(i) + ")" + modTagger.tags(i).strTag + vbTab)
+         Do While i < modTagger.tags.len - 12
+            Console.Write(Str(i) + ")" + modTagger.tags(i) + vbTab)
             i += 1
-            Console.Write(Str(i) + ")" + modTagger.tags(i).strTag + vbTab)
+            Console.Write(Str(i) + ")" + modTagger.tags(i) + vbTab)
             i += 1
-            Console.WriteLine(Str(i) + ")" + modTagger.tags(i).strTag)
+            Console.WriteLine(Str(i) + ")" + modTagger.tags(i))
             i += 1
          Loop
          modLexer.Lexer_Run()
