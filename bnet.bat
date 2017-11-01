@@ -18,7 +18,7 @@ echo 5. Compile modFile.dll
 vbc source\modFile.vb /nologo /debug+ /optionexplicit+ /optioninfer+ /optionstrict+ /rootnamespace:nsOc /platform:x86 /utf8output+ /r:"bin\modArg.dll" /r:"bin\modCocon.dll" /t:library /out:"bin\modFile.dll" /optimize+
 
 echo 6. Compile modUtil.dll
-vbc source\modUtil.vb /nologo /debug+ /optionexplicit+ /optioninfer+ /optionstrict+ /rootnamespace:nsOc /platform:x86 /utf8output+  /t:library /out:"bin\modUtil.dll" /optimize+
+vbc source\modUtil.vb /nologo /debug+ /optionexplicit+ /optioninfer+ /optionstrict+ /rootnamespace:nsOc /platform:x86 /utf8output+  /r:"bin\modCocon.dll" /t:library /out:"bin\modUtil.dll" /optimize+
 
 echo 7. Compile modTagger.dll
 vbc source\modTagger.vb /nologo /debug+ /optionexplicit+ /optioninfer+ /optionstrict+ /rootnamespace:nsOc /platform:x86 /utf8output+ /r:"bin\modCocon.dll" /r:"bin\modConst.dll" /r:"bin\modUtil.dll" /r:"bin\modFile.dll" /out:"bin\modTagger.dll" /t:library /optimize+

@@ -12,9 +12,14 @@ CONST
    tal3 = 34;
 
 TYPE
-   s1 = ARRAY 256 OF CHAR;
-   s2 = ARRAY 256 OF INTEGER
-   s3 = ARRAY 256 OF BOOLEAN;
+   tS1 = ARRAY 256 OF CHAR;
+   tS2 = ARRAY 256 OF INTEGER;
+   tS3 = ARRAY 256 OF BOOLEAN;
+   tRec = RECORD
+      i : INTEGER;
+      s : CHAR;
+      f : CHAR;
+   END;
 
 
    st = RECORD;

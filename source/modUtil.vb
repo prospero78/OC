@@ -60,6 +60,12 @@
          Next
          Return s
       End Function
+      Public Sub ASSERT(_test As Boolean, _msg As String)
+         If _test = False Then
+            модКокон.Ошибка(_msg)
+            Environment.Exit(1)
+         End If
+      End Sub
    End Module
 End Namespace
 

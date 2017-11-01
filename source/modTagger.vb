@@ -6,11 +6,11 @@ Namespace пиОк
       Dim _txtLine() As String ' массив строк исходного текста
       Default Public Property line(i As Integer) As String ' массив строк исходников
          Get
-            Debug.Assert(Not IsNothing(Me._txtLine(i)))
+            modUtil.ASSERT(IsNothing(Me._txtLine(i)), "Пустая строка!")
             Return Me._txtLine(i)
          End Get
          Set(value As String)
-            Debug.Assert(False, "Изменять исходник нельзя")
+            modUtil.ASSERT(False, "Изменять исходник нельзя")
          End Set
       End Property
       Public ReadOnly Property txt As String ' исходный код оперативный 
@@ -199,7 +199,7 @@ Namespace пиОк
       End Property
       Default ReadOnly Property strTag(i As Integer) As String
          Get
-            Debug.Assert(Not IsNothing(Me.tags(i)))
+            modUtil.ASSERT(Not IsNothing(Me.tags(i)), "Элемент списка пустой! tags(i)=" + Str(i))
             Return Me.tags(i).strTag
 
          End Get
