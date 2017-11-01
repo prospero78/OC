@@ -20,27 +20,16 @@ Namespace пиОк
             Return Me._txt_origin
          End Get
       End Property
-      Dim _iStr As Integer = 0
-      Public ReadOnly Property iStr As Integer
-         Get
-            Return Me._iStr
-         End Get
-      End Property
-      Dim _iPos As Integer = 0
+      Public coord As clsCoord
       Dim _lit As String = ""
-      Public ReadOnly Property iPos As Integer
-         Get
-            Return Me._iPos
-         End Get
-      End Property
       Public ReadOnly Property lit As String ' возвращает очередную литеру
          Get
-            If Me._txt_current.Length <> 0 Then
+            If Me._txt_current.Length > 0 Then
                Me._lit = Mid(Me._txt_current, 1, 1)
                Me._txt_current = Mid(Me._txt_current, 2)
                If Me._lit = vbLf Then
-                  Me._iStr += 1
-                  Me._iPos = 0
+                  Me.coord.iStr += 1
+                  Me.coord.iPos = 0
                   If IsNothing(Me._txtLine) Then
                      ReDim Me._txtLine(0)
                   Else
@@ -50,20 +39,11 @@ Namespace пиОк
                   Console.WriteLine("clsTxtSource._strSource: " + Me._strSource)
                   Me._strSource = ""
                Else
-                  Me._iPos += 1
+                  Me.coord.iPos += 1
                   Me._strSource += Me._lit
                End If
-            Else
-               If IsNothing(Me._txtLine) Then
-                  ReDim Me._txtLine(0)
-               Else
-                  ReDim Preserve Me._txtLine(Me._txtLine.Length)
-               End If
-               Me._txtLine(Me._txtLine.Length - 1) = Me._strSource + Me._lit
-               Console.WriteLine("clsTxtSource.END: " + Me._strSource)
-               Me._strSource = ""
             End If
-               Return Me._lit
+            Return Me._lit
          End Get
       End Property
       Public ReadOnly Property lit2 As String
@@ -79,8 +59,9 @@ Namespace пиОк
       Dim _txt_origin As String ' исходный код оригинальный
       Dim _txt_current As String ' исходный код текущий
       Public Sub New(_txt As String)
-         Me._txt_origin = _txt
-         Me._txt_current = _txt
+         Me.coord = New clsCoord()
+         Me._txt_origin = _txt + vbCrLf + vbCrLf
+         Me._txt_current = _txt + vbCrLf + vbCrLf
          'Console.WriteLine("clsTxtSource.New() " + _txt)
       End Sub
    End Class
@@ -112,21 +93,6 @@ Namespace пиОк
          Me._name = _Name
       End Sub
    End Class
-   ''' <summary>
-   ''' Содержит распознанный тэг -- лексему.
-   '''наследуется от clsTag 
-   ''' </summary>
-   Public Class clsLex
-      Inherits clsTag
-      ''' <summary>
-      ''' Строковое предствление тега для лексемы.
-      ''' </summary>
-      Public litName As clsName ' настоящее имя модуля
-      Public Sub New(_strTag As String, _coord As clsCoord)
-         MyBase.New(_strTag, _coord.iPos, _coord.iStr)
-         Me.litName = New clsName(_strTag)
-      End Sub
-   End Class
    '''<summary>
    '''Класс хранит координаты позиции кода в исходном месте. Позволяет сканировать текст на новую строку.
    '''</summary>
@@ -134,47 +100,53 @@ Namespace пиОк
       '''<summary>
       '''Позиция тега в строке
       '''</summary>
-      Dim pos As Integer = 0
+      Dim _pos As Integer = 0
       '''<summary>
       '''Номер строки в исходном тексте
       '''</summary>
-      Dim str As Integer = 0
+      Dim _str As Integer = 0
       '''<summary>
       '''Позиция тега в строке
       '''</summary>
-      Public ReadOnly Property iPos() As Integer
+      Public Property iPos As Integer
          Get
-            Return Me.pos
+            Return Me._pos
          End Get
+         Set(value As Integer)
+            Me._pos = value
+         End Set
       End Property
       '''<summary>
       '''Номер строки в исходном тексте, содержащий текущий тег
       '''</summary>
-      Public ReadOnly Property iStr() As Integer
+      Public Property iStr As Integer
          Get
-            Return Me.str
+            Return Me._str
          End Get
+         Set(value As Integer)
+            Me._str = value
+         End Set
       End Property
-      Public Sub New(Optional _str As Integer = 0, Optional _pos As Integer = 0)
+      Public Sub New(Optional str_ As Integer = 0, Optional pos_ As Integer = 0)
          If _pos < 0 Then
             модКокон.Ошибка("Позиция в строке не может быть отрицательной val=" + _pos.ToString())
             Environment.Exit(1)
          Else
-            Me.pos = _pos
+            Me._pos = pos_
          End If
          If _str < 0 Then
             модКокон.Ошибка("Номер строки не может быть отрицательной val=" + _str.ToString())
             Environment.Exit(1)
          Else
-            Me.str = _str
+            Me._str = str_
          End If
       End Sub
       '''<summary>
       '''По литере определяет налчие новой строки. В любом случае, обновляет координаты
       '''</summary>
-      Public Sub Coord_Update(_str As Integer, _pos As Integer)
-         Me.pos = _pos
-         Me.str += _str
+      Public Sub Coord_Update(str_ As Integer, pos_ As Integer)
+         Me._pos = pos_
+         Me._str += str_
       End Sub
    End Class
    Public Class clsTag
@@ -182,8 +154,8 @@ Namespace пиОк
       ' хранит в себе последовательно кусочек нераспознанного кода с координатами
       Public coord As clsCoord
       Public strTag As String = ""
-      Public Sub New(_strTag As String, _str As Integer, _pos As Integer)
-         Me.coord = New clsCoord(_str, _pos)
+      Public Sub New(_strTag As String, _coord As clsCoord)
+         Me.coord = _coord
          Me.strTag = _strTag
       End Sub
    End Class
@@ -196,8 +168,8 @@ Namespace пиОк
          End If
          Return res
       End Function
-      Public Sub Add(_lit As String, _str As Integer, _pos As Integer) 'Создать новый тэг
-         Dim tag As clsTag = New clsTag(_lit, _str, _pos)
+      Public Sub Add(_lit As String, _coord As clsCoord) 'Создать новый тэг
+         Dim tag As clsTag = New clsTag(_lit, _coord)
          'Console.WriteLine("clsTagList.Add(): " + _lit + " " + Str(_str) + " " + Str(_pos))
          If IsNothing(Me.tags) Then
             ReDim Me.tags(0)
@@ -253,22 +225,22 @@ Namespace пиОк
             End If
             If Me.ClassTag(lit) = modConst.singletag Then ' если тег-одиночка
                'Console.WriteLine("singletag-1")
-               Me.Add(lit, txtSrc.iStr, txtSrc.iPos)
+               Me.Add(lit, txtSrc.coord)
                lit = txtSrc.lit
             End If
             If Me.ClassTag(lit) = modConst.doubletag Then ' если сложный тег
                lit2 = txtSrc.lit2
                If InStr(":><", lit) > 0 And lit2 = "=" Then
                   'Console.WriteLine("doubletag-1")
-                  Me.Add(lit + lit2, txtSrc.iStr, txtSrc.iPos)
+                  Me.Add(lit + lit2, txtSrc.coord)
                   _tmp = txtSrc.lit
                ElseIf lit = "(" And lit2 = "*" Then
                   'Console.WriteLine("doubletag-2")
-                  Me.Add(lit + lit2, txtSrc.iStr, txtSrc.iPos)
+                  Me.Add(lit + lit2, txtSrc.coord)
                   _tmp = txtSrc.lit
                ElseIf lit = "*" And lit2 = ")" Then
                   'Console.WriteLine("doubletag-3")
-                  Me.Add(lit + lit2, txtSrc.iStr, txtSrc.iPos)
+                  Me.Add(lit + lit2, txtSrc.coord)
                   _tmp = txtSrc.lit
                End If
                lit = txtSrc.lit
@@ -278,7 +250,7 @@ Namespace пиОк
                   гсТег += lit
                   lit = txtSrc.lit
                Loop
-               Me.Add(гсТег, txtSrc.iStr, txtSrc.iPos - гсТег.Length)
+               Me.Add(гсТег, txtSrc.coord)
                гсТег = ""
             End If
          Loop

@@ -33,7 +33,7 @@
       ''' </summary>
       ''' <param name="txtLine">Строка, где MODULE не встречено </param>
       ''' <param name="_mLex">Лексема, которая должна была содржать MODULE</param>
-      Public Sub ErrorOpen(txtLine As String, _mLex As clsLex)
+      Public Sub ErrorOpen(txtLine As String, _mLex As clsTag)
          модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + " -" + Str(_mLex.coord.iPos))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_mLex.coord.iPos))
@@ -45,7 +45,7 @@
       ''' </summary>
       ''' <param name="txtLine">Строка с именем модуля</param>
       ''' <param name="_mLex">ошибочная лексема</param>
-      Public Sub ErrorEndName(txtLine As String, _mLex As clsLex)
+      Public Sub ErrorEndName(txtLine As String, _mLex As clsTag)
          модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + " -" + Str(_mLex.coord.iPos))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_mLex.coord.iPos))
@@ -57,7 +57,7 @@
       ''' </summary>
       ''' <param name="txtLine">Последняя строка</param>
       ''' <param name="_mLex">Последняя лексема</param>
-      Public Sub BadEndNModule(txtLine As String, _mLex As clsLex)
+      Public Sub BadEndNModule(txtLine As String, _mLex As clsTag)
          модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + "-" + Str(_mLex.coord.iPos))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_mLex.coord.iPos))
@@ -69,7 +69,7 @@
       ''' </summary>
       ''' <param name="txtLine">Строка в которой встречен второй MODULE</param>
       ''' <param name="_mLex">лексема запрещённый второй MODULE</param>
-      Public Sub ErrorDoubleNModule(txtLine As String, _mLex As clsLex)
+      Public Sub ErrorDoubleNModule(txtLine As String, _mLex As clsTag)
          модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + " -" + Str(_mLex.coord.iPos))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_mLex.coord.iPos))
@@ -94,7 +94,7 @@
       ''' </summary>
       ''' <param name="txtLine">Строка в которой встречена запрещённая инструкция</param>
       ''' <param name="_mLex">Лексема запрещённая инструкция</param>
-      Public Sub ErrorNextStatement(txtLine As String, _mLex As clsLex)
+      Public Sub ErrorNextStatement(txtLine As String, _mLex As clsTag)
          модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + " -" + Str(_mLex.coord.iPos))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_mLex.coord.iPos))
@@ -116,7 +116,7 @@
          Me.name = New clsName(_name)
          Me.alias_ = New clsName(_alias)
       End Sub
-      Public Sub Import_Error(txtLine As String, _lex As clsLex)
+      Public Sub Import_Error(txtLine As String, _lex As clsTag)
          модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + " -" + Str(_lex.coord.iPos))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_lex.coord.iPos))
@@ -125,15 +125,15 @@
       End Sub
    End Class
    Public Class clsConst ' класс содержащий константу
-      Public lex As clsLex ' содержит строкове представление и координаты
-      Public exp() As clsLex ' тут может быть целое выражение!!
+      Public lex As clsTag ' содержит строкове представление и координаты
+      Public exp() As clsTag ' тут может быть целое выражение!!
       Public type_ As String ' тип константы
       ''' <summary>
       ''' Выводится при отсутствии имени константы
       ''' </summary>
       ''' <param name="txtLine">Строка, в которой ошибка</param>
       ''' <param name="_lex">Неверная лексема</param>
-      Public Sub ErrorMissingName(txtLine As String, _lex As clsLex)
+      Public Sub ErrorMissingName(txtLine As String, _lex As clsTag)
          модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + " -" + Str(_lex.coord.iPos))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_lex.coord.iPos))
@@ -145,7 +145,7 @@
       ''' </summary>
       ''' <param name="txtLine">Строка с ошибочным именем</param>
       ''' <param name="_lex">Ошибочная лексема</param>
-      Public Sub ErrorEmptyName(txtLine As String, _lex As clsLex)
+      Public Sub ErrorEmptyName(txtLine As String, _lex As clsTag)
          модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + " -" + Str(_lex.coord.iPos))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_lex.coord.iPos))
@@ -157,7 +157,7 @@
       ''' </summary>
       ''' <param name="txtLine">Строка с ошибочным присвоение</param>
       ''' <param name="_lex">Ошибочная лексема на месте присвоения</param>
-      Public Sub ErrorAsign(txtLine As String, _lex As clsLex)
+      Public Sub ErrorAsign(txtLine As String, _lex As clsTag)
          модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + "-" + Str(_lex.coord.iPos))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_lex.coord.iPos))
@@ -169,7 +169,7 @@
       ''' </summary>
       ''' <param name="txtLine">Строка константы с выражением</param>
       ''' <param name="_lex">Последняя просмотренная лексема</param>
-      Public Sub ErrorEndSource(txtLine As String, _lex As clsLex)
+      Public Sub ErrorEndSource(txtLine As String, _lex As clsTag)
          модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + "-" + Str(_lex.coord.iPos))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_lex.coord.iPos))
@@ -203,7 +203,7 @@
       ''' </summary>
       ''' <param name="txtLine">Строка с запрещённым ключевым словом</param>
       ''' <param name="_lex">Само ключевое слово</param>
-      Public Sub ErrorKeyword(txtLine As String, _lex As clsLex)
+      Public Sub ErrorKeyword(txtLine As String, _lex As clsTag)
          модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + "-" + Str(_lex.coord.iPos))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_lex.coord.iPos))
@@ -216,15 +216,15 @@
    ''' </summary>
    Public Module modLexer
       Dim sRes As String = "" ' результат анализа
-      Dim mLex() As clsLex
+      Dim mLex() As clsTag
       Dim prog As clsModule ' объект главного модуля есть программ
       Dim tagc As clsCount ' текущий тег на анализе
       Dim txtLine() As String ' список строк исходника
       Sub Структуры_Копировать()
          Dim i As Integer = 0
-         Dim lex_ As clsLex
+         Dim lex_ As clsTag
          Do While (i < modTagger.tags.len)
-            lex_ = New clsLex(modTagger.tags(i),
+            lex_ = New clsTag(modTagger.tags(i),
                                       modTagger.tags.tags(i).coord)
             mLex(mLex.Length - 1) = lex_
             ReDim Preserve mLex(mLex.Length)
@@ -248,7 +248,7 @@
          ' правило ищет комметарии и иключает их из кода
          Dim count As Integer = 0
          Dim bStrip As Boolean
-         Dim tmpLex() As clsLex = Nothing
+         Dim tmpLex() As clsTag = Nothing
          ReDim tmpLex(0)
          Dim tag As String
          If sRes = "comment" Then
@@ -511,7 +511,7 @@
                   Exit Sub
                End If
                ' теперь создать лексему-имя в константу
-               Dim _lex As clsLex = mLex(tagc.val)
+               Dim _lex As clsTag = mLex(tagc.val)
                ' теперь создать саму константу с её выражением для присвоения
                Dim _const As clsConst = New clsConst With {.lex = _lex} ' заполнение константы
                ' в константе может быть выражение для присвоения
@@ -524,7 +524,7 @@
                   tagc.Inc()
                End If
                ' создать массив лексем для выражения
-               Dim _exp() As clsLex = Nothing
+               Dim _exp() As clsTag = Nothing
                ReDim _exp(0)
                tagc.Inc()
                ' перебирать лексемы, пока не закончится выражение, либо не закончится код
