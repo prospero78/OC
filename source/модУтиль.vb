@@ -1,5 +1,5 @@
 ﻿Namespace пиОк
-   Public Module modUtil
+   Public Module модУтиль
       Public Function ЕслиДробное(lit As String) As Boolean
          Dim bRes As Boolean = False
          Dim res As Double = 0
@@ -60,7 +60,7 @@
          Next
          Return s
       End Function
-      Public Sub ASSERT(_test As Boolean, _msg As String)
+      Public Sub КОНТРОЛЬ(_test As Boolean, _msg As String)
          If _test = False Then
             модКокон.Ошибка(_msg)
             Environment.Exit(1)

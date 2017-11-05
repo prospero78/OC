@@ -3,11 +3,11 @@
    ''' Основа любого типа в Оберона
    ''' </summary>
    Public Class clsType
-      Inherits clsTag
+      Inherits туЛекс
       Public name As String = "" ' имя типа
       Public num As Integer = 0 ' порядковый номер типа
-      Public Sub New(_lex As clsTag)
-         MyBase.New(_lex.strTag, _lex.coord)
+      Public Sub New(_lex As туЛекс)
+         MyBase.New(_lex.strTag, _lex.уКоорд)
       End Sub
    End Class
    ''' <summary>
@@ -16,7 +16,7 @@
    Public Class clsTypeMember
       Inherits clsType
       Public type_ As String = "_none_" ' тип member of recorc
-      Public Sub New(_lex As clsTag)
+      Public Sub New(_lex As туЛекс)
          MyBase.New(_lex)
       End Sub
    End Class
@@ -27,7 +27,7 @@
       Inherits clsType
       Public strOf As String = "_none_" ' из чег осостоит (если массив)
       Public lenArray As Integer = 0 ' размер типа если это массив
-      Public Sub New(_lex As clsTag)
+      Public Sub New(_lex As туЛекс)
          MyBase.New(_lex)
       End Sub
 
@@ -36,10 +36,10 @@
       ''' </summary>
       ''' <param name="txtLine">Строка с неверным определением</param>
       ''' <param name="_mLex">Ошибочная лексема</param>
-      Public Sub ErrorKeywordType(txtLine As String, _mLex As clsTag)
-         модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + " -" + Str(_mLex.coord.iPos))
+      Public Sub ErrorKeywordType(txtLine As String, _mLex As туЛекс)
+         модКокон.Ошибка("Крд: " + Str(_mLex.уКоорд.цСтр) + " -" + Str(_mLex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_mLex.coord.iPos))
+         Console.WriteLine(Смещ(_mLex.уКоорд.цПоз))
          модКокон.Ошибка("Ошибочный описатель типа")
          Environment.Exit(1)
       End Sub
@@ -70,10 +70,10 @@
       ''' </summary>
       ''' <param name="txtLine"></param>
       ''' <param name="_lex"></param>
-      Public Sub ErrorNumArray(txtLine As String, _lex As clsTag)
-         модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + " -" + Str(_lex.coord.iPos))
+      Public Sub ErrorNumArray(txtLine As String, _lex As туЛекс)
+         модКокон.Ошибка("Крд: " + Str(_lex.уКоорд.цСтр) + " -" + Str(_lex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_lex.coord.iPos))
+         Console.WriteLine(Смещ(_lex.уКоорд.цПоз))
          модКокон.Ошибка("Размерность типа-массива должна быть целым числом")
          Environment.Exit(1)
       End Sub
@@ -82,10 +82,10 @@
       ''' </summary>
       ''' <param name="txtLine"></param>
       ''' <param name="_lex"></param>
-      Public Sub ErrorOfArray(txtLine As String, _lex As clsTag)
-         модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + " -" + Str(_lex.coord.iPos))
+      Public Sub ErrorOfArray(txtLine As String, _lex As туЛекс)
+         модКокон.Ошибка("Крд: " + Str(_lex.уКоорд.цСтр) + " -" + Str(_lex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_lex.coord.iPos))
+         Console.WriteLine(Смещ(_lex.уКоорд.цПоз))
          модКокон.Ошибка("Должно быть OF после целого числа")
          Environment.Exit(1)
       End Sub
@@ -94,10 +94,10 @@
       ''' </summary>
       ''' <param name="txtLine"></param>
       ''' <param name="_lex"></param>
-      Public Sub ErrorToElArray(txtLine As String, _lex As clsTag)
-         модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + " -" + Str(_lex.coord.iPos))
+      Public Sub ErrorToElArray(txtLine As String, _lex As туЛекс)
+         модКокон.Ошибка("Крд: " + Str(_lex.уКоорд.цСтр) + " -" + Str(_lex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_lex.coord.iPos))
+         Console.WriteLine(Смещ(_lex.уКоорд.цПоз))
          модКокон.Ошибка("Элементы массива должны быть типом")
          Environment.Exit(1)
       End Sub
@@ -106,10 +106,10 @@
       ''' </summary>
       ''' <param name="txtLine"></param>
       ''' <param name="_lex"></param>
-      Public Sub ErrorEndArray(txtLine As String, _lex As clsTag)
-         модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + " -" + Str(_lex.coord.iPos))
+      Public Sub ErrorEndArray(txtLine As String, _lex As туЛекс)
+         модКокон.Ошибка("Крд: " + Str(_lex.уКоорд.цСтр) + " -" + Str(_lex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_lex.coord.iPos))
+         Console.WriteLine(Смещ(_lex.уКоорд.цПоз))
          модКокон.Ошибка("Тип-массив должен заканчиваться разделителем <;>")
          Environment.Exit(1)
       End Sub
@@ -120,7 +120,7 @@
       ''' <param name="_str"></param>
       Public Function SelectType(_str As String) As String
          Dim _res As String = ""
-         If modUtil.ЕслиИмя(_str) = "_name_" Then
+         If модУтиль.ЕслиИмя(_str) = "_name_" Then
             If _str = "BOOLEAN" Then
                _res = "BOOLEAN"
             ElseIf _str = "CHAR" Then
@@ -148,10 +148,10 @@
       ''' </summary>
       ''' <param name="txtLine">Строка с описанием типа</param>
       ''' <param name="_mLex">Лекссема с ошибкой</param>
-      Public Sub ErrorTerminal(txtLine As String, _mLex As clsTag)
-         модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + " -" + Str(_mLex.coord.iPos))
+      Public Sub ErrorTerminal(txtLine As String, _mLex As туЛекс)
+         модКокон.Ошибка("Крд: " + Str(_mLex.уКоорд.цСтр) + " -" + Str(_mLex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_mLex.coord.iPos))
+         Console.WriteLine(Смещ(_mLex.уКоорд.цПоз))
          модКокон.Ошибка("Ошибочный разделитель между именем типа и его описателем")
          Environment.Exit(1)
       End Sub

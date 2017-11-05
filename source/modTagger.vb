@@ -33,10 +33,10 @@
       ''' </summary>
       ''' <param name="txtLine">Строка, где MODULE не встречено </param>
       ''' <param name="_mLex">Лексема, которая должна была содржать MODULE</param>
-      Public Sub ErrorOpen(txtLine As String, _mLex As clsTag)
-         модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + " -" + Str(_mLex.coord.iPos))
+      Public Sub ErrorOpen(txtLine As String, _mLex As туЛекс)
+         модКокон.Ошибка("Крд: " + Str(_mLex.уКоорд.цСтр) + " -" + Str(_mLex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_mLex.coord.iPos))
+         Console.WriteLine(Смещ(_mLex.уКоорд.цПоз))
          модКокон.Ошибка("Модуль должен начинаться с ""MODULE""")
          Environment.Exit(1)
       End Sub
@@ -45,10 +45,10 @@
       ''' </summary>
       ''' <param name="txtLine">Строка с именем модуля</param>
       ''' <param name="_mLex">ошибочная лексема</param>
-      Public Sub ErrorEndName(txtLine As String, _mLex As clsTag)
-         модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + " -" + Str(_mLex.coord.iPos))
+      Public Sub ErrorEndName(txtLine As String, _mLex As туЛекс)
+         модКокон.Ошибка("Крд: " + Str(_mLex.уКоорд.цСтр) + " -" + Str(_mLex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_mLex.coord.iPos))
+         Console.WriteLine(Смещ(_mLex.уКоорд.цПоз))
          модКокон.Ошибка("Нет разделителя имени модуля")
          Environment.Exit(1)
       End Sub
@@ -57,10 +57,10 @@
       ''' </summary>
       ''' <param name="txtLine">Последняя строка</param>
       ''' <param name="_mLex">Последняя лексема</param>
-      Public Sub BadEndNModule(txtLine As String, _mLex As clsTag)
-         модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + "-" + Str(_mLex.coord.iPos))
+      Public Sub BadEndNModule(txtLine As String, _mLex As туЛекс)
+         модКокон.Ошибка("Крд: " + Str(_mLex.уКоорд.цСтр) + "-" + Str(_mLex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_mLex.coord.iPos))
+         Console.WriteLine(Смещ(_mLex.уКоорд.цПоз))
          модКокон.Ошибка("Модуль должен иметь ""END <NameModule.>""")
          Environment.Exit(1)
       End Sub
@@ -69,10 +69,10 @@
       ''' </summary>
       ''' <param name="txtLine">Строка в которой встречен второй MODULE</param>
       ''' <param name="_mLex">лексема запрещённый второй MODULE</param>
-      Public Sub ErrorDoubleNModule(txtLine As String, _mLex As clsTag)
-         модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + " -" + Str(_mLex.coord.iPos))
+      Public Sub ErrorDoubleNModule(txtLine As String, _mLex As туЛекс)
+         модКокон.Ошибка("Крд: " + Str(_mLex.уКоорд.цСтр) + " -" + Str(_mLex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_mLex.coord.iPos))
+         Console.WriteLine(Смещ(_mLex.уКоорд.цПоз))
          модКокон.Ошибка("MODULE должен быть один")
          Environment.Exit(1)
       End Sub
@@ -94,10 +94,10 @@
       ''' </summary>
       ''' <param name="txtLine">Строка в которой встречена запрещённая инструкция</param>
       ''' <param name="_mLex">Лексема запрещённая инструкция</param>
-      Public Sub ErrorNextStatement(txtLine As String, _mLex As clsTag)
-         модКокон.Ошибка("Крд: " + Str(_mLex.coord.iStr) + " -" + Str(_mLex.coord.iPos))
+      Public Sub ErrorNextStatement(txtLine As String, _mLex As туЛекс)
+         модКокон.Ошибка("Крд: " + Str(_mLex.уКоорд.цСтр) + " -" + Str(_mLex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_mLex.coord.iPos))
+         Console.WriteLine(Смещ(_mLex.уКоорд.цПоз))
          модКокон.Ошибка("Запрещённая лексема в этом месте")
          Environment.Exit(1)
       End Sub
@@ -116,27 +116,27 @@
          Me.name = New clsName(_name)
          Me.alias_ = New clsName(_alias)
       End Sub
-      Public Sub Import_Error(txtLine As String, _lex As clsTag)
-         модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + " -" + Str(_lex.coord.iPos))
+      Public Sub Import_Error(txtLine As String, _lex As туЛекс)
+         модКокон.Ошибка("Крд: " + Str(_lex.уКоорд.цСтр) + " -" + Str(_lex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_lex.coord.iPos))
+         Console.WriteLine(Смещ(_lex.уКоорд.цПоз))
          модКокон.Ошибка("Нарушение порядка импорта>")
          Environment.Exit(1)
       End Sub
    End Class
    Public Class clsConst ' класс содержащий константу
-      Public lex As clsTag ' содержит строкове представление и координаты
-      Public exp() As clsTag ' тут может быть целое выражение!!
+      Public lex As туЛекс ' содержит строкове представление и координаты
+      Public exp() As туЛекс ' тут может быть целое выражение!!
       Public type_ As String ' тип константы
       ''' <summary>
       ''' Выводится при отсутствии имени константы
       ''' </summary>
       ''' <param name="txtLine">Строка, в которой ошибка</param>
       ''' <param name="_lex">Неверная лексема</param>
-      Public Sub ErrorMissingName(txtLine As String, _lex As clsTag)
-         модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + " -" + Str(_lex.coord.iPos))
+      Public Sub ErrorMissingName(txtLine As String, _lex As туЛекс)
+         модКокон.Ошибка("Крд: " + Str(_lex.уКоорд.цСтр) + " -" + Str(_lex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_lex.coord.iPos))
+         Console.WriteLine(Смещ(_lex.уКоорд.цПоз))
          модКокон.Ошибка("Пропущено имя константы")
          Environment.Exit(1)
       End Sub
@@ -145,10 +145,10 @@
       ''' </summary>
       ''' <param name="txtLine">Строка с ошибочным именем</param>
       ''' <param name="_lex">Ошибочная лексема</param>
-      Public Sub ErrorEmptyName(txtLine As String, _lex As clsTag)
-         модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + " -" + Str(_lex.coord.iPos))
+      Public Sub ErrorEmptyName(txtLine As String, _lex As туЛекс)
+         модКокон.Ошибка("Крд: " + Str(_lex.уКоорд.цСтр) + " -" + Str(_lex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_lex.coord.iPos))
+         Console.WriteLine(Смещ(_lex.уКоорд.цПоз))
          модКокон.Ошибка("Пустое имя константы")
          Environment.Exit(1)
       End Sub
@@ -157,10 +157,10 @@
       ''' </summary>
       ''' <param name="txtLine">Строка с ошибочным присвоение</param>
       ''' <param name="_lex">Ошибочная лексема на месте присвоения</param>
-      Public Sub ErrorAsign(txtLine As String, _lex As clsTag)
-         модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + "-" + Str(_lex.coord.iPos))
+      Public Sub ErrorAsign(txtLine As String, _lex As туЛекс)
+         модКокон.Ошибка("Крд: " + Str(_lex.уКоорд.цСтр) + "-" + Str(_lex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_lex.coord.iPos))
+         Console.WriteLine(Смещ(_lex.уКоорд.цПоз))
          модКокон.Ошибка("Нарушение присвоения константы")
          Environment.Exit(1)
       End Sub
@@ -169,10 +169,10 @@
       ''' </summary>
       ''' <param name="txtLine">Строка константы с выражением</param>
       ''' <param name="_lex">Последняя просмотренная лексема</param>
-      Public Sub ErrorEndSource(txtLine As String, _lex As clsTag)
-         модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + "-" + Str(_lex.coord.iPos))
+      Public Sub ErrorEndSource(txtLine As String, _lex As туЛекс)
+         модКокон.Ошибка("Крд: " + Str(_lex.уКоорд.цСтр) + "-" + Str(_lex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_lex.coord.iPos))
+         Console.WriteLine(Смещ(_lex.уКоорд.цПоз))
          модКокон.Ошибка("Нет ограничителя константы")
          Environment.Exit(1)
       End Sub
@@ -203,10 +203,10 @@
       ''' </summary>
       ''' <param name="txtLine">Строка с запрещённым ключевым словом</param>
       ''' <param name="_lex">Само ключевое слово</param>
-      Public Sub ErrorKeyword(txtLine As String, _lex As clsTag)
-         модКокон.Ошибка("Крд: " + Str(_lex.coord.iStr) + "-" + Str(_lex.coord.iPos))
+      Public Sub ErrorKeyword(txtLine As String, _lex As туЛекс)
+         модКокон.Ошибка("Крд: " + Str(_lex.уКоорд.цСтр) + "-" + Str(_lex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
-         Console.WriteLine(Смещ(_lex.coord.iPos))
+         Console.WriteLine(Смещ(_lex.уКоорд.цПоз))
          модКокон.Ошибка("В этом месте ключевое слово запрещено")
          Environment.Exit(1)
       End Sub
@@ -216,16 +216,16 @@
    ''' </summary>
    Public Module modLexer
       Dim sRes As String = "" ' результат анализа
-      Dim mLex() As clsTag
+      Dim mLex() As туЛекс
       Dim prog As clsModule ' объект главного модуля есть программ
       Dim tagc As clsCount ' текущий тег на анализе
       Dim txtLine() As String ' список строк исходника
       Sub Структуры_Копировать()
          Dim i As Integer = 0
-         Dim lex_ As clsTag
+         Dim lex_ As туЛекс
          Do While (i < модЛексер.tags.len)
-            lex_ = New clsTag(модЛексер.tags(i),
-                                      модЛексер.tags.tags(i).coord)
+            lex_ = New туЛекс(модЛексер.tags(i),
+                                      модЛексер.tags.tags(i).уКоорд)
             mLex(mLex.Length - 1) = lex_
             ReDim Preserve mLex(mLex.Length)
             i += 1
@@ -234,9 +234,9 @@
       End Sub
       Sub ОшибкаИмени(msg As String, t As Integer)
          модКокон.Ошибка(msg + ":" + t.ToString() + " >" + mLex(t).strTag + "<")
-         модКокон.Ошибка("Крд: " + Str(mLex(t).coord.iStr) + " -" + Str(mLex(t).coord.iPos))
-         Console.WriteLine(txtLine(mLex(t).coord.iStr))
-         Console.WriteLine(Смещ(mLex(t).coord.iPos))
+         модКокон.Ошибка("Крд: " + Str(mLex(t).уКоорд.цСтр) + " -" + Str(mLex(t).уКоорд.цПоз))
+         Console.WriteLine(txtLine(mLex(t).уКоорд.цСтр))
+         Console.WriteLine(Смещ(mLex(t).уКоорд.цПоз))
          модКокон.Ошибка("Имя должно начинаться с буквы или ""_""")
          Environment.Exit(1)
       End Sub
@@ -248,7 +248,7 @@
          ' правило ищет комметарии и иключает их из кода
          Dim count As Integer = 0
          Dim bStrip As Boolean
-         Dim tmpLex() As clsTag = Nothing
+         Dim tmpLex() As туЛекс = Nothing
          ReDim tmpLex(0)
          Dim tag As String
          If sRes = "comment" Then
@@ -276,10 +276,10 @@
             tmpLex = Nothing
 
             If bStrip = True Then
-               модКокон.Ошибка("Крд: " + Str(mLex(mLex.Length - 1).coord.iStr + 1) + " -" _
-                               + Str(mLex(mLex.Length - 1).coord.iPos))
-               Console.WriteLine(txtLine(mLex(mLex.Length - 1).coord.iStr + 1))
-               Console.WriteLine(Смещ(mLex(mLex.Length - 1).coord.iPos))
+               модКокон.Ошибка("Крд: " + Str(mLex(mLex.Length - 1).уКоорд.цСтр + 1) + " -" _
+                               + Str(mLex(mLex.Length - 1).уКоорд.цПоз))
+               Console.WriteLine(txtLine(mLex(mLex.Length - 1).уКоорд.цСтр + 1))
+               Console.WriteLine(Смещ(mLex(mLex.Length - 1).уКоорд.цПоз))
                модКокон.Ошибка("Блок комментария не закрыт")
                sRes = "err"
                Exit Sub
@@ -299,13 +299,13 @@
                tagc.Inc()
                sRes = "1.2"
             Else ' если тег не оказался MODULE
-               prog.ErrorOpen(txtLine(mLex(0).coord.iStr), mLex(0))
+               prog.ErrorOpen(txtLine(mLex(0).уКоорд.цСтр), mLex(0))
             End If
          End If
          '1.2 У модуля должно быть имя
          If sRes = "1.2" Then
             ' проверка на допустимое имя. Должно начинаться либо с "_"  либо с буквы
-            If modUtil.ЕслиНачИмени(mLex(tagc.val).strTag) Then
+            If модУтиль.ЕслиНачИмени(mLex(tagc.val).strTag) Then
                prog.name = mLex(tagc.val).strTag
                tagc.Inc()
             Else
@@ -318,7 +318,7 @@
                sRes = "1.3"
                tagc.Inc()
             Else
-               prog.ErrorEndName(txtLine(mLex(tagc.val - 1).coord.iStr), mLex(tagc.val - 1))
+               prog.ErrorEndName(txtLine(mLex(tagc.val - 1).уКоорд.цСтр), mLex(tagc.val - 1))
 
             End If
          End If
@@ -328,7 +328,7 @@
             Dim i As Integer = 3 ' начинаем отсчёт сразу за определением модуля
             Do While i < mLex.Length - 2 ' учитываем ссылку вперёд на точку
                ' конец ли это? i+2 -- через имя
-               If mLex(i).strTag = "END" And modUtil.ЕслиИмя(mLex(i + 1).strTag) = "_name_" And
+               If mLex(i).strTag = "END" And модУтиль.ЕслиИмя(mLex(i + 1).strTag) = "_name_" And
                    mLex(i + 2).strTag = "." Then
                   bEnd = True
                   ' ограничивать будем полем структуры программы
@@ -339,7 +339,7 @@
                i += 1
             Loop
             If Not bEnd Then 'а конца то нет!! работаем с последним тегом
-               prog.BadEndNModule(txtLine(mLex(mLex.Length - 1).coord.iStr - 1), mLex(mLex.Length - 1))
+               prog.BadEndNModule(txtLine(mLex(mLex.Length - 1).уКоорд.цСтр - 1), mLex(mLex.Length - 1))
             End If
          End If
          '1.4 Модуль должен быть один
@@ -359,7 +359,7 @@
                      i += 1
                      Continue Do
                   Else ' да. Это не строка, и не часть сущности!!
-                     prog.ErrorDoubleNModule(txtLine(mLex(i).coord.iStr), mLex(i))
+                     prog.ErrorDoubleNModule(txtLine(mLex(i).уКоорд.цСтр), mLex(i))
                   End If
                End If
                i += 1
@@ -370,7 +370,7 @@
          If sRes = "1.5" Then
             If prog.name <> mLex(prog.tag_end - 1).strTag Then
                ' это залёт!
-               prog.MissMathName(txtLine(mLex(0).coord.iStr), txtLine(mLex(prog.tag_end - 1).coord.iStr))
+               prog.MissMathName(txtLine(mLex(0).уКоорд.цСтр), txtLine(mLex(prog.tag_end - 1).уКоорд.цСтр))
             Else
                sRes = "1.6"
             End If
@@ -385,7 +385,7 @@
             Else
                ' запрещённый символ
                Console.WriteLine(">" + mLex(tagc.val).strTag + "<")
-               prog.ErrorNextStatement(txtLine(mLex(tagc.val).coord.iStr), mLex(tagc.val))
+               prog.ErrorNextStatement(txtLine(mLex(tagc.val).уКоорд.цСтр), mLex(tagc.val))
             End If
          End If
       End Sub
@@ -412,7 +412,7 @@
                tagc.Inc()
                If mLex(tagc.val).strTag = "," Or mLex(tagc.val).strTag = ";" Then ' Первая ветка -- прямой импорт
                   ' проверить имя модуля и алиас на допустимость
-                  If modUtil.ЕслиИмя(mLex(tagc.val - 1).strTag) <> "_name_" Then
+                  If модУтиль.ЕслиИмя(mLex(tagc.val - 1).strTag) <> "_name_" Then
                      '  неправильное имени
                      ОшибкаИмени("IMPORT", tagc.val)
                   End If
@@ -428,17 +428,17 @@
                      sRes = "2.3"
                      Exit Do
                   Else ' а это уже ошибка!!
-                     prog.import(prog.import.Length - 1).Import_Error(txtLine(mLex(tagc.val + 1).coord.iStr), mLex(tagc.val + 1))
+                     prog.import(prog.import.Length - 1).Import_Error(txtLine(mLex(tagc.val + 1).уКоорд.цСтр), mLex(tagc.val + 1))
                   End If
                ElseIf mLex(tagc.val).strTag = ":=" Then ' вторая ветка -- импорт с алиасом
                   ' проверка имени
                   tagc.Inc()
-                  If modUtil.ЕслиИмя(mLex(tagc.val).strTag) <> "_name_" Then
+                  If модУтиль.ЕслиИмя(mLex(tagc.val).strTag) <> "_name_" Then
                      '  неправильное имени
                      ОшибкаИмени("IMPORT", tagc.val)
                   End If
                   ' проверка алиаса
-                  If modUtil.ЕслиИмя(mLex(tagc.val - 2).strTag) <> "_name_" Then
+                  If модУтиль.ЕслиИмя(mLex(tagc.val - 2).strTag) <> "_name_" Then
                      '  неправильное имени
                      ОшибкаИмени("IMPORT", tagc.val - 2)
                   End If
@@ -456,10 +456,10 @@
                      sRes = "const"
                      Exit Do
                   Else ' а это уже ошибка!!
-                     prog.import(prog.import.Length - 1).Import_Error(txtLine(mLex(tagc.val).coord.iStr), mLex(tagc.val + 3))
+                     prog.import(prog.import.Length - 1).Import_Error(txtLine(mLex(tagc.val).уКоорд.цСтр), mLex(tagc.val + 3))
                   End If
                Else
-                  prog.import(prog.import.Length - 1).Import_Error(txtLine(mLex(tagc.val + 1).coord.iStr), mLex(tagc.val + 1))
+                  prog.import(prog.import.Length - 1).Import_Error(txtLine(mLex(tagc.val + 1).уКоорд.цСтр), mLex(tagc.val + 1))
                End If
             Loop
          End If
@@ -480,7 +480,7 @@
             Else
                tagc.Inc()
                ' может имя, а может ключевое слово
-               If modUtil.ЕслиИмя(mLex(tagc.val).strTag) = "_name_" Then
+               If модУтиль.ЕслиИмя(mLex(tagc.val).strTag) = "_name_" Then
                   Dim cst As clsConst = New clsConst()
                   ' если имя оказалось ключевым словом -- идти к следующему блоку
                   If cst.NextKeyword(mLex(tagc.val).strTag) Then
@@ -490,7 +490,7 @@
                   End If
                   sRes = "3.2"
                Else ' если имя пустое
-                  prog.const_(0).ErrorMissingName(txtLine(mLex(tagc.val).coord.iStr), mLex(tagc.val))
+                  prog.const_(0).ErrorMissingName(txtLine(mLex(tagc.val).уКоорд.цСтр), mLex(tagc.val))
                End If
             End If
          End If
@@ -500,7 +500,7 @@
                ' может быть что угодно в выражении, но не ";". Пока не разбираем что именно
                ' Добавляем тег в секцию констант
                ' сначала добавить имя константы, проверим на правильность имени
-               If modUtil.ЕслиИмя(mLex(tagc.val).strTag) <> "_name_" Then
+               If модУтиль.ЕслиИмя(mLex(tagc.val).strTag) <> "_name_" Then
                   ОшибкаИмени("Константы:", tagc.val)
                End If
                ' проверить на следующее ключевое слово
@@ -511,7 +511,7 @@
                   Exit Sub
                End If
                ' теперь создать лексему-имя в константу
-               Dim _lex As clsTag = mLex(tagc.val)
+               Dim _lex As туЛекс = mLex(tagc.val)
                ' теперь создать саму константу с её выражением для присвоения
                Dim _const As clsConst = New clsConst With {.lex = _lex} ' заполнение константы
                ' в константе может быть выражение для присвоения
@@ -519,12 +519,12 @@
                tagc.Inc()
                ' если нет "равно" -- сообщить об ошибке, иначе продолжать
                If mLex(tagc.val).strTag <> "=" Then
-                  prog.const_(0).ErrorAsign(txtLine(mLex(tagc.val).coord.iStr), mLex(tagc.val))
+                  prog.const_(0).ErrorAsign(txtLine(mLex(tagc.val).уКоорд.цСтр), mLex(tagc.val))
                Else
                   tagc.Inc()
                End If
                ' создать массив лексем для выражения
-               Dim _exp() As clsTag = Nothing
+               Dim _exp() As туЛекс = Nothing
                ReDim _exp(0)
                tagc.Inc()
                ' перебирать лексемы, пока не закончится выражение, либо не закончится код
@@ -537,7 +537,7 @@
                   ' TODO: двоеточие в выражениях запрещена (и для SET запятую надо переделать!!!)
                   If _const.NextKeyword(mLex(tagc.val).strTag) Then
                      ' здесь надо вообще покончить с разбором (пока)
-                     prog.const_(0).ErrorKeyword(txtLine(mLex(tagc.val).coord.iStr), mLex(tagc.val))
+                     prog.const_(0).ErrorKeyword(txtLine(mLex(tagc.val).уКоорд.цСтр), mLex(tagc.val))
                   End If
                   ' заполняем выражение
                   _exp(_exp.Length - 1) = mLex(tagc.val)
@@ -586,7 +586,7 @@
             End If
             ' это не следующая секция, это имя типа. Начать перебор
             Do
-               If modUtil.ЕслиИмя(mLex(tagc.val).strTag) = "_name_" Then
+               If модУтиль.ЕслиИмя(mLex(tagc.val).strTag) = "_name_" Then
                   ' добавить новый тип
                   Dim _type_name As String = mLex(tagc.val).strTag
                   tagc.Inc() '+1
@@ -595,7 +595,7 @@
                      Console.WriteLine("Обнаружен правильный разделитель типа")
                      tagc.Inc() '+2
                   Else
-                     modType.ErrorTerminal(txtLine(mLex(tagc.val).coord.iStr), mLex(tagc.val))
+                     modType.ErrorTerminal(txtLine(mLex(tagc.val).уКоорд.цСтр), mLex(tagc.val))
                   End If
                   ' простые типы
                   ' Группа ARRAY
@@ -603,7 +603,7 @@
                      tagc.Inc() '+3
                      Dim _type_sort As String = "ARRAY"
                      ' ARRAY <N>
-                     If modUtil.ЕслиЦелое(mLex(tagc.val).strTag) Then
+                     If модУтиль.ЕслиЦелое(mLex(tagc.val).strTag) Then
                         Dim _type_len As Integer = CInt(mLex(tagc.val).strTag)
                         tagc.Inc() '+4
                         ' дальше ДОЛЖНО идти OF
@@ -630,19 +630,19 @@
                                  Continue Do
                               Else
                                  ' нет разделителя определения типа массива
-                                 modType.ErrorEndArray(txtLine(mLex(tagc.val - 1).coord.iStr), mLex(tagc.val - 1))
+                                 modType.ErrorEndArray(txtLine(mLex(tagc.val - 1).уКоорд.цСтр), mLex(tagc.val - 1))
                               End If
                            Else
                               ' ошибка по типу элеметов массива
-                              modType.ErrorToElArray(txtLine(mLex(tagc.val).coord.iStr), mLex(tagc.val))
+                              modType.ErrorToElArray(txtLine(mLex(tagc.val).уКоорд.цСтр), mLex(tagc.val))
                            End If
                         Else
                            ' нет элемента OF
-                           modType.ErrorOfArray(txtLine(mLex(tagc.val).coord.iStr), mLex(tagc.val))
+                           modType.ErrorOfArray(txtLine(mLex(tagc.val).уКоорд.цСтр), mLex(tagc.val))
                         End If
                      Else
                         ' размерность типа должна быть числом
-                        modType.ErrorNumArray(txtLine(mLex(tagc.val).coord.iStr), mLex(tagc.val))
+                        modType.ErrorNumArray(txtLine(mLex(tagc.val).уКоорд.цСтр), mLex(tagc.val))
                      End If
                   End If
                   ' проверка на ключевое слово RECORD
@@ -654,7 +654,7 @@
                      ReDim members(0)
                      Do ' TODO: в типе может быть встречена запись. Надо доделать
                         ' в этой позиции должно идти имя-члена записи 
-                        If modUtil.ЕслиИмя(mLex(tagc.val).strTag) = "_name_" Then
+                        If модУтиль.ЕслиИмя(mLex(tagc.val).strTag) = "_name_" Then
                            ' добавить в массив членов новый член
                            Dim mem As clsTypeMember = New clsTypeMember(mLex(tagc.val)) With {
                               .name = mLex(tagc.val).strTag,
@@ -676,14 +676,14 @@
                                     Continue Do
                                  Else
                                     ' неверный разделитель в члене записи
-                                    modType.ErrorTerminal(txtLine(mLex(tagc.val).coord.iStr), mLex(tagc.val))
+                                    modType.ErrorTerminal(txtLine(mLex(tagc.val).уКоорд.цСтр), mLex(tagc.val))
                                  End If
                               Else
                                  ОшибкаИмени("RECORD: ", tagc.val)
                               End If
                            Else
                               ' нет разделителя между членом записи и его типом
-                              modType.ErrorTerminal(txtLine(mLex(tagc.val).coord.iStr), mLex(tagc.val))
+                              modType.ErrorTerminal(txtLine(mLex(tagc.val).уКоорд.цСтр), mLex(tagc.val))
                            End If
                         Else
                            ' сообщить об оишбочном имени члена записи

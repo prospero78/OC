@@ -84,7 +84,7 @@ Namespace пиОк
       Public Sub Компилировать()
          ' нарезать колбасу из исходника с присвоением координат
          Console.WriteLine("Разметка тегов")
-         модЛексер.Тег_Разметить()
+         модЛексер.Лексемы_Разметить()
          Console.WriteLine("All tags:" + Str(модЛексер.tags.len))
          Dim i As Integer = 0
          Do While i < модЛексер.tags.len - 12
