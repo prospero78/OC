@@ -7,7 +7,7 @@
       Public name As String = "" ' имя типа
       Public num As Integer = 0 ' порядковый номер типа
       Public Sub New(_lex As туЛекс)
-         MyBase.New(_lex.strTag, _lex.уКоорд)
+         MyBase.New(_lex.стрЛекс, _lex.уКоорд)
       End Sub
    End Class
    ''' <summary>

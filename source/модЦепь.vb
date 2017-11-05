@@ -3,11 +3,43 @@
    '''  Тип предоставляет одно звено в цепи звеньев
    ''' </summary>
    Public Class туЗвено
-      Public звПред As туЗвено ' предыдущее звено
-      Public звСлед As туЗвено ' следующее звено
-      Public Sub New(Optional пЗвПред As туЗвено = Nothing, Optional пЗвСлед As туЗвено = Nothing)
-         Me.звПред = пЗвПред
-         Me.звСлед = пЗвСлед
+      Dim _уПред As туЗвено
+      ''' <summary>
+      '''  Предыдущий указатель в звене
+      ''' </summary>
+      Public ReadOnly Property уПред As туЗвено ' предыдущее звено
+         Get
+            Return Me._уПред
+         End Get
+      End Property
+      Public Sub уПред_Уст(пуПред As туЗвено)
+         Me._уПред = пуПред
+      End Sub
+
+      Dim _уСлед As туЗвено
+      ''' <summary>
+      ''' Возвращает указатель на следующий элемент
+      ''' </summary>
+      ''' <returns></returns>
+      Public ReadOnly Property уСлед As туЗвено ' следующее звено
+         Get
+            Return Me._уСлед
+         End Get
+      End Property
+      Public Sub уСлед_Уст(пуСлед As туЗвено)
+         Me._уСлед = пуСлед
+      End Sub
+
+      Shared _цВсего As Integer = 0
+      Public Shared ReadOnly Property цВсего As Integer
+         Get
+            Return Me._цВсего
+         End Get
+      End Property
+
+      Public Sub New(Optional пуПред As туЗвено = Nothing, Optional пуСлед As туЗвено = Nothing)
+         Me._уПред = пуПред
+         Me._уСлед = пуСлед
       End Sub
    End Class
    ''' <summary>

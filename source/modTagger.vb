@@ -1,5 +1,33 @@
 ﻿Namespace пиОк
    ''' <summary>
+   ''' Содержит имя объекта и методы обработки имени
+   ''' </summary>
+   Public Class туИмя
+      Dim _name As String = ""
+      ''' <summary>
+      ''' Строкове обозначение имени объекта.
+      ''' </summary>
+      ''' <returns>возвращает строкове значение</returns>
+      Public Property strVal() As String
+         Get
+            Return Me._name
+         End Get
+         Set(value As String)
+            Dim res As String
+            res = модУтиль.ЕслиИмя(value)
+            If res = "_name_" Then
+               Me._name = value
+            Else
+               модКокон.Ошибка(Me._name + ":" + res + " val=" + value)
+               Environment.Exit(1)
+            End If
+         End Set
+      End Property
+      Public Sub New(_Name As String)
+         Me._name = _Name
+      End Sub
+   End Class
+   ''' <summary>
    '''  Предаставляет класс счётчика с полезными фишками
    ''' </summary>
    Public Class clsCount
@@ -110,11 +138,11 @@
    ''' Содержит список модулей для импорта
    ''' </summary>
    Public Class clsImport ' содержит имена модулей для имопрта и их алиасы
-      Public name As clsName
-      Public alias_ As clsName
+      Public name As туИмя
+      Public alias_ As туИмя
       Public Sub New(Optional _name As String = "", Optional _alias As String = "")
-         Me.name = New clsName(_name)
-         Me.alias_ = New clsName(_alias)
+         Me.name = New туИмя(_name)
+         Me.alias_ = New туИмя(_alias)
       End Sub
       Public Sub Import_Error(txtLine As String, _lex As туЛекс)
          модКокон.Ошибка("Крд: " + Str(_lex.уКоорд.цСтр) + " -" + Str(_lex.уКоорд.цПоз))
@@ -220,20 +248,8 @@
       Dim prog As clsModule ' объект главного модуля есть программ
       Dim tagc As clsCount ' текущий тег на анализе
       Dim txtLine() As String ' список строк исходника
-      Sub Структуры_Копировать()
-         Dim i As Integer = 0
-         Dim lex_ As туЛекс
-         Do While (i < модЛексер.tags.len)
-            lex_ = New туЛекс(модЛексер.tags(i),
-                                      модЛексер.tags.tags(i).уКоорд)
-            mLex(mLex.Length - 1) = lex_
-            ReDim Preserve mLex(mLex.Length)
-            i += 1
-         Loop
-         модЛексер.tags = Nothing
-      End Sub
       Sub ОшибкаИмени(msg As String, t As Integer)
-         модКокон.Ошибка(msg + ":" + t.ToString() + " >" + mLex(t).strTag + "<")
+         модКокон.Ошибка(msg + ":" + t.ToString() + " >" + mLex(t).стрЛекс + "<")
          модКокон.Ошибка("Крд: " + Str(mLex(t).уКоорд.цСтр) + " -" + Str(mLex(t).уКоорд.цПоз))
          Console.WriteLine(txtLine(mLex(t).уКоорд.цСтр))
          Console.WriteLine(Смещ(mLex(t).уКоорд.цПоз))
@@ -253,7 +269,7 @@
          Dim tag As String
          If sRes = "comment" Then
             Do While count < mLex.Length
-               tag = mLex(count).strTag
+               tag = mLex(count).стрЛекс
                If tag = "(*" Then ' начало коммента
                   bStrip = True
                   count += 1
@@ -294,7 +310,7 @@
       Sub Пр_МОДУЛЬ()
          ' 1.1 МОДУЛЬ должен быть первым
          If sRes = "module" Then
-            If mLex(tagc.val).strTag = "MODULE" Then
+            If mLex(tagc.val).стрЛекс = "MODULE" Then
                ' открываем наш модуль
                tagc.Inc()
                sRes = "1.2"
@@ -305,8 +321,8 @@
          '1.2 У модуля должно быть имя
          If sRes = "1.2" Then
             ' проверка на допустимое имя. Должно начинаться либо с "_"  либо с буквы
-            If модУтиль.ЕслиНачИмени(mLex(tagc.val).strTag) Then
-               prog.name = mLex(tagc.val).strTag
+            If модУтиль.ЕслиНачИмени(mLex(tagc.val).стрЛекс) Then
+               prog.name = mLex(tagc.val).стрЛекс
                tagc.Inc()
             Else
                ОшибкаИмени("MODULE", 1)
@@ -314,7 +330,7 @@
             End If
 
             ' имя модуля -- № 1, разделитель -- № 2
-            If mLex(tagc.val).strTag <> ";" Then ' пропущен разделитель
+            If mLex(tagc.val).стрЛекс <> ";" Then ' пропущен разделитель
                sRes = "1.3"
                tagc.Inc()
             Else
@@ -328,8 +344,8 @@
             Dim i As Integer = 3 ' начинаем отсчёт сразу за определением модуля
             Do While i < mLex.Length - 2 ' учитываем ссылку вперёд на точку
                ' конец ли это? i+2 -- через имя
-               If mLex(i).strTag = "END" And модУтиль.ЕслиИмя(mLex(i + 1).strTag) = "_name_" And
-                   mLex(i + 2).strTag = "." Then
+               If mLex(i).стрЛекс = "END" And модУтиль.ЕслиИмя(mLex(i + 1).стрЛекс) = "_name_" And
+                   mLex(i + 2).стрЛекс = "." Then
                   bEnd = True
                   ' ограничивать будем полем структуры программы
                   prog.tag_end = i + 2
@@ -348,14 +364,14 @@
             ' Интересует только первая тотальная встреча
             Dim i As Integer = 1 ' нельзя брать 0, так как это и есть модуль
             Do While i < prog.tag_end  ' последние тэги мы уже выяснили
-               If mLex(i).strTag = "MODULE" Then 'надо выясить, может это часть выражения, или строка
-                  If (mLex(i - 1).strTag = ".") Then
+               If mLex(i).стрЛекс = "MODULE" Then 'надо выясить, может это часть выражения, или строка
+                  If (mLex(i - 1).стрЛекс = ".") Then
                      i += 1
                      Continue Do
-                  ElseIf mLex(i - 1).strTag = """" And mLex(i + 1).strTag = """" Then
+                  ElseIf mLex(i - 1).стрЛекс = """" And mLex(i + 1).стрЛекс = """" Then
                      i += 1
                      Continue Do
-                  ElseIf mLex(i - 1).strTag = "'" And mLex(i + 1).strTag = "'" Then
+                  ElseIf mLex(i - 1).стрЛекс = "'" And mLex(i + 1).стрЛекс = "'" Then
                      i += 1
                      Continue Do
                   Else ' да. Это не строка, и не часть сущности!!
@@ -368,7 +384,7 @@
          End If
          ' 1.5 Имя модуля и имя конца должны совпадать
          If sRes = "1.5" Then
-            If prog.name <> mLex(prog.tag_end - 1).strTag Then
+            If prog.name <> mLex(prog.tag_end - 1).стрЛекс Then
                ' это залёт!
                prog.MissMathName(txtLine(mLex(0).уКоорд.цСтр), txtLine(mLex(prog.tag_end - 1).уКоорд.цСтр))
             Else
@@ -378,13 +394,13 @@
          ' дальше должно идти на выбор: IMPORT CONST TYPE VAR PROCEDURE BEGIN
          If sRes = "1.6" Then
             ' первая инструкция после разделителя имени модуля
-            If mLex(tagc.val).strTag = "IMPORT" Or mLex(tagc.val).strTag = "CONST" Or
-                  mLex(tagc.val).strTag = "TYPE" Or mLex(tagc.val).strTag = "VAR" Or
-                  mLex(tagc.val).strTag = "PROCEDURE" Or mLex(tagc.val).strTag = "BEGIN" Then
+            If mLex(tagc.val).стрЛекс = "IMPORT" Or mLex(tagc.val).стрЛекс = "CONST" Or
+                  mLex(tagc.val).стрЛекс = "TYPE" Or mLex(tagc.val).стрЛекс = "VAR" Or
+                  mLex(tagc.val).стрЛекс = "PROCEDURE" Or mLex(tagc.val).стрЛекс = "BEGIN" Then
                sRes = "import"
             Else
                ' запрещённый символ
-               Console.WriteLine(">" + mLex(tagc.val).strTag + "<")
+               Console.WriteLine(">" + mLex(tagc.val).стрЛекс + "<")
                prog.ErrorNextStatement(txtLine(mLex(tagc.val).уКоорд.цСтр), mLex(tagc.val))
             End If
          End If
@@ -395,7 +411,7 @@
       Sub Пр_ИМПОРТ()
          ' прочесали модуль, теперь проверить нет ли импорта
          If sRes = "import" Then ' 2.1 IMPORT может идти тегом № 3 -- проверяем
-            If mLex(tagc.val).strTag = "IMPORT" Then
+            If mLex(tagc.val).стрЛекс = "IMPORT" Then
                sRes = "2.2"
                tagc.Inc()
             End If
@@ -410,48 +426,48 @@
                ' Импортов может быть 
                ' прямой, c алиасом, с запятой (продолжение), с ";" -- конец импорта
                tagc.Inc()
-               If mLex(tagc.val).strTag = "," Or mLex(tagc.val).strTag = ";" Then ' Первая ветка -- прямой импорт
+               If mLex(tagc.val).стрЛекс = "," Or mLex(tagc.val).стрЛекс = ";" Then ' Первая ветка -- прямой импорт
                   ' проверить имя модуля и алиас на допустимость
-                  If модУтиль.ЕслиИмя(mLex(tagc.val - 1).strTag) <> "_name_" Then
+                  If модУтиль.ЕслиИмя(mLex(tagc.val - 1).стрЛекс) <> "_name_" Then
                      '  неправильное имени
                      ОшибкаИмени("IMPORT", tagc.val)
                   End If
                   ReDim Preserve prog.import(prog.import.Length)
-                  Dim imp As clsImport = New clsImport(mLex(tagc.val).strTag)
+                  Dim imp As clsImport = New clsImport(mLex(tagc.val).стрЛекс)
                   prog.import(prog.import.Length - 1) = imp
                   tagc.Inc() ' ищем разделитель импорта
-                  If mLex(tagc.val).strTag = "," Then 'импорт может закончился?
+                  If mLex(tagc.val).стрЛекс = "," Then 'импорт может закончился?
                      tagc.Inc()
                      Continue Do
-                  ElseIf mLex(tagc.val).strTag = ";" Then ' импорт закончить
+                  ElseIf mLex(tagc.val).стрЛекс = ";" Then ' импорт закончить
                      tagc.Inc()
                      sRes = "2.3"
                      Exit Do
                   Else ' а это уже ошибка!!
                      prog.import(prog.import.Length - 1).Import_Error(txtLine(mLex(tagc.val + 1).уКоорд.цСтр), mLex(tagc.val + 1))
                   End If
-               ElseIf mLex(tagc.val).strTag = ":=" Then ' вторая ветка -- импорт с алиасом
+               ElseIf mLex(tagc.val).стрЛекс = ":=" Then ' вторая ветка -- импорт с алиасом
                   ' проверка имени
                   tagc.Inc()
-                  If модУтиль.ЕслиИмя(mLex(tagc.val).strTag) <> "_name_" Then
+                  If модУтиль.ЕслиИмя(mLex(tagc.val).стрЛекс) <> "_name_" Then
                      '  неправильное имени
                      ОшибкаИмени("IMPORT", tagc.val)
                   End If
                   ' проверка алиаса
-                  If модУтиль.ЕслиИмя(mLex(tagc.val - 2).strTag) <> "_name_" Then
+                  If модУтиль.ЕслиИмя(mLex(tagc.val - 2).стрЛекс) <> "_name_" Then
                      '  неправильное имени
                      ОшибкаИмени("IMPORT", tagc.val - 2)
                   End If
                   ' значит добавить элемент импрота
                   ReDim Preserve prog.import(prog.import.Length + 1)
-                  Dim imp As clsImport = New clsImport(mLex(tagc.val).strTag, mLex(tagc.val - 2).strTag)
+                  Dim imp As clsImport = New clsImport(mLex(tagc.val).стрЛекс, mLex(tagc.val - 2).стрЛекс)
                   prog.import(prog.import.Length - 1) = imp
                   ' проверка на продолжение
                   tagc.Inc()
-                  If mLex(tagc.val).strTag = "," Then 'импорт может закончился?
+                  If mLex(tagc.val).стрЛекс = "," Then 'импорт может закончился?
                      tagc.Inc()
                      Continue Do
-                  ElseIf mLex(tagc.val).strTag = ";" Then ' импорт закончить
+                  ElseIf mLex(tagc.val).стрЛекс = ";" Then ' импорт закончить
                      tagc.Inc()
                      sRes = "const"
                      Exit Do
@@ -471,7 +487,7 @@
       Sub Пр_КОНСТ()
          ' Проверяет правильность объявления констант
          If sRes = "const" Then ' Правило объявления инструкции CONST
-            If mLex(tagc.val).strTag <> "CONST" Then ' возможно просто нет такой секции
+            If mLex(tagc.val).стрЛекс <> "CONST" Then ' возможно просто нет такой секции
                tagc.Inc()
                sRes = "type"
                Exit Sub
@@ -480,10 +496,10 @@
             Else
                tagc.Inc()
                ' может имя, а может ключевое слово
-               If модУтиль.ЕслиИмя(mLex(tagc.val).strTag) = "_name_" Then
+               If модУтиль.ЕслиИмя(mLex(tagc.val).стрЛекс) = "_name_" Then
                   Dim cst As clsConst = New clsConst()
                   ' если имя оказалось ключевым словом -- идти к следующему блоку
-                  If cst.NextKeyword(mLex(tagc.val).strTag) Then
+                  If cst.NextKeyword(mLex(tagc.val).стрЛекс) Then
                      tagc.Inc()
                      sRes = "type"
                      Exit Sub
@@ -500,12 +516,12 @@
                ' может быть что угодно в выражении, но не ";". Пока не разбираем что именно
                ' Добавляем тег в секцию констант
                ' сначала добавить имя константы, проверим на правильность имени
-               If модУтиль.ЕслиИмя(mLex(tagc.val).strTag) <> "_name_" Then
+               If модУтиль.ЕслиИмя(mLex(tagc.val).стрЛекс) <> "_name_" Then
                   ОшибкаИмени("Константы:", tagc.val)
                End If
                ' проверить на следующее ключевое слово
                ' В это месте ключевое слово разрешено, и если что -- выход
-               If prog.const_(0).NextKeyword(mLex(tagc.val).strTag) Then
+               If prog.const_(0).NextKeyword(mLex(tagc.val).стрЛекс) Then
                   sRes = "type"
                   ' tagc += 1 Указатель итак на ключевое слово
                   Exit Sub
@@ -518,7 +534,7 @@
                ' перейти к следующему символу для проверки
                tagc.Inc()
                ' если нет "равно" -- сообщить об ошибке, иначе продолжать
-               If mLex(tagc.val).strTag <> "=" Then
+               If mLex(tagc.val).стрЛекс <> "=" Then
                   prog.const_(0).ErrorAsign(txtLine(mLex(tagc.val).уКоорд.цСтр), mLex(tagc.val))
                Else
                   tagc.Inc()
@@ -530,12 +546,12 @@
                ' перебирать лексемы, пока не закончится выражение, либо не закончится код
                Do While tagc.val < prog.tag_end
                   ' если встречен ";"
-                  If mLex(tagc.val).strTag = ";" Then
+                  If mLex(tagc.val).стрЛекс = ";" Then
                      ' здесь надо прервать внутренний цикл с выходом на внешний
                      Exit Do
                   End If
                   ' TODO: двоеточие в выражениях запрещена (и для SET запятую надо переделать!!!)
-                  If _const.NextKeyword(mLex(tagc.val).strTag) Then
+                  If _const.NextKeyword(mLex(tagc.val).стрЛекс) Then
                      ' здесь надо вообще покончить с разбором (пока)
                      prog.const_(0).ErrorKeyword(txtLine(mLex(tagc.val).уКоорд.цСтр), mLex(tagc.val))
                   End If
@@ -566,7 +582,7 @@
          ' проверка на ключевое слово "TYPE"
          ' такой секции может просто не быть
          If sRes = "type" Then
-            If mLex(tagc.val).strTag = "TYPE" Then
+            If mLex(tagc.val).стрЛекс = "TYPE" Then
                Console.WriteLine("Обнаружена секция типы")
                ' продолжаем работу над сбором типов
                tagc.Inc()
@@ -576,22 +592,22 @@
          ' обнаружена и подтверждена секция типов
          If sRes = "4.2" Then
             ' секция типов может быть пустая
-            If mLex(tagc.val).strTag = "VAR" Or mLex(tagc.val).strTag = "PROCEDURE" Or
-                  mLex(tagc.val).strTag = "BEGIN" Or
-                  (mLex(tagc.val).strTag = "END" And mLex(tagc.val + 1).strTag = prog.name And
-                  mLex(tagc.val + 2).strTag = ".") Then
+            If mLex(tagc.val).стрЛекс = "VAR" Or mLex(tagc.val).стрЛекс = "PROCEDURE" Or
+                  mLex(tagc.val).стрЛекс = "BEGIN" Or
+                  (mLex(tagc.val).стрЛекс = "END" And mLex(tagc.val + 1).стрЛекс = prog.name And
+                  mLex(tagc.val + 2).стрЛекс = ".") Then
                tagc.Inc()
                sRes = "var"
                Exit Sub
             End If
             ' это не следующая секция, это имя типа. Начать перебор
             Do
-               If модУтиль.ЕслиИмя(mLex(tagc.val).strTag) = "_name_" Then
+               If модУтиль.ЕслиИмя(mLex(tagc.val).стрЛекс) = "_name_" Then
                   ' добавить новый тип
-                  Dim _type_name As String = mLex(tagc.val).strTag
+                  Dim _type_name As String = mLex(tagc.val).стрЛекс
                   tagc.Inc() '+1
                   ' проверка на разделитель
-                  If mLex(tagc.val).strTag = "=" Then
+                  If mLex(tagc.val).стрЛекс = "=" Then
                      Console.WriteLine("Обнаружен правильный разделитель типа")
                      tagc.Inc() '+2
                   Else
@@ -599,23 +615,23 @@
                   End If
                   ' простые типы
                   ' Группа ARRAY
-                  If mLex(tagc.val).strTag = "ARRAY" Then
+                  If mLex(tagc.val).стрЛекс = "ARRAY" Then
                      tagc.Inc() '+3
                      Dim _type_sort As String = "ARRAY"
                      ' ARRAY <N>
-                     If модУтиль.ЕслиЦелое(mLex(tagc.val).strTag) Then
-                        Dim _type_len As Integer = CInt(mLex(tagc.val).strTag)
+                     If модУтиль.ЕслиЦелое(mLex(tagc.val).стрЛекс) Then
+                        Dim _type_len As Integer = CInt(mLex(tagc.val).стрЛекс)
                         tagc.Inc() '+4
                         ' дальше ДОЛЖНО идти OF
-                        If mLex(tagc.val).strTag = "OF" Then
+                        If mLex(tagc.val).стрЛекс = "OF" Then
                            tagc.Inc() '+5
                            'имя типа
-                           Dim t As String = modType.SelectType(mLex(tagc.val).strTag)
+                           Dim t As String = modType.SelectType(mLex(tagc.val).стрЛекс)
                            If t <> "_not_" Then
                               Dim _type_of As String = t
                               tagc.Inc() '+6
                               ' проверка на завершение типа-массива
-                              If mLex(tagc.val).strTag = ";" Then
+                              If mLex(tagc.val).стрЛекс = ";" Then
                                  Dim _type_array As clsTypeArray = New clsTypeArray(mLex(tagc.val - 6)) With {
                                     .name = _type_name,
                                     .strOf = _type_of,
@@ -646,7 +662,7 @@
                      End If
                   End If
                   ' проверка на ключевое слово RECORD
-                  If mLex(tagc.val).strTag = "RECORD" Then
+                  If mLex(tagc.val).стрЛекс = "RECORD" Then
                      _type_name = "record"
                      tagc.Inc()
                      ' проверяем все члены записи
@@ -654,22 +670,22 @@
                      ReDim members(0)
                      Do ' TODO: в типе может быть встречена запись. Надо доделать
                         ' в этой позиции должно идти имя-члена записи 
-                        If модУтиль.ЕслиИмя(mLex(tagc.val).strTag) = "_name_" Then
+                        If модУтиль.ЕслиИмя(mLex(tagc.val).стрЛекс) = "_name_" Then
                            ' добавить в массив членов новый член
                            Dim mem As clsTypeMember = New clsTypeMember(mLex(tagc.val)) With {
-                              .name = mLex(tagc.val).strTag,
+                              .name = mLex(tagc.val).стрЛекс,
                               .type_ = _type_name}
                            tagc.Inc()
                            ' в следующей позиции должен идти разделитель
-                           If mLex(tagc.val).strTag = ":" Then
+                           If mLex(tagc.val).стрЛекс = ":" Then
                               tagc.Inc()
                               ' в следующей позиции должен идти тип члена
-                              Dim a As String = modType.SelectType(mLex(tagc.val).strTag)
+                              Dim a As String = modType.SelectType(mLex(tagc.val).стрЛекс)
                               If a <> "_not_" Then
                                  mem.type_ = a
                                  tagc.Inc()
                                  ' в следующей позиции должен идти разделитель
-                                 If mLex(tagc.val).strTag = ";" Then
+                                 If mLex(tagc.val).стрЛекс = ";" Then
                                     tagc.Inc()
                                     members(members.Length - 1) = mem
                                     ReDim Preserve members(members.Length - 1)
@@ -708,11 +724,11 @@
          Пр_КОММЕНТАРИЙ()
          Dim i As Integer = 0
          Do While i < mLex.Length - 2
-            Console.Write(Str(i) + ")" + mLex(i).strTag + vbTab)
+            Console.Write(Str(i) + ")" + mLex(i).стрЛекс + vbTab)
             i += 1
-            Console.Write(Str(i) + ")" + mLex(i).strTag + vbTab)
+            Console.Write(Str(i) + ")" + mLex(i).стрЛекс + vbTab)
             i += 1
-            Console.WriteLine(Str(i) + ")" + mLex(i).strTag)
+            Console.WriteLine(Str(i) + ")" + mLex(i).стрЛекс)
             i += 1
          Loop
          Console.WriteLine("Пр_МОДУЛЬ")
@@ -730,7 +746,6 @@
          ReDim mLex(0)
          tagc = New clsCount()
          Console.WriteLine("Копирование структур")
-         Структуры_Копировать()
          ' создать объект програмы и упаковать его
          prog = New clsModule()
          Console.WriteLine("Отработать правила")
