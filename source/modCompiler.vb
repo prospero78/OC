@@ -84,14 +84,14 @@ Namespace пиОк
       Public Sub Компилировать()
          ' нарезать колбасу из исходника с присвоением координат
          Console.WriteLine("Разметка тегов")
-         модЛексер.Лексемы_Разметить()
-         Console.WriteLine("All tags:" + Str(модЛексер.уЦепьЛекс.len))
-         Dim луЛекс As туЛекс = модЛексер.уЦепьЛекс.уПервЛекс
+         модСлова.Лексемы_Разметить()
+         Console.WriteLine("All tags:" + Str(модСлова.слова.длина))
+         Dim луЛекс As туСлово = модСлова.слова.уПервЛекс
          Dim i As Integer = 0
          Do While Not IsNothing(луЛекс.уСлед)
-            Console.Write(Str(i) + ")" + луЛекс.стрЛекс + vbTab)
+            Console.Write(Str(i) + ")" + луЛекс.стрСлово + vbTab)
             i += 1
-            луЛекс = луЛекс.уСлед
+            луЛекс = модСлова.слова
          Loop
          modLexer.Lexer_Run()
          Console.Read()

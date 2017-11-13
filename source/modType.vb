@@ -3,11 +3,11 @@
    ''' Основа любого типа в Оберона
    ''' </summary>
    Public Class clsType
-      Inherits туЛекс
+      Inherits туСлово
       Public name As String = "" ' имя типа
       Public num As Integer = 0 ' порядковый номер типа
-      Public Sub New(_lex As туЛекс)
-         MyBase.New(_lex.стрЛекс, _lex.уКоорд)
+      Public Sub New(_lex As туСлово)
+         MyBase.New(_lex.стрСлово, _lex.уКоорд)
       End Sub
    End Class
    ''' <summary>
@@ -16,7 +16,7 @@
    Public Class clsTypeMember
       Inherits clsType
       Public type_ As String = "_none_" ' тип member of recorc
-      Public Sub New(_lex As туЛекс)
+      Public Sub New(_lex As туСлово)
          MyBase.New(_lex)
       End Sub
    End Class
@@ -27,7 +27,7 @@
       Inherits clsType
       Public strOf As String = "_none_" ' из чег осостоит (если массив)
       Public lenArray As Integer = 0 ' размер типа если это массив
-      Public Sub New(_lex As туЛекс)
+      Public Sub New(_lex As туСлово)
          MyBase.New(_lex)
       End Sub
 
@@ -36,7 +36,7 @@
       ''' </summary>
       ''' <param name="txtLine">Строка с неверным определением</param>
       ''' <param name="_mLex">Ошибочная лексема</param>
-      Public Sub ErrorKeywordType(txtLine As String, _mLex As туЛекс)
+      Public Sub ErrorKeywordType(txtLine As String, _mLex As туСлово)
          модКокон.Ошибка("Крд: " + Str(_mLex.уКоорд.цСтр) + " -" + Str(_mLex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_mLex.уКоорд.цПоз))
@@ -70,7 +70,7 @@
       ''' </summary>
       ''' <param name="txtLine"></param>
       ''' <param name="_lex"></param>
-      Public Sub ErrorNumArray(txtLine As String, _lex As туЛекс)
+      Public Sub ErrorNumArray(txtLine As String, _lex As туСлово)
          модКокон.Ошибка("Крд: " + Str(_lex.уКоорд.цСтр) + " -" + Str(_lex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_lex.уКоорд.цПоз))
@@ -82,7 +82,7 @@
       ''' </summary>
       ''' <param name="txtLine"></param>
       ''' <param name="_lex"></param>
-      Public Sub ErrorOfArray(txtLine As String, _lex As туЛекс)
+      Public Sub ErrorOfArray(txtLine As String, _lex As туСлово)
          модКокон.Ошибка("Крд: " + Str(_lex.уКоорд.цСтр) + " -" + Str(_lex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_lex.уКоорд.цПоз))
@@ -94,7 +94,7 @@
       ''' </summary>
       ''' <param name="txtLine"></param>
       ''' <param name="_lex"></param>
-      Public Sub ErrorToElArray(txtLine As String, _lex As туЛекс)
+      Public Sub ErrorToElArray(txtLine As String, _lex As туСлово)
          модКокон.Ошибка("Крд: " + Str(_lex.уКоорд.цСтр) + " -" + Str(_lex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_lex.уКоорд.цПоз))
@@ -106,7 +106,7 @@
       ''' </summary>
       ''' <param name="txtLine"></param>
       ''' <param name="_lex"></param>
-      Public Sub ErrorEndArray(txtLine As String, _lex As туЛекс)
+      Public Sub ErrorEndArray(txtLine As String, _lex As туСлово)
          модКокон.Ошибка("Крд: " + Str(_lex.уКоорд.цСтр) + " -" + Str(_lex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_lex.уКоорд.цПоз))
@@ -148,7 +148,7 @@
       ''' </summary>
       ''' <param name="txtLine">Строка с описанием типа</param>
       ''' <param name="_mLex">Лекссема с ошибкой</param>
-      Public Sub ErrorTerminal(txtLine As String, _mLex As туЛекс)
+      Public Sub ErrorTerminal(txtLine As String, _mLex As туСлово)
          модКокон.Ошибка("Крд: " + Str(_mLex.уКоорд.цСтр) + " -" + Str(_mLex.уКоорд.цПоз))
          Console.WriteLine(txtLine)
          Console.WriteLine(Смещ(_mLex.уКоорд.цПоз))

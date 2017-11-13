@@ -1,10 +1,10 @@
 'Модуль содержит необходимые константы для работы лексического анализатора
 Namespace пиОк
-   Public Module modConst
-      ' для теггера
-      Public Const multitag = 0
-      Public Const doubletag = 2
-      Public Const singletag = 1
+   Public Module модКонст
+      ' для разбиения на слова
+      Public Const мультилит = 0
+      Public Const дилитера = 2
+      Public Const монолитера = 1
       ' типы оберона
       Public Const iLong = 16
       ' Служебные определения
