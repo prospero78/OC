@@ -91,7 +91,7 @@ Namespace пиОк
          Do While Not IsNothing(луЛекс.уСлед)
             Console.Write(Str(i) + ")" + луЛекс.стрСлово + vbTab)
             i += 1
-            луЛекс = модСлова.слова
+            слова.Дальше()
          Loop
          modLexer.Lexer_Run()
          Console.Read()

@@ -132,6 +132,7 @@ Namespace пиОк
    Public Class тСлова
       Dim _послед As туСлово ' последняя лексема в цепи
       Dim _первая As туСлово ' первая лексема в цепи
+      Dim _текущ As туСлово ' текущая лексема в цепи
       Dim _длина As Integer = 0 ' длина всей цепи
       Public ReadOnly Property уПервЛекс As туСлово
          Get
@@ -150,9 +151,10 @@ Namespace пиОк
          'Console.WriteLine("clsTagList.Add(): " + _lit + " " + Str(_str) + " " + Str(_pos))
          If IsNothing(Me._первая) Then
             Me._первая = луЛекс
-            Me._послед = луЛекс
+            'Me._послед = луЛекс
             Me._первая.уСлед_Уст(Me._послед)
             Me._послед.уПред_Уст(Me._первая)
+            Me._послед.уСлед_Уст(Nothing)
          Else
             Me._послед.уСлед_Уст(луЛекс)
             луЛекс.уПред_Уст(Me._послед)
@@ -164,8 +166,17 @@ Namespace пиОк
             Return Me._длина
          End Get
       End Property
+      Public Sub Дальше()
+         If IsNothing(_текущ) Then
+            Me._текущ = Me._первая
+         Else
+            Me._текущ = Me._текущ.уСлед
+         End If
+      End Sub
       Public Sub New()
-
+         Me._первая = Nothing
+         Me._текущ = Nothing
+         Me._послед = Nothing
       End Sub
       Public Function Слово_Тип(lit As String) As Integer
          ' описывает типы тегов в зависимости от длины:

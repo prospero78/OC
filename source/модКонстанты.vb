@@ -8,7 +8,7 @@ Namespace пиОк
       ' типы оберона
       Public Const iLong = 16
       ' Служебные определения
-      Public Const eot = -1000000
+      Public Const кнц = -1000000 ' конец текста
       ' Символы
       Public Const iNuber = 34
       Public Const iIdent = 37

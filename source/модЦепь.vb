@@ -33,7 +33,7 @@
       Shared _цВсего As Integer = 0
       Public Shared ReadOnly Property цВсего As Integer
          Get
-            Return Me._цВсего
+            Return _цВсего
          End Get
       End Property
 

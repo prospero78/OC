@@ -1,6 +1,6 @@
 ' Модуль для сканирования исходного текста
 Namespace пиОк
-   Public Class clsAnaliz
+   Public Class клсАнализ
       Public txtTokens() As String
    End Class
    Public Module модСканер
@@ -13,7 +13,7 @@ Namespace пиОк
             txtOb = Mid(txtOb, 2)
          Loop
          If Len(txtOb) = 0 Then
-            iSym = modConst.eot
+            iSym = модКонст.кнц
          End If
       End Sub
       Public Sub Сканировать()
