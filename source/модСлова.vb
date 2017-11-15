@@ -170,7 +170,7 @@ Namespace пиОк
          If IsNothing(_текущ) Then
             Me._текущ = Me._первая
          Else
-            Me._текущ = Me._текущ.уСлед
+            'Me._текущ = Me._текущ.уСлед
          End If
       End Sub
       Public Sub New()

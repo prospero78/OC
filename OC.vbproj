@@ -873,7 +873,6 @@
     <Compile Include="source\modType.vb" />
     <Compile Include="source\oc.vb" />
     <Compile Include="source\модКонстанты.vb" />
-    <Compile Include="source\модЛексер.vb" />
     <Compile Include="source\модСлова.vb" />
     <Compile Include="source\модУтиль.vb" />
     <Compile Include="source\модЦепь.vb" />
