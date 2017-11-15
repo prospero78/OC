@@ -10,4 +10,8 @@
    Private Sub ВыходToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ВыходToolStripMenuItem.Click
       Environment.Exit(0)
    End Sub
+
+   Private Sub ОПрограммеToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ОПрограммеToolStripMenuItem.Click
+      окнИнфо.Show()
+   End Sub
 End Class

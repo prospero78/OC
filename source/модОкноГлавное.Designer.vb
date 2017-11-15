@@ -22,6 +22,7 @@ Partial Class окнГлавное
    'Не изменяйте ее в редакторе исходного кода.
    <System.Diagnostics.DebuggerStepThrough()> _
    Private Sub InitializeComponent()
+      Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(окнГлавное))
       Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
       Me.ФайлToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
       Me.ОткрытьToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -30,12 +31,16 @@ Partial Class окнГлавное
       Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripSeparator()
       Me.ВыходToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
       Me.длгФайлОткрыть = New System.Windows.Forms.OpenFileDialog()
+      Me.ПомощьToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+      Me.СправкаToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+      Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripSeparator()
+      Me.ОПрограммеToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
       Me.MenuStrip1.SuspendLayout()
       Me.SuspendLayout()
       '
       'MenuStrip1
       '
-      Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ФайлToolStripMenuItem})
+      Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ФайлToolStripMenuItem, Me.ПомощьToolStripMenuItem})
       Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
       Me.MenuStrip1.Name = "MenuStrip1"
       Me.MenuStrip1.Size = New System.Drawing.Size(862, 24)
@@ -84,12 +89,38 @@ Partial Class окнГлавное
       Me.длгФайлОткрыть.Filter = "Оберон-07(*.o7)|*.o7"
       Me.длгФайлОткрыть.Title = "Открыть модуль Оберон-07"
       '
+      'ПомощьToolStripMenuItem
+      '
+      Me.ПомощьToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.СправкаToolStripMenuItem, Me.ToolStripMenuItem2, Me.ОПрограммеToolStripMenuItem})
+      Me.ПомощьToolStripMenuItem.Name = "ПомощьToolStripMenuItem"
+      Me.ПомощьToolStripMenuItem.Size = New System.Drawing.Size(68, 20)
+      Me.ПомощьToolStripMenuItem.Text = "Помощь"
+      '
+      'СправкаToolStripMenuItem
+      '
+      Me.СправкаToolStripMenuItem.Name = "СправкаToolStripMenuItem"
+      Me.СправкаToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+      Me.СправкаToolStripMenuItem.Text = "Справка"
+      '
+      'ToolStripMenuItem2
+      '
+      Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
+      Me.ToolStripMenuItem2.Size = New System.Drawing.Size(149, 6)
+      '
+      'ОПрограммеToolStripMenuItem
+      '
+      Me.ОПрограммеToolStripMenuItem.Name = "ОПрограммеToolStripMenuItem"
+      Me.ОПрограммеToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+      Me.ОПрограммеToolStripMenuItem.Text = "О программе"
+      Me.ОПрограммеToolStripMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal
+      '
       'окнГлавное
       '
       Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
       Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
       Me.ClientSize = New System.Drawing.Size(862, 507)
       Me.Controls.Add(Me.MenuStrip1)
+      Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
       Me.MainMenuStrip = Me.MenuStrip1
       Me.Name = "окнГлавное"
       Me.Text = "Компилятор Оберон-07"
@@ -108,4 +139,8 @@ Partial Class окнГлавное
    Friend WithEvents ToolStripMenuItem1 As ToolStripSeparator
    Friend WithEvents ВыходToolStripMenuItem As ToolStripMenuItem
    Friend WithEvents длгФайлОткрыть As OpenFileDialog
+   Friend WithEvents ПомощьToolStripMenuItem As ToolStripMenuItem
+   Friend WithEvents СправкаToolStripMenuItem As ToolStripMenuItem
+   Friend WithEvents ToolStripMenuItem2 As ToolStripSeparator
+   Friend WithEvents ОПрограммеToolStripMenuItem As ToolStripMenuItem
 End Class

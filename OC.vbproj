@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{247170B0-D97F-4719-AE3B-F656462B9596}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>My.окнГлавное</StartupObject>
+    <StartupObject>My.My.MyApplication</StartupObject>
     <RootNamespace>My</RootNamespace>
     <AssemblyName>oc</AssemblyName>
     <FileAlignment>512</FileAlignment>
@@ -13,6 +13,7 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -23,10 +24,13 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
+    <ProductName>Компилятор Оберон-07</ProductName>
+    <PublisherName>КБК Техника</PublisherName>
+    <AutorunEnabled>true</AutorunEnabled>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.72.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -66,6 +70,12 @@
   </PropertyGroup>
   <PropertyGroup>
     <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>oberon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -844,21 +854,28 @@
     <None Include=".git\refs\stash" />
     <None Include=".git\smartgit.config" />
     <None Include="app.config" />
-    <None Include="bmono.bat" />
-    <None Include="bnet.bat" />
-    <None Include="ct.bat" />
     <None Include="doc\Oberon07.Report.pdf" />
     <None Include="modTest.o7" />
+    <None Include="My Project\app.manifest" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-    <None Include="README.md" />
     <None Include="vbRisc\build.bat" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationEvents.vb" />
     <Compile Include="GlobalSuppressions.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="My Project\Settings.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -882,6 +899,12 @@
     <Compile Include="source\modType.vb" />
     <Compile Include="source\oc.vb" />
     <Compile Include="source\модКонстанты.vb" />
+    <Compile Include="source\модОкноИнфо.Designer.vb">
+      <DependentUpon>модОкноИнфо.vb</DependentUpon>
+    </Compile>
+    <Compile Include="source\модОкноИнфо.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="source\модСлова.vb" />
     <Compile Include="source\модУтиль.vb" />
     <Compile Include="source\модЦепь.vb" />
@@ -894,6 +917,12 @@
   <ItemGroup>
     <Content Include="doc\oberon07Report%28rus%29.html" />
     <Content Include="doc\out.txt" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <Content Include="oberon.ico" />
+    <Content Include="oberon.jpg" />
     <Content Include="Risc\ORB.Mod.txt" />
     <Content Include="Risc\ORG.Mod.txt" />
     <Content Include="Risc\ORP.Mod.txt" />
@@ -905,8 +934,16 @@
     <Content Include="vbRisc\ORS.dll" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="source\модОкноГлавное.resx">
       <DependentUpon>модОкноГлавное.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="source\модОкноИнфо.resx">
+      <DependentUpon>модОкноИнфо.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -924,6 +961,14 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <FileAssociation Include=".o7">
+      <Visible>False</Visible>
+      <Description>Исходный файл Оберон-07</Description>
+      <Progid>oc.exe</Progid>
+      <DefaultIcon>source\images\oberon.jpg</DefaultIcon>
+    </FileAssociation>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.Targets" />
   <ProjectExtensions>

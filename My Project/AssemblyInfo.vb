@@ -8,12 +8,12 @@ Imports System.Runtime.InteropServices
 
 ' Проверьте значения атрибутов сборки
 
-<Assembly: AssemblyTitle("Oberon-07")>
-<Assembly: AssemblyDescription("Compiler Oberon-07 for. Net")>
-<Assembly: AssemblyCompany("KBK Techniks ltd.")>
-<Assembly: AssemblyProduct("Compiler Oberon-07 for. Net")>
-<Assembly: AssemblyCopyright("KBK Techniks ltd.")>
-<Assembly: AssemblyTrademark("(L) BSD-2")>
+<Assembly: AssemblyTitle("oc.exe")>
+<Assembly: AssemblyDescription("Компилятор Оберон-07 для .Net. Распорстраняется под лицензией BSD-2. Возможно любое использование без предоставления гарантий.")>
+<Assembly: AssemblyCompany("КБК Техника")>
+<Assembly: AssemblyProduct("oc.exe")>
+<Assembly: AssemblyCopyright("КБК Техника")>
+<Assembly: AssemblyTrademark("BSD-2")>
 
 <Assembly: ComVisible(False)>
 
@@ -30,5 +30,5 @@ Imports System.Runtime.InteropServices
 ' Можно задать все значения или принять номера сборки и редакции по умолчанию 
 ' используя "*", как показано ниже:
 
-<Assembly: AssemblyVersion("1.0.0.0")>
+<Assembly: AssemblyVersion("1.0.0.80")>
 <Assembly: AssemblyFileVersion("1.0.0.0")>
