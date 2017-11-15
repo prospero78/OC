@@ -1,3 +1,5 @@
 /oc.exe
 *.vbproj.FileListAbsolute.txt
 /OC.vbproj.FileListAbsolute.txt
+/OC.vbprojResolveAssemblyReference.cache
+*.vbproj.GenerateResource.Cache
