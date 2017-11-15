@@ -1,4 +1,4 @@
-﻿Namespace пиОк
+﻿Namespace My
    Module модОк
 
       Sub Main()
@@ -15,6 +15,6 @@
             Console.Write("Для просмотра результат запустите ""out.exe"" ")
          End If
          Console.Read()
-      End sub
-   End module
+      End Sub
+   End Module
 End Namespace

@@ -1,4 +1,4 @@
-﻿Namespace пиОк
+﻿Namespace My
    Public Module модУтиль
       Public Function ЕслиДробное(lit As String) As Boolean
          Dim bRes As Boolean = False

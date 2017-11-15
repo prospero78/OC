@@ -1,5 +1,5 @@
 ' Модуль для сканирования исходного текста
-Namespace пиОк
+Namespace My
    Public Class клсАнализ
       Public txtTokens() As String
    End Class

@@ -5,8 +5,8 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{247170B0-D97F-4719-AE3B-F656462B9596}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>oc.окнГлавное</StartupObject>
-    <RootNamespace>oc</RootNamespace>
+    <StartupObject>My.окнГлавное</StartupObject>
+    <RootNamespace>My</RootNamespace>
     <AssemblyName>oc</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
@@ -849,12 +849,21 @@
     <None Include="ct.bat" />
     <None Include="doc\Oberon07.Report.pdf" />
     <None Include="modTest.o7" />
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
     <None Include="README.md" />
     <None Include="vbRisc\build.bat" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="source\модОкноГлавное.Designer.vb">
       <DependentUpon>модОкноГлавное.vb</DependentUpon>
     </Compile>

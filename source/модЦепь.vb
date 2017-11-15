@@ -1,4 +1,4 @@
-﻿Namespace пиОк
+﻿Namespace My
    ''' <summary>
    '''  Тип предоставляет одно звено в цепи звеньев
    ''' </summary>

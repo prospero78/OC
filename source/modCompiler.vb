@@ -4,7 +4,7 @@
 Imports System.IO
 Imports System.Diagnostics
 
-Namespace пиОк
+Namespace My
    Public Module модКомпиль
       Dim литАнализ As String = "" ' Look литера для анализа
       Dim txtBeg As String = "" ' Начало текст Visual Basic

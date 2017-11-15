@@ -1,7 +1,7 @@
 'Модуль выполняет необходимые операции с файлами
 Imports System.IO ' для File
 
-Namespace пиОк
+Namespace My
    Public Module модФайл
       Dim argMod As clsArgs
       Public txtFileO7 As String = "" ' содержимое исходного файла Оберон-07

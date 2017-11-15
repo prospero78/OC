@@ -1,4 +1,4 @@
-﻿Namespace пиОк
+﻿Namespace My
    ''' <summary>
    ''' Основа любого типа в Оберона
    ''' </summary>

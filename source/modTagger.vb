@@ -1,4 +1,4 @@
-﻿Namespace пиОк
+﻿Namespace My
    ''' <summary>
    ''' Содержит имя объекта и методы обработки имени
    ''' </summary>

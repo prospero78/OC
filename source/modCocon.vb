@@ -1,6 +1,6 @@
 ﻿' пи -- "пространство имён"
 ' Ок -- "Оберон компилятор"
-Namespace пиОк
+Namespace My
    Public Module модКокон ' Consol Colorize
 
       Const txtObcomp As String = "|   Oberon-07 compiler   2017 BSD-2  |"

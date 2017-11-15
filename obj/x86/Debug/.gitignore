@@ -3,3 +3,5 @@
 /OC.vbproj.FileListAbsolute.txt
 /OC.vbprojResolveAssemblyReference.cache
 *.vbproj.GenerateResource.Cache
+*.vbproj.CoreCompileInputs.cache
+*.cache

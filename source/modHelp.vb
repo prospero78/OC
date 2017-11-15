@@ -1,5 +1,5 @@
 'Модуль справки для компилятора
-Namespace пиОк
+Namespace My
    Public Module модСправка
       Const txtHelp As String = vbCrLf & "Справка по использованию консольного компилятора:" & vbCrLf &
                                          "                                                 " & vbCrLf &

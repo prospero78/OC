@@ -1,5 +1,5 @@
 ' Модуль представляет собой синтаксический анализатор
-Namespace пиОк
+Namespace My
    Public Module модСинтакс
 
    End Module

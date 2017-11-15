@@ -1,5 +1,5 @@
 'Модуль парсит параметры командной строки
-Namespace пиОк
+Namespace My
    Public Class clsArgs 'Описывает структуру аргументов
       Public arg As String = ""
       Public val As String = ""
