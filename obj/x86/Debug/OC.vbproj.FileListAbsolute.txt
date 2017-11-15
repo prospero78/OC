@@ -1,4 +1,0 @@
-D:\coding\github.com\OC\obj\x86\Debug\OC.vbprojResolveAssemblyReference.cache
-D:\coding\github.com\OC\obj\x86\Debug\OC.окнГлавное.resources
-D:\coding\github.com\OC\obj\x86\Debug\OC.vbproj.GenerateResource.Cache
-D:\coding\github.com\OC\obj\x86\Debug\OC.vbproj.CoreCompileInputs.cache
