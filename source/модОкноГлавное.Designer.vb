@@ -22,6 +22,7 @@ Partial Class окнГлавное
    'Не изменяйте ее в редакторе исходного кода.
    <System.Diagnostics.DebuggerStepThrough()> _
    Private Sub InitializeComponent()
+      Me.components = New System.ComponentModel.Container()
       Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(окнГлавное))
       Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
       Me.ФайлToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -30,18 +31,24 @@ Partial Class окнГлавное
       Me.ЗакрытьToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
       Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripSeparator()
       Me.ВыходToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-      Me.длгФайлОткрыть = New System.Windows.Forms.OpenFileDialog()
       Me.ПомощьToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
       Me.СправкаToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
       Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripSeparator()
       Me.ОПрограммеToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-      Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-      Me.текстИсходник = New System.Windows.Forms.RichTextBox()
-      Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+      Me.длгФайлОткрыть = New System.Windows.Forms.OpenFileDialog()
+      Me.TabControl1 = New System.Windows.Forms.TabControl()
+      Me.TabPage2 = New System.Windows.Forms.TabPage()
+      Me.TabPage1 = New System.Windows.Forms.TabPage()
+      Me.TabPage3 = New System.Windows.Forms.TabPage()
       Me.текстРезультат = New System.Windows.Forms.RichTextBox()
+      Me.текстИсходник = New System.Windows.Forms.RichTextBox()
+      Me.FastColoredTextBox1 = New FastColoredTextBoxNS.FastColoredTextBox()
       Me.MenuStrip1.SuspendLayout()
-      Me.GroupBox1.SuspendLayout()
-      Me.GroupBox2.SuspendLayout()
+      Me.TabControl1.SuspendLayout()
+      Me.TabPage2.SuspendLayout()
+      Me.TabPage1.SuspendLayout()
+      Me.TabPage3.SuspendLayout()
+      CType(Me.FastColoredTextBox1, System.ComponentModel.ISupportInitialize).BeginInit()
       Me.SuspendLayout()
       '
       'MenuStrip1
@@ -63,37 +70,31 @@ Partial Class окнГлавное
       'ОткрытьToolStripMenuItem
       '
       Me.ОткрытьToolStripMenuItem.Name = "ОткрытьToolStripMenuItem"
-      Me.ОткрытьToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+      Me.ОткрытьToolStripMenuItem.Size = New System.Drawing.Size(132, 22)
       Me.ОткрытьToolStripMenuItem.Text = "&Открыть"
       '
       'СохраитьToolStripMenuItem
       '
       Me.СохраитьToolStripMenuItem.Name = "СохраитьToolStripMenuItem"
-      Me.СохраитьToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+      Me.СохраитьToolStripMenuItem.Size = New System.Drawing.Size(132, 22)
       Me.СохраитьToolStripMenuItem.Text = "&Сохранить"
       '
       'ЗакрытьToolStripMenuItem
       '
       Me.ЗакрытьToolStripMenuItem.Name = "ЗакрытьToolStripMenuItem"
-      Me.ЗакрытьToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+      Me.ЗакрытьToolStripMenuItem.Size = New System.Drawing.Size(132, 22)
       Me.ЗакрытьToolStripMenuItem.Text = "&Закрыть"
       '
       'ToolStripMenuItem1
       '
       Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-      Me.ToolStripMenuItem1.Size = New System.Drawing.Size(149, 6)
+      Me.ToolStripMenuItem1.Size = New System.Drawing.Size(129, 6)
       '
       'ВыходToolStripMenuItem
       '
       Me.ВыходToolStripMenuItem.Name = "ВыходToolStripMenuItem"
-      Me.ВыходToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+      Me.ВыходToolStripMenuItem.Size = New System.Drawing.Size(132, 22)
       Me.ВыходToolStripMenuItem.Text = "&Выход"
-      '
-      'длгФайлОткрыть
-      '
-      Me.длгФайлОткрыть.DefaultExt = "Оберон-07;*.o7"
-      Me.длгФайлОткрыть.Filter = "Оберон-07(*.o7)|*.o7"
-      Me.длгФайлОткрыть.Title = "Открыть модуль Оберон-07"
       '
       'ПомощьToolStripMenuItem
       '
@@ -105,66 +106,129 @@ Partial Class окнГлавное
       'СправкаToolStripMenuItem
       '
       Me.СправкаToolStripMenuItem.Name = "СправкаToolStripMenuItem"
-      Me.СправкаToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+      Me.СправкаToolStripMenuItem.Size = New System.Drawing.Size(149, 22)
       Me.СправкаToolStripMenuItem.Text = "Справка"
       '
       'ToolStripMenuItem2
       '
       Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-      Me.ToolStripMenuItem2.Size = New System.Drawing.Size(149, 6)
+      Me.ToolStripMenuItem2.Size = New System.Drawing.Size(146, 6)
       '
       'ОПрограммеToolStripMenuItem
       '
       Me.ОПрограммеToolStripMenuItem.Name = "ОПрограммеToolStripMenuItem"
-      Me.ОПрограммеToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+      Me.ОПрограммеToolStripMenuItem.Size = New System.Drawing.Size(149, 22)
       Me.ОПрограммеToolStripMenuItem.Text = "О программе"
       Me.ОПрограммеToolStripMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal
       '
-      'GroupBox1
+      'длгФайлОткрыть
       '
-      Me.GroupBox1.Controls.Add(Me.текстИсходник)
-      Me.GroupBox1.Location = New System.Drawing.Point(12, 27)
-      Me.GroupBox1.Name = "GroupBox1"
-      Me.GroupBox1.Size = New System.Drawing.Size(429, 468)
-      Me.GroupBox1.TabIndex = 3
-      Me.GroupBox1.TabStop = False
-      Me.GroupBox1.Text = "Исходный код"
+      Me.длгФайлОткрыть.DefaultExt = "Оберон-07;*.o7"
+      Me.длгФайлОткрыть.Filter = "Оберон-07(*.o7)|*.o7"
+      Me.длгФайлОткрыть.Title = "Открыть модуль Оберон-07"
       '
-      'текстИсходник
+      'TabControl1
       '
-      Me.текстИсходник.Font = New System.Drawing.Font("Consolas", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
-      Me.текстИсходник.Location = New System.Drawing.Point(6, 19)
-      Me.текстИсходник.Name = "текстИсходник"
-      Me.текстИсходник.Size = New System.Drawing.Size(417, 443)
-      Me.текстИсходник.TabIndex = 3
-      Me.текстИсходник.Text = ""
+      Me.TabControl1.Controls.Add(Me.TabPage2)
+      Me.TabControl1.Controls.Add(Me.TabPage1)
+      Me.TabControl1.Controls.Add(Me.TabPage3)
+      Me.TabControl1.Location = New System.Drawing.Point(12, 27)
+      Me.TabControl1.Name = "TabControl1"
+      Me.TabControl1.SelectedIndex = 0
+      Me.TabControl1.Size = New System.Drawing.Size(838, 452)
+      Me.TabControl1.TabIndex = 5
       '
-      'GroupBox2
+      'TabPage2
       '
-      Me.GroupBox2.Controls.Add(Me.текстРезультат)
-      Me.GroupBox2.Location = New System.Drawing.Point(447, 27)
-      Me.GroupBox2.Name = "GroupBox2"
-      Me.GroupBox2.Size = New System.Drawing.Size(403, 468)
-      Me.GroupBox2.TabIndex = 4
-      Me.GroupBox2.TabStop = False
-      Me.GroupBox2.Text = "Результат"
+      Me.TabPage2.Controls.Add(Me.текстИсходник)
+      Me.TabPage2.Location = New System.Drawing.Point(4, 22)
+      Me.TabPage2.Name = "TabPage2"
+      Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
+      Me.TabPage2.Size = New System.Drawing.Size(830, 426)
+      Me.TabPage2.TabIndex = 1
+      Me.TabPage2.Text = "TabPage2"
+      Me.TabPage2.UseVisualStyleBackColor = True
+      '
+      'TabPage1
+      '
+      Me.TabPage1.Controls.Add(Me.текстРезультат)
+      Me.TabPage1.Location = New System.Drawing.Point(4, 22)
+      Me.TabPage1.Name = "TabPage1"
+      Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
+      Me.TabPage1.Size = New System.Drawing.Size(830, 426)
+      Me.TabPage1.TabIndex = 2
+      Me.TabPage1.Text = "TabPage1"
+      Me.TabPage1.UseVisualStyleBackColor = True
+      '
+      'TabPage3
+      '
+      Me.TabPage3.Controls.Add(Me.FastColoredTextBox1)
+      Me.TabPage3.Location = New System.Drawing.Point(4, 22)
+      Me.TabPage3.Name = "TabPage3"
+      Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
+      Me.TabPage3.Size = New System.Drawing.Size(830, 426)
+      Me.TabPage3.TabIndex = 3
+      Me.TabPage3.Text = "TabPage3"
+      Me.TabPage3.UseVisualStyleBackColor = True
       '
       'текстРезультат
       '
       Me.текстРезультат.Font = New System.Drawing.Font("Consolas", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
-      Me.текстРезультат.Location = New System.Drawing.Point(6, 19)
+      Me.текстРезультат.Location = New System.Drawing.Point(6, 6)
       Me.текстРезультат.Name = "текстРезультат"
-      Me.текстРезультат.Size = New System.Drawing.Size(391, 443)
-      Me.текстРезультат.TabIndex = 3
+      Me.текстРезультат.Size = New System.Drawing.Size(818, 414)
+      Me.текстРезультат.TabIndex = 6
       Me.текстРезультат.Text = ""
+      '
+      'текстИсходник
+      '
+      Me.текстИсходник.Font = New System.Drawing.Font("Consolas", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
+      Me.текстИсходник.Location = New System.Drawing.Point(6, 6)
+      Me.текстИсходник.Name = "текстИсходник"
+      Me.текстИсходник.Size = New System.Drawing.Size(818, 414)
+      Me.текстИсходник.TabIndex = 5
+      Me.текстИсходник.Text = ""
+      '
+      'FastColoredTextBox1
+      '
+      Me.FastColoredTextBox1.AutoCompleteBracketsList = New Char() {Global.Microsoft.VisualBasic.ChrW(40), Global.Microsoft.VisualBasic.ChrW(41), Global.Microsoft.VisualBasic.ChrW(123), Global.Microsoft.VisualBasic.ChrW(125), Global.Microsoft.VisualBasic.ChrW(91), Global.Microsoft.VisualBasic.ChrW(93), Global.Microsoft.VisualBasic.ChrW(34), Global.Microsoft.VisualBasic.ChrW(34), Global.Microsoft.VisualBasic.ChrW(39), Global.Microsoft.VisualBasic.ChrW(39)}
+      Me.FastColoredTextBox1.AutoIndent = Global.My.Settings.Default.UserTrue
+      Me.FastColoredTextBox1.AutoScrollMinSize = New System.Drawing.Size(491, 816)
+      Me.FastColoredTextBox1.BackBrush = Nothing
+      Me.FastColoredTextBox1.CharHeight = 17
+      Me.FastColoredTextBox1.CharWidth = 8
+      Me.FastColoredTextBox1.Cursor = System.Windows.Forms.Cursors.IBeam
+      Me.FastColoredTextBox1.DataBindings.Add(New System.Windows.Forms.Binding("AutoIndent", Global.My.Settings.Default, "UserTrue", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+      Me.FastColoredTextBox1.DataBindings.Add(New System.Windows.Forms.Binding("FoldingIndicatorColor", Global.My.Settings.Default, "UserFolding", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+      Me.FastColoredTextBox1.DataBindings.Add(New System.Windows.Forms.Binding("Language", Global.My.Settings.Default, "Oberon", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+      Me.FastColoredTextBox1.DataBindings.Add(New System.Windows.Forms.Binding("ShowLineNumbers", Global.My.Settings.Default, "UserTrue", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+      Me.FastColoredTextBox1.DataBindings.Add(New System.Windows.Forms.Binding("ToolTipDelay", Global.My.Settings.Default, "UserDelay", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+      Me.FastColoredTextBox1.DisabledColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(180, Byte), Integer), CType(CType(180, Byte), Integer), CType(CType(180, Byte), Integer))
+      Me.FastColoredTextBox1.FoldingIndicatorColor = Global.My.Settings.Default.UserFolding
+      Me.FastColoredTextBox1.Font = New System.Drawing.Font("Consolas", 11.0!)
+      Me.FastColoredTextBox1.IsReplaceMode = False
+      Me.FastColoredTextBox1.Language = Global.My.Settings.Default.Oberon
+      Me.FastColoredTextBox1.Location = New System.Drawing.Point(6, 6)
+      Me.FastColoredTextBox1.Name = "FastColoredTextBox1"
+      Me.FastColoredTextBox1.Paddings = New System.Windows.Forms.Padding(0)
+      Me.FastColoredTextBox1.SelectionColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(255, Byte), Integer))
+      Me.FastColoredTextBox1.ServiceColors = CType(resources.GetObject("FastColoredTextBox1.ServiceColors"), FastColoredTextBoxNS.ServiceColors)
+      Me.FastColoredTextBox1.ShowFoldingLines = True
+      Me.FastColoredTextBox1.ShowLineNumbers = Global.My.Settings.Default.UserTrue
+      Me.FastColoredTextBox1.Size = New System.Drawing.Size(818, 414)
+      Me.FastColoredTextBox1.SourceTextBox = Me.FastColoredTextBox1
+      Me.FastColoredTextBox1.TabIndex = 0
+      Me.FastColoredTextBox1.TabLength = 3
+      Me.FastColoredTextBox1.Text = resources.GetString("FastColoredTextBox1.Text")
+      Me.FastColoredTextBox1.ToolTipDelay = Global.My.Settings.Default.UserDelay
+      Me.FastColoredTextBox1.Zoom = 100
       '
       'окнГлавное
       '
       Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
       Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
       Me.ClientSize = New System.Drawing.Size(862, 507)
-      Me.Controls.Add(Me.GroupBox2)
-      Me.Controls.Add(Me.GroupBox1)
+      Me.Controls.Add(Me.TabControl1)
       Me.Controls.Add(Me.MenuStrip1)
       Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
       Me.MainMenuStrip = Me.MenuStrip1
@@ -172,8 +236,11 @@ Partial Class окнГлавное
       Me.Text = "Компилятор Оберон-07"
       Me.MenuStrip1.ResumeLayout(False)
       Me.MenuStrip1.PerformLayout()
-      Me.GroupBox1.ResumeLayout(False)
-      Me.GroupBox2.ResumeLayout(False)
+      Me.TabControl1.ResumeLayout(False)
+      Me.TabPage2.ResumeLayout(False)
+      Me.TabPage1.ResumeLayout(False)
+      Me.TabPage3.ResumeLayout(False)
+      CType(Me.FastColoredTextBox1, System.ComponentModel.ISupportInitialize).EndInit()
       Me.ResumeLayout(False)
       Me.PerformLayout()
 
@@ -191,8 +258,11 @@ Partial Class окнГлавное
    Friend WithEvents СправкаToolStripMenuItem As ToolStripMenuItem
    Friend WithEvents ToolStripMenuItem2 As ToolStripSeparator
    Friend WithEvents ОПрограммеToolStripMenuItem As ToolStripMenuItem
-   Friend WithEvents GroupBox1 As GroupBox
+   Friend WithEvents TabControl1 As TabControl
+   Friend WithEvents TabPage2 As TabPage
+   Friend WithEvents TabPage1 As TabPage
+   Friend WithEvents TabPage3 As TabPage
+   Friend WithEvents FastColoredTextBox1 As FastColoredTextBoxNS.FastColoredTextBox
    Friend WithEvents текстИсходник As RichTextBox
-   Friend WithEvents GroupBox2 As GroupBox
    Friend WithEvents текстРезультат As RichTextBox
 End Class

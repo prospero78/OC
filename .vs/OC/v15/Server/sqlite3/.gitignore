@@ -1,5 +1,4 @@
-*.ide
-/storage.ide
 /db.lock
+/storage.ide
 /storage.ide-shm
 /storage.ide-wal

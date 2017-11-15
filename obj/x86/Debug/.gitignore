@@ -5,3 +5,4 @@
 *.vbproj.GenerateResource.Cache
 *.vbproj.CoreCompileInputs.cache
 *.cache
+*.vbproj.CopyComplete

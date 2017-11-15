@@ -52,6 +52,54 @@ Partial Friend NotInheritable Class Settings
             Return defaultInstance
         End Get
     End Property
+    
+    <Global.System.Configuration.UserScopedSettingAttribute(),  _
+     Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+     Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+    Public Property UserTrue() As Boolean
+        Get
+            Return CType(Me("UserTrue"),Boolean)
+        End Get
+        Set
+            Me("UserTrue") = value
+        End Set
+    End Property
+    
+    <Global.System.Configuration.UserScopedSettingAttribute(),  _
+     Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+     Global.System.Configuration.DefaultSettingValueAttribute("Indigo")>  _
+    Public Property UserFolding() As Global.System.Drawing.Color
+        Get
+            Return CType(Me("UserFolding"),Global.System.Drawing.Color)
+        End Get
+        Set
+            Me("UserFolding") = value
+        End Set
+    End Property
+    
+    <Global.System.Configuration.UserScopedSettingAttribute(),  _
+     Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+     Global.System.Configuration.DefaultSettingValueAttribute("Custom")>  _
+    Public Property Oberon() As Global.FastColoredTextBoxNS.Language
+        Get
+            Return CType(Me("Oberon"),Global.FastColoredTextBoxNS.Language)
+        End Get
+        Set
+            Me("Oberon") = value
+        End Set
+    End Property
+    
+    <Global.System.Configuration.UserScopedSettingAttribute(),  _
+     Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+     Global.System.Configuration.DefaultSettingValueAttribute("250")>  _
+    Public Property UserDelay() As Integer
+        Get
+            Return CType(Me("UserDelay"),Integer)
+        End Get
+        Set
+            Me("UserDelay") = value
+        End Set
+    End Property
 End Class
 
 Namespace My

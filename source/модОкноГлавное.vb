@@ -33,4 +33,5 @@
       Me.Text = "Компилятор Оберон-07 сборка " + My.Application.Info.Version.Build.ToString()
 
    End Sub
+
 End Class
