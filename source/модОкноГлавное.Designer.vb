@@ -38,11 +38,12 @@ Partial Class окнГлавное
       Me.длгФайлОткрыть = New System.Windows.Forms.OpenFileDialog()
       Me.TabControl1 = New System.Windows.Forms.TabControl()
       Me.TabPage2 = New System.Windows.Forms.TabPage()
-      Me.TabPage1 = New System.Windows.Forms.TabPage()
-      Me.TabPage3 = New System.Windows.Forms.TabPage()
-      Me.текстРезультат = New System.Windows.Forms.RichTextBox()
       Me.текстИсходник = New System.Windows.Forms.RichTextBox()
+      Me.TabPage1 = New System.Windows.Forms.TabPage()
+      Me.текстРезультат = New System.Windows.Forms.RichTextBox()
+      Me.TabPage3 = New System.Windows.Forms.TabPage()
       Me.FastColoredTextBox1 = New FastColoredTextBoxNS.FastColoredTextBox()
+      Me.DocumentMap1 = New FastColoredTextBoxNS.DocumentMap()
       Me.MenuStrip1.SuspendLayout()
       Me.TabControl1.SuspendLayout()
       Me.TabPage2.SuspendLayout()
@@ -149,6 +150,15 @@ Partial Class окнГлавное
       Me.TabPage2.Text = "TabPage2"
       Me.TabPage2.UseVisualStyleBackColor = True
       '
+      'текстИсходник
+      '
+      Me.текстИсходник.Font = New System.Drawing.Font("Consolas", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
+      Me.текстИсходник.Location = New System.Drawing.Point(6, 6)
+      Me.текстИсходник.Name = "текстИсходник"
+      Me.текстИсходник.Size = New System.Drawing.Size(818, 414)
+      Me.текстИсходник.TabIndex = 5
+      Me.текстИсходник.Text = ""
+      '
       'TabPage1
       '
       Me.TabPage1.Controls.Add(Me.текстРезультат)
@@ -160,17 +170,6 @@ Partial Class окнГлавное
       Me.TabPage1.Text = "TabPage1"
       Me.TabPage1.UseVisualStyleBackColor = True
       '
-      'TabPage3
-      '
-      Me.TabPage3.Controls.Add(Me.FastColoredTextBox1)
-      Me.TabPage3.Location = New System.Drawing.Point(4, 22)
-      Me.TabPage3.Name = "TabPage3"
-      Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-      Me.TabPage3.Size = New System.Drawing.Size(830, 426)
-      Me.TabPage3.TabIndex = 3
-      Me.TabPage3.Text = "TabPage3"
-      Me.TabPage3.UseVisualStyleBackColor = True
-      '
       'текстРезультат
       '
       Me.текстРезультат.Font = New System.Drawing.Font("Consolas", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
@@ -180,14 +179,17 @@ Partial Class окнГлавное
       Me.текстРезультат.TabIndex = 6
       Me.текстРезультат.Text = ""
       '
-      'текстИсходник
+      'TabPage3
       '
-      Me.текстИсходник.Font = New System.Drawing.Font("Consolas", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
-      Me.текстИсходник.Location = New System.Drawing.Point(6, 6)
-      Me.текстИсходник.Name = "текстИсходник"
-      Me.текстИсходник.Size = New System.Drawing.Size(818, 414)
-      Me.текстИсходник.TabIndex = 5
-      Me.текстИсходник.Text = ""
+      Me.TabPage3.Controls.Add(Me.DocumentMap1)
+      Me.TabPage3.Controls.Add(Me.FastColoredTextBox1)
+      Me.TabPage3.Location = New System.Drawing.Point(4, 22)
+      Me.TabPage3.Name = "TabPage3"
+      Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
+      Me.TabPage3.Size = New System.Drawing.Size(830, 426)
+      Me.TabPage3.TabIndex = 3
+      Me.TabPage3.Text = "TabPage3"
+      Me.TabPage3.UseVisualStyleBackColor = True
       '
       'FastColoredTextBox1
       '
@@ -197,6 +199,7 @@ Partial Class окнГлавное
       Me.FastColoredTextBox1.BackBrush = Nothing
       Me.FastColoredTextBox1.CharHeight = 17
       Me.FastColoredTextBox1.CharWidth = 8
+      Me.FastColoredTextBox1.CommentPrefix = ""
       Me.FastColoredTextBox1.Cursor = System.Windows.Forms.Cursors.IBeam
       Me.FastColoredTextBox1.DataBindings.Add(New System.Windows.Forms.Binding("AutoIndent", Global.My.Settings.Default, "UserTrue", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
       Me.FastColoredTextBox1.DataBindings.Add(New System.Windows.Forms.Binding("FoldingIndicatorColor", Global.My.Settings.Default, "UserFolding", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
@@ -208,20 +211,34 @@ Partial Class окнГлавное
       Me.FastColoredTextBox1.Font = New System.Drawing.Font("Consolas", 11.0!)
       Me.FastColoredTextBox1.IsReplaceMode = False
       Me.FastColoredTextBox1.Language = Global.My.Settings.Default.Oberon
+      Me.FastColoredTextBox1.LeftBracket = Global.Microsoft.VisualBasic.ChrW(40)
+      Me.FastColoredTextBox1.LeftBracket2 = Global.Microsoft.VisualBasic.ChrW(91)
       Me.FastColoredTextBox1.Location = New System.Drawing.Point(6, 6)
       Me.FastColoredTextBox1.Name = "FastColoredTextBox1"
       Me.FastColoredTextBox1.Paddings = New System.Windows.Forms.Padding(0)
+      Me.FastColoredTextBox1.RightBracket = Global.Microsoft.VisualBasic.ChrW(41)
+      Me.FastColoredTextBox1.RightBracket2 = Global.Microsoft.VisualBasic.ChrW(93)
       Me.FastColoredTextBox1.SelectionColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(255, Byte), Integer))
       Me.FastColoredTextBox1.ServiceColors = CType(resources.GetObject("FastColoredTextBox1.ServiceColors"), FastColoredTextBoxNS.ServiceColors)
       Me.FastColoredTextBox1.ShowFoldingLines = True
       Me.FastColoredTextBox1.ShowLineNumbers = Global.My.Settings.Default.UserTrue
-      Me.FastColoredTextBox1.Size = New System.Drawing.Size(818, 414)
+      Me.FastColoredTextBox1.Size = New System.Drawing.Size(665, 414)
       Me.FastColoredTextBox1.SourceTextBox = Me.FastColoredTextBox1
       Me.FastColoredTextBox1.TabIndex = 0
       Me.FastColoredTextBox1.TabLength = 3
       Me.FastColoredTextBox1.Text = resources.GetString("FastColoredTextBox1.Text")
       Me.FastColoredTextBox1.ToolTipDelay = Global.My.Settings.Default.UserDelay
       Me.FastColoredTextBox1.Zoom = 100
+      '
+      'DocumentMap1
+      '
+      Me.DocumentMap1.ForeColor = System.Drawing.Color.Maroon
+      Me.DocumentMap1.Location = New System.Drawing.Point(677, 6)
+      Me.DocumentMap1.Name = "DocumentMap1"
+      Me.DocumentMap1.Size = New System.Drawing.Size(147, 414)
+      Me.DocumentMap1.TabIndex = 1
+      Me.DocumentMap1.Target = Me.FastColoredTextBox1
+      Me.DocumentMap1.Text = "DocumentMap1"
       '
       'окнГлавное
       '
@@ -265,4 +282,5 @@ Partial Class окнГлавное
    Friend WithEvents FastColoredTextBox1 As FastColoredTextBoxNS.FastColoredTextBox
    Friend WithEvents текстИсходник As RichTextBox
    Friend WithEvents текстРезультат As RichTextBox
+   Friend WithEvents DocumentMap1 As FastColoredTextBoxNS.DocumentMap
 End Class

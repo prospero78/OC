@@ -6,3 +6,5 @@
 *.vbproj.CoreCompileInputs.cache
 *.cache
 *.vbproj.CopyComplete
+*.vbprojResolveAssemblyReference.cache
+*.pdb

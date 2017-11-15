@@ -1,3 +1,5 @@
 /oc.exe.CodeAnalysisLog.xml
 /oc.exe.config
 /oc.exe.lastcodeanalysissucceeded
+*.pdb
+*.exe.lastcodeanalysissucceeded
