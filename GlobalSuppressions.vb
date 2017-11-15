@@ -47,3 +47,4 @@
 <Assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Стиль", "IDE1006:Стили именования", Justification:="<Ожидание>", Scope:="type", Target:="~T:My.My.туЗвено")>
 <Assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Стиль", "IDE1006:Стили именования", Justification:="<Ожидание>", Scope:="type", Target:="~T:My.My.туИмя")>
 <Assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Стиль", "IDE1006:Стили именования", Justification:="<Ожидание>", Scope:="type", Target:="~T:My.My.туЦепь")>
+<Assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Стиль", "IDE1006:Стили именования", Justification:="<Ожидание>", Scope:="member", Target:="~M:My.окнГлавное.окнГлавное_Load(System.Object,System.EventArgs)")>

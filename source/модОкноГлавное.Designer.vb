@@ -35,7 +35,13 @@ Partial Class окнГлавное
       Me.СправкаToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
       Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripSeparator()
       Me.ОПрограммеToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+      Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+      Me.текстИсходник = New System.Windows.Forms.RichTextBox()
+      Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+      Me.текстРезультат = New System.Windows.Forms.RichTextBox()
       Me.MenuStrip1.SuspendLayout()
+      Me.GroupBox1.SuspendLayout()
+      Me.GroupBox2.SuspendLayout()
       Me.SuspendLayout()
       '
       'MenuStrip1
@@ -114,11 +120,51 @@ Partial Class окнГлавное
       Me.ОПрограммеToolStripMenuItem.Text = "О программе"
       Me.ОПрограммеToolStripMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal
       '
+      'GroupBox1
+      '
+      Me.GroupBox1.Controls.Add(Me.текстИсходник)
+      Me.GroupBox1.Location = New System.Drawing.Point(12, 27)
+      Me.GroupBox1.Name = "GroupBox1"
+      Me.GroupBox1.Size = New System.Drawing.Size(429, 468)
+      Me.GroupBox1.TabIndex = 3
+      Me.GroupBox1.TabStop = False
+      Me.GroupBox1.Text = "Исходный код"
+      '
+      'текстИсходник
+      '
+      Me.текстИсходник.Font = New System.Drawing.Font("Consolas", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
+      Me.текстИсходник.Location = New System.Drawing.Point(6, 19)
+      Me.текстИсходник.Name = "текстИсходник"
+      Me.текстИсходник.Size = New System.Drawing.Size(417, 443)
+      Me.текстИсходник.TabIndex = 3
+      Me.текстИсходник.Text = ""
+      '
+      'GroupBox2
+      '
+      Me.GroupBox2.Controls.Add(Me.текстРезультат)
+      Me.GroupBox2.Location = New System.Drawing.Point(447, 27)
+      Me.GroupBox2.Name = "GroupBox2"
+      Me.GroupBox2.Size = New System.Drawing.Size(403, 468)
+      Me.GroupBox2.TabIndex = 4
+      Me.GroupBox2.TabStop = False
+      Me.GroupBox2.Text = "Результат"
+      '
+      'текстРезультат
+      '
+      Me.текстРезультат.Font = New System.Drawing.Font("Consolas", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
+      Me.текстРезультат.Location = New System.Drawing.Point(6, 19)
+      Me.текстРезультат.Name = "текстРезультат"
+      Me.текстРезультат.Size = New System.Drawing.Size(391, 443)
+      Me.текстРезультат.TabIndex = 3
+      Me.текстРезультат.Text = ""
+      '
       'окнГлавное
       '
       Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
       Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
       Me.ClientSize = New System.Drawing.Size(862, 507)
+      Me.Controls.Add(Me.GroupBox2)
+      Me.Controls.Add(Me.GroupBox1)
       Me.Controls.Add(Me.MenuStrip1)
       Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
       Me.MainMenuStrip = Me.MenuStrip1
@@ -126,6 +172,8 @@ Partial Class окнГлавное
       Me.Text = "Компилятор Оберон-07"
       Me.MenuStrip1.ResumeLayout(False)
       Me.MenuStrip1.PerformLayout()
+      Me.GroupBox1.ResumeLayout(False)
+      Me.GroupBox2.ResumeLayout(False)
       Me.ResumeLayout(False)
       Me.PerformLayout()
 
@@ -143,4 +191,8 @@ Partial Class окнГлавное
    Friend WithEvents СправкаToolStripMenuItem As ToolStripMenuItem
    Friend WithEvents ToolStripMenuItem2 As ToolStripSeparator
    Friend WithEvents ОПрограммеToolStripMenuItem As ToolStripMenuItem
+   Friend WithEvents GroupBox1 As GroupBox
+   Friend WithEvents текстИсходник As RichTextBox
+   Friend WithEvents GroupBox2 As GroupBox
+   Friend WithEvents текстРезультат As RichTextBox
 End Class
