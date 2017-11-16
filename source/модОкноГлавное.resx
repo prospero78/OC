@@ -123,7 +123,7 @@
   <metadata name="длгФайлОткрыть.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>132, 17</value>
   </metadata>
-  <data name="FastColoredTextBox1.ServiceColors" mimetype="application/x-microsoft.net.object.binary.base64">
+  <data name="srcBox.ServiceColors" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdGYXN0Q29sb3JlZFRleHRCb3gsIFZlcnNpb249Mi4xNi4yMy4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWZiOGFhMTJiOTk0ZWY2MWIMAwAAAFFTeXN0
@@ -141,7 +141,7 @@
         CgAAAAAAAAAAjQABAAH4/////P///woAAAAAAAAAAKQAAQAB9/////z///8KAAAAAAAAAACWAAEACw==
 </value>
   </data>
-  <data name="FastColoredTextBox1.Text" xml:space="preserve">
+  <data name="srcBox.Text" xml:space="preserve">
     <value>(* комментарий, который компилятор должен игнорировать *)
 
 MODULE _modTest;

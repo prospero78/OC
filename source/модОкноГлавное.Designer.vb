@@ -42,14 +42,14 @@ Partial Class окнГлавное
       Me.TabPage1 = New System.Windows.Forms.TabPage()
       Me.текстРезультат = New System.Windows.Forms.RichTextBox()
       Me.TabPage3 = New System.Windows.Forms.TabPage()
-      Me.FastColoredTextBox1 = New FastColoredTextBoxNS.FastColoredTextBox()
       Me.DocumentMap1 = New FastColoredTextBoxNS.DocumentMap()
+      Me.srcBox = New FastColoredTextBoxNS.FastColoredTextBox()
       Me.MenuStrip1.SuspendLayout()
       Me.TabControl1.SuspendLayout()
       Me.TabPage2.SuspendLayout()
       Me.TabPage1.SuspendLayout()
       Me.TabPage3.SuspendLayout()
-      CType(Me.FastColoredTextBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+      CType(Me.srcBox, System.ComponentModel.ISupportInitialize).BeginInit()
       Me.SuspendLayout()
       '
       'MenuStrip1
@@ -182,7 +182,7 @@ Partial Class окнГлавное
       'TabPage3
       '
       Me.TabPage3.Controls.Add(Me.DocumentMap1)
-      Me.TabPage3.Controls.Add(Me.FastColoredTextBox1)
+      Me.TabPage3.Controls.Add(Me.srcBox)
       Me.TabPage3.Location = New System.Drawing.Point(4, 22)
       Me.TabPage3.Name = "TabPage3"
       Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
@@ -191,45 +191,6 @@ Partial Class окнГлавное
       Me.TabPage3.Text = "TabPage3"
       Me.TabPage3.UseVisualStyleBackColor = True
       '
-      'FastColoredTextBox1
-      '
-      Me.FastColoredTextBox1.AutoCompleteBracketsList = New Char() {Global.Microsoft.VisualBasic.ChrW(40), Global.Microsoft.VisualBasic.ChrW(41), Global.Microsoft.VisualBasic.ChrW(123), Global.Microsoft.VisualBasic.ChrW(125), Global.Microsoft.VisualBasic.ChrW(91), Global.Microsoft.VisualBasic.ChrW(93), Global.Microsoft.VisualBasic.ChrW(34), Global.Microsoft.VisualBasic.ChrW(34), Global.Microsoft.VisualBasic.ChrW(39), Global.Microsoft.VisualBasic.ChrW(39)}
-      Me.FastColoredTextBox1.AutoIndent = Global.My.Settings.Default.UserTrue
-      Me.FastColoredTextBox1.AutoScrollMinSize = New System.Drawing.Size(491, 816)
-      Me.FastColoredTextBox1.BackBrush = Nothing
-      Me.FastColoredTextBox1.CharHeight = 17
-      Me.FastColoredTextBox1.CharWidth = 8
-      Me.FastColoredTextBox1.CommentPrefix = ""
-      Me.FastColoredTextBox1.Cursor = System.Windows.Forms.Cursors.IBeam
-      Me.FastColoredTextBox1.DataBindings.Add(New System.Windows.Forms.Binding("AutoIndent", Global.My.Settings.Default, "UserTrue", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-      Me.FastColoredTextBox1.DataBindings.Add(New System.Windows.Forms.Binding("FoldingIndicatorColor", Global.My.Settings.Default, "UserFolding", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-      Me.FastColoredTextBox1.DataBindings.Add(New System.Windows.Forms.Binding("Language", Global.My.Settings.Default, "Oberon", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-      Me.FastColoredTextBox1.DataBindings.Add(New System.Windows.Forms.Binding("ShowLineNumbers", Global.My.Settings.Default, "UserTrue", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-      Me.FastColoredTextBox1.DataBindings.Add(New System.Windows.Forms.Binding("ToolTipDelay", Global.My.Settings.Default, "UserDelay", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-      Me.FastColoredTextBox1.DisabledColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(180, Byte), Integer), CType(CType(180, Byte), Integer), CType(CType(180, Byte), Integer))
-      Me.FastColoredTextBox1.FoldingIndicatorColor = Global.My.Settings.Default.UserFolding
-      Me.FastColoredTextBox1.Font = New System.Drawing.Font("Consolas", 11.0!)
-      Me.FastColoredTextBox1.IsReplaceMode = False
-      Me.FastColoredTextBox1.Language = Global.My.Settings.Default.Oberon
-      Me.FastColoredTextBox1.LeftBracket = Global.Microsoft.VisualBasic.ChrW(40)
-      Me.FastColoredTextBox1.LeftBracket2 = Global.Microsoft.VisualBasic.ChrW(91)
-      Me.FastColoredTextBox1.Location = New System.Drawing.Point(6, 6)
-      Me.FastColoredTextBox1.Name = "FastColoredTextBox1"
-      Me.FastColoredTextBox1.Paddings = New System.Windows.Forms.Padding(0)
-      Me.FastColoredTextBox1.RightBracket = Global.Microsoft.VisualBasic.ChrW(41)
-      Me.FastColoredTextBox1.RightBracket2 = Global.Microsoft.VisualBasic.ChrW(93)
-      Me.FastColoredTextBox1.SelectionColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(255, Byte), Integer))
-      Me.FastColoredTextBox1.ServiceColors = CType(resources.GetObject("FastColoredTextBox1.ServiceColors"), FastColoredTextBoxNS.ServiceColors)
-      Me.FastColoredTextBox1.ShowFoldingLines = True
-      Me.FastColoredTextBox1.ShowLineNumbers = Global.My.Settings.Default.UserTrue
-      Me.FastColoredTextBox1.Size = New System.Drawing.Size(665, 414)
-      Me.FastColoredTextBox1.SourceTextBox = Me.FastColoredTextBox1
-      Me.FastColoredTextBox1.TabIndex = 0
-      Me.FastColoredTextBox1.TabLength = 3
-      Me.FastColoredTextBox1.Text = resources.GetString("FastColoredTextBox1.Text")
-      Me.FastColoredTextBox1.ToolTipDelay = Global.My.Settings.Default.UserDelay
-      Me.FastColoredTextBox1.Zoom = 100
-      '
       'DocumentMap1
       '
       Me.DocumentMap1.ForeColor = System.Drawing.Color.Maroon
@@ -237,8 +198,47 @@ Partial Class окнГлавное
       Me.DocumentMap1.Name = "DocumentMap1"
       Me.DocumentMap1.Size = New System.Drawing.Size(147, 414)
       Me.DocumentMap1.TabIndex = 1
-      Me.DocumentMap1.Target = Me.FastColoredTextBox1
+      Me.DocumentMap1.Target = Me.srcBox
       Me.DocumentMap1.Text = "DocumentMap1"
+      '
+      'srcBox
+      '
+      Me.srcBox.AutoCompleteBracketsList = New Char() {Global.Microsoft.VisualBasic.ChrW(40), Global.Microsoft.VisualBasic.ChrW(41), Global.Microsoft.VisualBasic.ChrW(123), Global.Microsoft.VisualBasic.ChrW(125), Global.Microsoft.VisualBasic.ChrW(91), Global.Microsoft.VisualBasic.ChrW(93), Global.Microsoft.VisualBasic.ChrW(34), Global.Microsoft.VisualBasic.ChrW(34), Global.Microsoft.VisualBasic.ChrW(39), Global.Microsoft.VisualBasic.ChrW(39)}
+      Me.srcBox.AutoIndent = Global.My.Settings.Default.UserTrue
+      Me.srcBox.AutoScrollMinSize = New System.Drawing.Size(491, 816)
+      Me.srcBox.BackBrush = Nothing
+      Me.srcBox.CharHeight = 17
+      Me.srcBox.CharWidth = 8
+      Me.srcBox.CommentPrefix = ""
+      Me.srcBox.Cursor = System.Windows.Forms.Cursors.IBeam
+      Me.srcBox.DataBindings.Add(New System.Windows.Forms.Binding("AutoIndent", Global.My.Settings.Default, "UserTrue", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+      Me.srcBox.DataBindings.Add(New System.Windows.Forms.Binding("FoldingIndicatorColor", Global.My.Settings.Default, "UserFolding", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+      Me.srcBox.DataBindings.Add(New System.Windows.Forms.Binding("Language", Global.My.Settings.Default, "Oberon", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+      Me.srcBox.DataBindings.Add(New System.Windows.Forms.Binding("ShowLineNumbers", Global.My.Settings.Default, "UserTrue", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+      Me.srcBox.DataBindings.Add(New System.Windows.Forms.Binding("ToolTipDelay", Global.My.Settings.Default, "UserDelay", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+      Me.srcBox.DisabledColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(180, Byte), Integer), CType(CType(180, Byte), Integer), CType(CType(180, Byte), Integer))
+      Me.srcBox.FoldingIndicatorColor = Global.My.Settings.Default.UserFolding
+      Me.srcBox.Font = New System.Drawing.Font("Consolas", 11.0!)
+      Me.srcBox.IsReplaceMode = False
+      Me.srcBox.Language = Global.My.Settings.Default.Oberon
+      Me.srcBox.LeftBracket = Global.Microsoft.VisualBasic.ChrW(40)
+      Me.srcBox.LeftBracket2 = Global.Microsoft.VisualBasic.ChrW(91)
+      Me.srcBox.Location = New System.Drawing.Point(6, 6)
+      Me.srcBox.Name = "srcBox"
+      Me.srcBox.Paddings = New System.Windows.Forms.Padding(0)
+      Me.srcBox.RightBracket = Global.Microsoft.VisualBasic.ChrW(41)
+      Me.srcBox.RightBracket2 = Global.Microsoft.VisualBasic.ChrW(93)
+      Me.srcBox.SelectionColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(255, Byte), Integer))
+      Me.srcBox.ServiceColors = CType(resources.GetObject("srcBox.ServiceColors"), FastColoredTextBoxNS.ServiceColors)
+      Me.srcBox.ShowFoldingLines = True
+      Me.srcBox.ShowLineNumbers = Global.My.Settings.Default.UserTrue
+      Me.srcBox.Size = New System.Drawing.Size(665, 414)
+      Me.srcBox.SourceTextBox = Me.srcBox
+      Me.srcBox.TabIndex = 0
+      Me.srcBox.TabLength = 3
+      Me.srcBox.Text = resources.GetString("srcBox.Text")
+      Me.srcBox.ToolTipDelay = Global.My.Settings.Default.UserDelay
+      Me.srcBox.Zoom = 100
       '
       'окнГлавное
       '
@@ -257,7 +257,7 @@ Partial Class окнГлавное
       Me.TabPage2.ResumeLayout(False)
       Me.TabPage1.ResumeLayout(False)
       Me.TabPage3.ResumeLayout(False)
-      CType(Me.FastColoredTextBox1, System.ComponentModel.ISupportInitialize).EndInit()
+      CType(Me.srcBox, System.ComponentModel.ISupportInitialize).EndInit()
       Me.ResumeLayout(False)
       Me.PerformLayout()
 
@@ -279,7 +279,7 @@ Partial Class окнГлавное
    Friend WithEvents TabPage2 As TabPage
    Friend WithEvents TabPage1 As TabPage
    Friend WithEvents TabPage3 As TabPage
-   Friend WithEvents FastColoredTextBox1 As FastColoredTextBoxNS.FastColoredTextBox
+   Friend WithEvents srcBox As FastColoredTextBoxNS.FastColoredTextBox
    Friend WithEvents текстИсходник As RichTextBox
    Friend WithEvents текстРезультат As RichTextBox
    Friend WithEvents DocumentMap1 As FastColoredTextBoxNS.DocumentMap

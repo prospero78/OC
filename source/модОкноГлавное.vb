@@ -34,7 +34,7 @@
 
    End Sub
 
-   Private Sub FastColoredTextBox1_Load(sender As Object, e As EventArgs) Handles FastColoredTextBox1.Load
+   Private Sub FastColoredTextBox1_Load(sender As Object, e As EventArgs) Handles srcBox.Load
 
    End Sub
 End Class
