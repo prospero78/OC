@@ -30,5 +30,5 @@ Imports System.Runtime.InteropServices
 ' Можно задать все значения или принять номера сборки и редакции по умолчанию 
 ' используя "*", как показано ниже:
 
-<Assembly: AssemblyVersion("0.0.86.0")>
-<Assembly: AssemblyFileVersion("0.0.86.0")>
+<Assembly: AssemblyVersion("0.0.90.0")>
+<Assembly: AssemblyFileVersion("0.0.90.0")>

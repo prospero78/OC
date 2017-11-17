@@ -13,4 +13,8 @@ Public Module модКонст
    Public Const iIdent = 37
    Public Const iEnd = 40
    Public Const iModule = 63
+   ' Цвета расцветки
+   Public Const iDefault = 0
+   Public Const iKeyWord = 1
+   Public Const iKeyWord2 = 2
 End Module

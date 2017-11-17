@@ -76,20 +76,9 @@ Partial Friend NotInheritable Class Settings
             Me("UserFolding") = value
         End Set
     End Property
-    
-    <Global.System.Configuration.UserScopedSettingAttribute(),  _
-     Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-     Global.System.Configuration.DefaultSettingValueAttribute("Custom")>  _
-    Public Property Oberon() As Global.FastColoredTextBoxNS.Language
-        Get
-            Return CType(Me("Oberon"),Global.FastColoredTextBoxNS.Language)
-        End Get
-        Set
-            Me("Oberon") = value
-        End Set
-    End Property
-    
-    <Global.System.Configuration.UserScopedSettingAttribute(),  _
+
+
+   <Global.System.Configuration.UserScopedSettingAttribute(),  _
      Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
      Global.System.Configuration.DefaultSettingValueAttribute("250")>  _
     Public Property UserDelay() As Integer

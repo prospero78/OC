@@ -31,10 +31,13 @@
 
    Private Sub окнГлавное_Load(sender As Object, e As EventArgs) Handles MyBase.Load
       Me.Text = "Компилятор Оберон-07 сборка " + My.Application.Info.Version.Build.ToString()
+   End Sub
+
+   Private Sub btnCompile_Click(sender As Object, e As EventArgs) Handles btnCompile.Click
 
    End Sub
 
-   Private Sub FastColoredTextBox1_Load(sender As Object, e As EventArgs) Handles srcBox.Load
-
+   Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+      'модКомпиль2.Компилировать()
    End Sub
 End Class

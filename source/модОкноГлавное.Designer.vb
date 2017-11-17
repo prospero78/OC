@@ -41,15 +41,12 @@ Partial Class окнГлавное
       Me.текстИсходник = New System.Windows.Forms.RichTextBox()
       Me.TabPage1 = New System.Windows.Forms.TabPage()
       Me.текстРезультат = New System.Windows.Forms.RichTextBox()
-      Me.TabPage3 = New System.Windows.Forms.TabPage()
-      Me.DocumentMap1 = New FastColoredTextBoxNS.DocumentMap()
-      Me.srcBox = New FastColoredTextBoxNS.FastColoredTextBox()
+      Me.btnCompile = New System.Windows.Forms.Button()
+      Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
       Me.MenuStrip1.SuspendLayout()
       Me.TabControl1.SuspendLayout()
       Me.TabPage2.SuspendLayout()
       Me.TabPage1.SuspendLayout()
-      Me.TabPage3.SuspendLayout()
-      CType(Me.srcBox, System.ComponentModel.ISupportInitialize).BeginInit()
       Me.SuspendLayout()
       '
       'MenuStrip1
@@ -132,8 +129,7 @@ Partial Class окнГлавное
       '
       Me.TabControl1.Controls.Add(Me.TabPage2)
       Me.TabControl1.Controls.Add(Me.TabPage1)
-      Me.TabControl1.Controls.Add(Me.TabPage3)
-      Me.TabControl1.Location = New System.Drawing.Point(12, 43)
+      Me.TabControl1.Location = New System.Drawing.Point(12, 27)
       Me.TabControl1.Name = "TabControl1"
       Me.TabControl1.SelectedIndex = 0
       Me.TabControl1.Size = New System.Drawing.Size(838, 452)
@@ -147,7 +143,7 @@ Partial Class окнГлавное
       Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
       Me.TabPage2.Size = New System.Drawing.Size(830, 426)
       Me.TabPage2.TabIndex = 1
-      Me.TabPage2.Text = "TabPage2"
+      Me.TabPage2.Text = "srcOberon"
       Me.TabPage2.UseVisualStyleBackColor = True
       '
       'текстИсходник
@@ -157,94 +153,47 @@ Partial Class окнГлавное
       Me.текстИсходник.Name = "текстИсходник"
       Me.текстИсходник.Size = New System.Drawing.Size(818, 414)
       Me.текстИсходник.TabIndex = 5
-      Me.текстИсходник.Text = ""
+      Me.текстИсходник.Text = resources.GetString("текстИсходник.Text")
       '
       'TabPage1
       '
+      Me.TabPage1.Controls.Add(Me.btnCompile)
       Me.TabPage1.Controls.Add(Me.текстРезультат)
       Me.TabPage1.Location = New System.Drawing.Point(4, 22)
       Me.TabPage1.Name = "TabPage1"
       Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
       Me.TabPage1.Size = New System.Drawing.Size(830, 426)
       Me.TabPage1.TabIndex = 2
-      Me.TabPage1.Text = "TabPage1"
+      Me.TabPage1.Text = "srcVB"
       Me.TabPage1.UseVisualStyleBackColor = True
       '
       'текстРезультат
       '
       Me.текстРезультат.Font = New System.Drawing.Font("Consolas", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
-      Me.текстРезультат.Location = New System.Drawing.Point(6, 6)
+      Me.текстРезультат.Location = New System.Drawing.Point(6, 35)
       Me.текстРезультат.Name = "текстРезультат"
-      Me.текстРезультат.Size = New System.Drawing.Size(818, 414)
+      Me.текстРезультат.Size = New System.Drawing.Size(818, 385)
       Me.текстРезультат.TabIndex = 6
       Me.текстРезультат.Text = ""
       '
-      'TabPage3
+      'btnCompile
       '
-      Me.TabPage3.Controls.Add(Me.DocumentMap1)
-      Me.TabPage3.Controls.Add(Me.srcBox)
-      Me.TabPage3.Location = New System.Drawing.Point(4, 22)
-      Me.TabPage3.Name = "TabPage3"
-      Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-      Me.TabPage3.Size = New System.Drawing.Size(830, 426)
-      Me.TabPage3.TabIndex = 3
-      Me.TabPage3.Text = "TabPage3"
-      Me.TabPage3.UseVisualStyleBackColor = True
+      Me.btnCompile.Location = New System.Drawing.Point(6, 6)
+      Me.btnCompile.Name = "btnCompile"
+      Me.btnCompile.Size = New System.Drawing.Size(75, 23)
+      Me.btnCompile.TabIndex = 6
+      Me.btnCompile.Text = "Compile"
+      Me.btnCompile.UseVisualStyleBackColor = True
       '
-      'DocumentMap1
+      'Timer1
       '
-      Me.DocumentMap1.ForeColor = System.Drawing.Color.Maroon
-      Me.DocumentMap1.Location = New System.Drawing.Point(677, 6)
-      Me.DocumentMap1.Name = "DocumentMap1"
-      Me.DocumentMap1.Size = New System.Drawing.Size(147, 414)
-      Me.DocumentMap1.TabIndex = 1
-      Me.DocumentMap1.Target = Me.srcBox
-      Me.DocumentMap1.Text = "DocumentMap1"
-      '
-      'srcBox
-      '
-      Me.srcBox.AutoCompleteBracketsList = New Char() {Global.Microsoft.VisualBasic.ChrW(40), Global.Microsoft.VisualBasic.ChrW(41), Global.Microsoft.VisualBasic.ChrW(123), Global.Microsoft.VisualBasic.ChrW(125), Global.Microsoft.VisualBasic.ChrW(91), Global.Microsoft.VisualBasic.ChrW(93), Global.Microsoft.VisualBasic.ChrW(34), Global.Microsoft.VisualBasic.ChrW(34), Global.Microsoft.VisualBasic.ChrW(39), Global.Microsoft.VisualBasic.ChrW(39)}
-      Me.srcBox.AutoIndent = Global.My.Settings.Default.UserTrue
-      Me.srcBox.AutoScrollMinSize = New System.Drawing.Size(458, 816)
-      Me.srcBox.BackBrush = Nothing
-      Me.srcBox.CharHeight = 17
-      Me.srcBox.CharWidth = 8
-      Me.srcBox.CommentPrefix = ""
-      Me.srcBox.Cursor = System.Windows.Forms.Cursors.IBeam
-      Me.srcBox.DataBindings.Add(New System.Windows.Forms.Binding("AutoIndent", Global.My.Settings.Default, "UserTrue", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-      Me.srcBox.DataBindings.Add(New System.Windows.Forms.Binding("FoldingIndicatorColor", Global.My.Settings.Default, "UserFolding", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-      Me.srcBox.DataBindings.Add(New System.Windows.Forms.Binding("Language", Global.My.Settings.Default, "Oberon", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-      Me.srcBox.DataBindings.Add(New System.Windows.Forms.Binding("ShowLineNumbers", Global.My.Settings.Default, "UserTrue", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-      Me.srcBox.DataBindings.Add(New System.Windows.Forms.Binding("ToolTipDelay", Global.My.Settings.Default, "UserDelay", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-      Me.srcBox.DisabledColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(180, Byte), Integer), CType(CType(180, Byte), Integer), CType(CType(180, Byte), Integer))
-      Me.srcBox.FoldingIndicatorColor = Global.My.Settings.Default.UserFolding
-      Me.srcBox.Font = New System.Drawing.Font("Consolas", 11.0!)
-      Me.srcBox.IsReplaceMode = False
-      Me.srcBox.Language = Global.My.Settings.Default.Oberon
-      Me.srcBox.LeftBracket = Global.Microsoft.VisualBasic.ChrW(40)
-      Me.srcBox.LeftBracket2 = Global.Microsoft.VisualBasic.ChrW(91)
-      Me.srcBox.Location = New System.Drawing.Point(6, 6)
-      Me.srcBox.Name = "srcBox"
-      Me.srcBox.Paddings = New System.Windows.Forms.Padding(0)
-      Me.srcBox.RightBracket = Global.Microsoft.VisualBasic.ChrW(41)
-      Me.srcBox.RightBracket2 = Global.Microsoft.VisualBasic.ChrW(93)
-      Me.srcBox.SelectionColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(255, Byte), Integer))
-      Me.srcBox.ServiceColors = CType(resources.GetObject("srcBox.ServiceColors"), FastColoredTextBoxNS.ServiceColors)
-      Me.srcBox.ShowFoldingLines = True
-      Me.srcBox.ShowLineNumbers = Global.My.Settings.Default.UserTrue
-      Me.srcBox.Size = New System.Drawing.Size(665, 414)
-      Me.srcBox.SourceTextBox = Me.srcBox
-      Me.srcBox.TabIndex = 0
-      Me.srcBox.TabLength = 3
-      Me.srcBox.Text = resources.GetString("srcBox.Text")
-      Me.srcBox.ToolTipDelay = Global.My.Settings.Default.UserDelay
-      Me.srcBox.Zoom = 100
+      Me.Timer1.Interval = 500
       '
       'окнГлавное
       '
       Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
       Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-      Me.ClientSize = New System.Drawing.Size(862, 507)
+      Me.ClientSize = New System.Drawing.Size(862, 516)
       Me.Controls.Add(Me.TabControl1)
       Me.Controls.Add(Me.MenuStrip1)
       Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -256,8 +205,6 @@ Partial Class окнГлавное
       Me.TabControl1.ResumeLayout(False)
       Me.TabPage2.ResumeLayout(False)
       Me.TabPage1.ResumeLayout(False)
-      Me.TabPage3.ResumeLayout(False)
-      CType(Me.srcBox, System.ComponentModel.ISupportInitialize).EndInit()
       Me.ResumeLayout(False)
       Me.PerformLayout()
 
@@ -278,9 +225,8 @@ Partial Class окнГлавное
    Friend WithEvents TabControl1 As TabControl
    Friend WithEvents TabPage2 As TabPage
    Friend WithEvents TabPage1 As TabPage
-   Friend WithEvents TabPage3 As TabPage
-   Friend WithEvents srcBox As FastColoredTextBoxNS.FastColoredTextBox
    Friend WithEvents текстИсходник As RichTextBox
    Friend WithEvents текстРезультат As RichTextBox
-   Friend WithEvents DocumentMap1 As FastColoredTextBoxNS.DocumentMap
+   Friend WithEvents btnCompile As Button
+   Friend WithEvents Timer1 As Timer
 End Class
