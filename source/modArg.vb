@@ -1,6 +1,5 @@
 'Модуль парсит параметры командной строки
-Namespace My
-   Public Class clsArgs 'Описывает структуру аргументов
+Public Class clsArgs 'Описывает структуру аргументов
       Public arg As String = ""
       Public val As String = ""
    End Class
@@ -46,5 +45,4 @@ Namespace My
             Console.WriteLine(argMod.arg + ":  " + argMod.val)
          End If
       End Sub
-   End Module
-End Namespace
+End Module

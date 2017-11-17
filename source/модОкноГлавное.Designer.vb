@@ -133,7 +133,7 @@ Partial Class окнГлавное
       Me.TabControl1.Controls.Add(Me.TabPage2)
       Me.TabControl1.Controls.Add(Me.TabPage1)
       Me.TabControl1.Controls.Add(Me.TabPage3)
-      Me.TabControl1.Location = New System.Drawing.Point(12, 27)
+      Me.TabControl1.Location = New System.Drawing.Point(12, 43)
       Me.TabControl1.Name = "TabControl1"
       Me.TabControl1.SelectedIndex = 0
       Me.TabControl1.Size = New System.Drawing.Size(838, 452)
@@ -205,7 +205,7 @@ Partial Class окнГлавное
       '
       Me.srcBox.AutoCompleteBracketsList = New Char() {Global.Microsoft.VisualBasic.ChrW(40), Global.Microsoft.VisualBasic.ChrW(41), Global.Microsoft.VisualBasic.ChrW(123), Global.Microsoft.VisualBasic.ChrW(125), Global.Microsoft.VisualBasic.ChrW(91), Global.Microsoft.VisualBasic.ChrW(93), Global.Microsoft.VisualBasic.ChrW(34), Global.Microsoft.VisualBasic.ChrW(34), Global.Microsoft.VisualBasic.ChrW(39), Global.Microsoft.VisualBasic.ChrW(39)}
       Me.srcBox.AutoIndent = Global.My.Settings.Default.UserTrue
-      Me.srcBox.AutoScrollMinSize = New System.Drawing.Size(491, 816)
+      Me.srcBox.AutoScrollMinSize = New System.Drawing.Size(458, 816)
       Me.srcBox.BackBrush = Nothing
       Me.srcBox.CharHeight = 17
       Me.srcBox.CharWidth = 8
