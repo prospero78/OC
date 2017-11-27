@@ -38,10 +38,13 @@ Partial Class окнГлавное
       Me.длгФайлОткрыть = New System.Windows.Forms.OpenFileDialog()
       Me.TabControl1 = New System.Windows.Forms.TabControl()
       Me.TabPage2 = New System.Windows.Forms.TabPage()
+      Me.btnClear = New System.Windows.Forms.Button()
+      Me.btnStep = New System.Windows.Forms.Button()
+      Me.txtLog = New System.Windows.Forms.TextBox()
       Me.текстИсходник = New System.Windows.Forms.RichTextBox()
       Me.TabPage1 = New System.Windows.Forms.TabPage()
-      Me.текстРезультат = New System.Windows.Forms.RichTextBox()
       Me.btnCompile = New System.Windows.Forms.Button()
+      Me.текстРезультат = New System.Windows.Forms.RichTextBox()
       Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
       Me.MenuStrip1.SuspendLayout()
       Me.TabControl1.SuspendLayout()
@@ -132,26 +135,55 @@ Partial Class окнГлавное
       Me.TabControl1.Location = New System.Drawing.Point(12, 27)
       Me.TabControl1.Name = "TabControl1"
       Me.TabControl1.SelectedIndex = 0
-      Me.TabControl1.Size = New System.Drawing.Size(838, 452)
+      Me.TabControl1.Size = New System.Drawing.Size(838, 477)
       Me.TabControl1.TabIndex = 5
       '
       'TabPage2
       '
+      Me.TabPage2.Controls.Add(Me.btnClear)
+      Me.TabPage2.Controls.Add(Me.btnStep)
+      Me.TabPage2.Controls.Add(Me.txtLog)
       Me.TabPage2.Controls.Add(Me.текстИсходник)
       Me.TabPage2.Location = New System.Drawing.Point(4, 22)
       Me.TabPage2.Name = "TabPage2"
       Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-      Me.TabPage2.Size = New System.Drawing.Size(830, 426)
+      Me.TabPage2.Size = New System.Drawing.Size(830, 451)
       Me.TabPage2.TabIndex = 1
       Me.TabPage2.Text = "srcOberon"
       Me.TabPage2.UseVisualStyleBackColor = True
       '
+      'btnClear
+      '
+      Me.btnClear.Location = New System.Drawing.Point(499, 6)
+      Me.btnClear.Name = "btnClear"
+      Me.btnClear.Size = New System.Drawing.Size(96, 30)
+      Me.btnClear.TabIndex = 8
+      Me.btnClear.Text = "Очистить"
+      Me.btnClear.UseVisualStyleBackColor = True
+      '
+      'btnStep
+      '
+      Me.btnStep.Location = New System.Drawing.Point(6, 6)
+      Me.btnStep.Name = "btnStep"
+      Me.btnStep.Size = New System.Drawing.Size(96, 30)
+      Me.btnStep.TabIndex = 7
+      Me.btnStep.Text = "Шаг >>"
+      Me.btnStep.UseVisualStyleBackColor = True
+      '
+      'txtLog
+      '
+      Me.txtLog.Location = New System.Drawing.Point(499, 42)
+      Me.txtLog.Multiline = True
+      Me.txtLog.Name = "txtLog"
+      Me.txtLog.Size = New System.Drawing.Size(325, 403)
+      Me.txtLog.TabIndex = 6
+      '
       'текстИсходник
       '
       Me.текстИсходник.Font = New System.Drawing.Font("Consolas", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
-      Me.текстИсходник.Location = New System.Drawing.Point(6, 6)
+      Me.текстИсходник.Location = New System.Drawing.Point(6, 42)
       Me.текстИсходник.Name = "текстИсходник"
-      Me.текстИсходник.Size = New System.Drawing.Size(818, 414)
+      Me.текстИсходник.Size = New System.Drawing.Size(487, 403)
       Me.текстИсходник.TabIndex = 5
       Me.текстИсходник.Text = resources.GetString("текстИсходник.Text")
       '
@@ -162,19 +194,10 @@ Partial Class окнГлавное
       Me.TabPage1.Location = New System.Drawing.Point(4, 22)
       Me.TabPage1.Name = "TabPage1"
       Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-      Me.TabPage1.Size = New System.Drawing.Size(830, 426)
+      Me.TabPage1.Size = New System.Drawing.Size(830, 451)
       Me.TabPage1.TabIndex = 2
       Me.TabPage1.Text = "srcVB"
       Me.TabPage1.UseVisualStyleBackColor = True
-      '
-      'текстРезультат
-      '
-      Me.текстРезультат.Font = New System.Drawing.Font("Consolas", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
-      Me.текстРезультат.Location = New System.Drawing.Point(6, 35)
-      Me.текстРезультат.Name = "текстРезультат"
-      Me.текстРезультат.Size = New System.Drawing.Size(818, 385)
-      Me.текстРезультат.TabIndex = 6
-      Me.текстРезультат.Text = ""
       '
       'btnCompile
       '
@@ -184,6 +207,15 @@ Partial Class окнГлавное
       Me.btnCompile.TabIndex = 6
       Me.btnCompile.Text = "Compile"
       Me.btnCompile.UseVisualStyleBackColor = True
+      '
+      'текстРезультат
+      '
+      Me.текстРезультат.Font = New System.Drawing.Font("Consolas", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
+      Me.текстРезультат.Location = New System.Drawing.Point(6, 35)
+      Me.текстРезультат.Name = "текстРезультат"
+      Me.текстРезультат.Size = New System.Drawing.Size(818, 385)
+      Me.текстРезультат.TabIndex = 6
+      Me.текстРезультат.Text = ""
       '
       'Timer1
       '
@@ -204,6 +236,7 @@ Partial Class окнГлавное
       Me.MenuStrip1.PerformLayout()
       Me.TabControl1.ResumeLayout(False)
       Me.TabPage2.ResumeLayout(False)
+      Me.TabPage2.PerformLayout()
       Me.TabPage1.ResumeLayout(False)
       Me.ResumeLayout(False)
       Me.PerformLayout()
@@ -229,4 +262,7 @@ Partial Class окнГлавное
    Friend WithEvents текстРезультат As RichTextBox
    Friend WithEvents btnCompile As Button
    Friend WithEvents Timer1 As Timer
+   Friend WithEvents btnClear As Button
+   Friend WithEvents btnStep As Button
+   Friend WithEvents txtLog As TextBox
 End Class

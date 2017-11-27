@@ -39,5 +39,25 @@
 
    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
       'модКомпиль2.Компилировать()
+      'модКомпиль2.Компилировать()
+      'модКомпиль2.Компилировать()
+   End Sub
+
+   Private Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
+      txtLog.Text = ""
+   End Sub
+
+   Dim текстИсх As String = текстИсходник.Text  ' копия текста исходника
+
+   Dim уИсхСтроки As туИсход = New туИсход(текстИсх + "  ") ' массив строк для отображения ошибок
+   Dim слова As тСлова = New тСлова()
+   Private Sub btnStep_Click(sender As Object, e As EventArgs) Handles btnStep.Click
+      ' Выполняет шаг разбиения по словам
+      Static цШаг As Integer = 0 ' счётчик шагов разбиения по словам
+      ' если первый шаг -- если процедура по шагам выпоняется несколько раз
+      If цШаг = 0 Then
+         текстИсх = текстИсходник.Text
+      End If
+      слова.Нарезать(уИсхСтроки)
    End Sub
 End Class

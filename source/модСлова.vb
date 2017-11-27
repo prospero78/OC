@@ -192,13 +192,13 @@ Public Class тСлова
       End If
       Return res
    End Function
-   Public Sub Нарезать(_исходник As туИсход)
+   Public Function Нарезать(_исходник As туИсход) As String
       Dim лсТег As String = ""
       Dim лит As String = ""
       Dim лит2 As String = ""
       Dim _tmp As String = "" ' перменная для правильного пропуска doubletag
       лит = txtSrc.лит
-      Do While _исходник.длина > 1 ' общий цикл с правильными литерами
+      If _исходник.длина > 1 Then ' общий цикл с правильными литерами
          If Me.ЕслиОтсев(лит) Then ' отбросим мусор
             ' Пропуск символов-мусора
             лит = txtSrc.лит
@@ -228,10 +228,10 @@ Public Class тСлова
                лит = txtSrc.лит
             Loop
             Me.Добавить(лсТег, txtSrc.коорд)
-            лсТег = ""
          End If
-      Loop
-   End Sub
+      End If
+      Return лсТег
+   End Function
 End Class
 ''' <summary>
 ''' попытка сделать по уму
@@ -240,9 +240,11 @@ Public Module модСлова
    Public слова As тСлова = New тСлова()
    Public txtSrc As туИсход ' исходник разбитый построчно
    ' =================== Лексирование =======================
-   Public Sub Лексемы_Разметить()
+   Public Sub Разметить()
+      слова.Нарезать(txtSrc)
+   End Sub
+   Public Sub Настроить()
       слова = New тСлова()
       txtSrc = New туИсход(модФайл.txtFileO7 + "  ") ' хвост нужен, чтобы гарантированно не обрезать тег
-      слова.Нарезать(txtSrc)
    End Sub
 End Module
