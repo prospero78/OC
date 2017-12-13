@@ -1,0 +1,11 @@
+D:\coding\github.com\OC\bin\Debug\OC.exe.config
+D:\coding\github.com\OC\bin\Debug\OC.exe
+D:\coding\github.com\OC\bin\Debug\OC.pdb
+D:\coding\github.com\OC\bin\Debug\OC.xml
+D:\coding\github.com\OC\obj\Debug\OC.Resources.resources
+D:\coding\github.com\OC\obj\Debug\OC.vbproj.GenerateResource.Cache
+D:\coding\github.com\OC\obj\Debug\OC.vbproj.CoreCompileInputs.cache
+D:\coding\github.com\OC\obj\Debug\OC.exe
+D:\coding\github.com\OC\obj\Debug\OC.xml
+D:\coding\github.com\OC\obj\Debug\OC.pdb
+D:\coding\github.com\OC\obj\Debug\OC.Form1.resources
